@@ -1,3 +1,4 @@
+import { useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import React from "react";
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
@@ -7,6 +8,7 @@ import { theme } from "../constants/theme";
 import { hp, wp } from "../helpers/common";
 
 const welcome = () => {
+  const router = useRouter();
   return (
     <ScreenWrapper bg="white">
       <StatusBar style="dark" />
@@ -30,12 +32,12 @@ const welcome = () => {
           <Button
             title="Getting Started"
             buttonStyle={{ marginHorizontal: wp(3) }}
-            onPress={() => {}}
+            onPress={() => router.push("signUp")}
           />
 
           <View style={styles.bottomTextContainer}>
             <Text style={styles.loginText}>Already have an account ?</Text>
-            <Pressable>
+            <Pressable onPress={() => router.push("login")}>
               <Text
                 style={[
                   styles.loginText,
