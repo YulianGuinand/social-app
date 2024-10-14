@@ -1,7 +1,7 @@
 export const getUserImageSrc = imagePath => {
     if(imagePath) {
-        return imagePath
+        return {uri: imagePath}
     } else {
-        return '../assets/images/defaultUser.png';
+        return require('../assets/images/defaultUser.png');
     }
 }
