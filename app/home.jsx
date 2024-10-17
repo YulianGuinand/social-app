@@ -1,5 +1,5 @@
-import React from "react";
-import { Alert, Pressable, StyleSheet, Text, View } from "react-native";
+import React, { useEffect, useState } from "react";
+import { Alert, FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 import Button from "../components/Button";
 import ScreenWrapper from "../components/ScreenWrapper";
 import { useAuth } from "../contexts/AuthContext";
@@ -9,20 +9,49 @@ import { theme } from "../constants/theme";
 import Icon from "../assets/icons";
 import { useRouter } from "expo-router";
 import Avatar from "../components/Avatar";
+import { fetchPosts } from "../services/postService";
+import PostCard from "../components/PostCard";
+import Loading from "../components/Loading";
+import { getUserData } from "../services/userService";
 
+var limit = 0;
 const Home = () => {
   const { user, setAuth } = useAuth();
   const router = useRouter();
 
-  // console.log("user : ", user);
+  const [posts, setPosts] = useState([]);
 
-  // const onLogout = async () => {
-  //   const { error } = await supabase.auth.signOut();
+  const getPosts = async () => {
+    limit += 10;
+    console.log('Fetching post: ', limit)
+    let res = await fetchPosts(limit);
+    
+    if(res.success) {
+      setPosts(res.data)
+    }
+  }
 
-  //   if (error) {
-  //     Alert.alert("Sign out", "Error signing out!");
-  //   }
-  // };
+  const handlePostEvent = async (payload) => {
+    // console.log("GOT POST EVENT",payload)
+    if(payload.eventType == 'INSERT' && payload?.new?.id) {
+      let newPost = {...payload.new};
+      let res = await getUserData(newPost.userId);
+      newPost.user = res.success ? res.data : {};
+      setPosts(prevPosts => [newPost, ...prevPosts]);
+    }
+  }
+
+  useEffect(() => {
+
+    let postChannel = supabase
+    .channel('posts')
+    .on('postgres_changes', {event: '*', schema: 'public', table: 'posts'}, handlePostEvent).subscribe();
+    getPosts();
+
+    return () => {
+      supabase.removeChannel(postChannel)
+    }
+  }, [])
 
   return (
     <ScreenWrapper bg="white">
@@ -47,6 +76,15 @@ const Home = () => {
             </Pressable>
           </View>
         </View>
+
+        {/* POSTS */}
+        <FlatList data={posts} showsVerticalScrollIndicator={false} contentContainerStyle={styles.listStyle} keyExtractor={item => item.id.toString()} renderItem={({item}) => <PostCard item={item} currentUser={user} router={router} />}
+        ListFooterComponent={
+          <View style={{marginVertical: posts.length == 0 ? 200 : 30}}>
+            <Loading/>
+          </View>
+        }
+        />
       </View>
       {/* <Button title="Logout" onPress={onLogout} /> */}
     </ScreenWrapper>

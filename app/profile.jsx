@@ -80,7 +80,7 @@ const UserHeader = ({user, router, handleLogOut}) => {
             {
               user && user.phoneNumber && (
                 <View style={styles.info}>
-                  <Icon name="mail" size={20} color={theme.colors.textLight}/>
+                  <Icon name="call" size={20} color={theme.colors.textLight}/>
                   <Text style={styles.infoText}>
                     {user && user.phoneNumber}
                   </Text>

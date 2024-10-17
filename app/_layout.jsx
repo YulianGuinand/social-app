@@ -3,7 +3,9 @@ import React, { useEffect } from "react";
 import { AuthProvider, useAuth } from "../contexts/AuthContext";
 import { supabase } from "../lib/supabase";
 import { getUserData } from "../services/userService";
+import { LogBox } from "react-native";
 
+LogBox.ignoreLogs(['Warning: TNodeChildrenRenderer:', 'Warning: MemoizedTNodeRenderer', 'Warning: TRenderEngineProvider'])
 const _layout = () => {
   return (
     <AuthProvider>
