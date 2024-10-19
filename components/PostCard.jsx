@@ -30,7 +30,7 @@ const tagsStyles = {
   },
 };
 
-const PostCard = ({ item, currentUser, router, hasShadow = true }) => {
+const PostCard = ({ item, currentUser, router, hasShadow = true, showMoreIcon=true }) => {
   const shadowStyles = {
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.06,
@@ -46,15 +46,12 @@ const PostCard = ({ item, currentUser, router, hasShadow = true }) => {
 
   const createdAt = moment(item?.created_at).format("MMM D");
 
-  const openPostDetails = () => {};
-
   const onLike = async () => {
     if (liked) {
       // remove like
       let updateLikes = likes.filter((like) => like.userId != currentUser?.id);
       setLikes([...updateLikes]);
       let res = await removePostLike(item?.id, currentUser?.id);
-      console.log("REMOVED LIKE : ", res);
       if (!res.success) {
         Alert.alert("Post", "Something went wrong!");
       }
@@ -66,7 +63,6 @@ const PostCard = ({ item, currentUser, router, hasShadow = true }) => {
       };
       setLikes([...likes, data]);
       let res = await createPostLike(data);
-      console.log("ADDED LIKE : ", res);
       if (!res.success) {
         Alert.alert("Post", "Something went wrong!");
       }
@@ -89,6 +85,12 @@ const PostCard = ({ item, currentUser, router, hasShadow = true }) => {
     ? true
     : false;
 
+  const openPostDetails = () => {
+    if(!showMoreIcon) return null;
+    console.log("ITEM ID: ",item?.id);
+    router.push({pathname: 'postDetails', params: {postId: item?.id ? item?.id : 6}})
+  };
+  
   return (
     <View style={[styles.container, hasShadow && shadowStyles]}>
       <View style={styles.header}>
@@ -104,14 +106,19 @@ const PostCard = ({ item, currentUser, router, hasShadow = true }) => {
             <Text style={styles.postTime}>{createdAt}</Text>
           </View>
         </View>
-        <TouchableOpacity onPress={openPostDetails}>
-          <Icon
-            name="threeDotsHorizontal"
-            size={hp(3.4)}
-            strokeWidth={3}
-            color={theme.colors.text}
-          />
-        </TouchableOpacity>
+
+        {
+          showMoreIcon && (
+          <TouchableOpacity onPress={openPostDetails}>
+            <Icon
+              name="threeDotsHorizontal"
+              size={hp(3.4)}
+              strokeWidth={3}
+              color={theme.colors.text}
+            />
+          </TouchableOpacity>
+          )
+        }
       </View>
 
       {/* POST BODY & MEDIA */}
@@ -168,10 +175,14 @@ const PostCard = ({ item, currentUser, router, hasShadow = true }) => {
             </Text>
           </View>
           <View style={styles.footerButton}>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={openPostDetails}>
               <Icon name="comment" size={24} color={theme.colors.textLight} />
             </TouchableOpacity>
-            <Text style={styles.count}>0</Text>
+            <Text style={styles.count}>
+              {
+                item?.comments[0]?.count
+              }
+            </Text>
           </View>
           <View style={styles.footerButton}>
             {loading ? (
