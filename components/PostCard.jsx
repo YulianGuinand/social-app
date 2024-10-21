@@ -12,6 +12,7 @@ import { downloadFile, getSupabaseFileUrl } from "../services/imageService";
 import { Video } from "expo-av";
 import { createPostLike, removePostLike } from "../services/postService";
 import Loading from "./Loading";
+import { supabase } from "../lib/supabase";
 
 const textStyle = {
   color: theme.colors.dark,
@@ -30,7 +31,13 @@ const tagsStyles = {
   },
 };
 
-const PostCard = ({ item, currentUser, router, hasShadow = true, showMoreIcon=true }) => {
+const PostCard = ({
+  item,
+  currentUser,
+  router,
+  hasShadow = true,
+  showMoreIcon = true,
+}) => {
   const shadowStyles = {
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.06,
@@ -86,11 +93,13 @@ const PostCard = ({ item, currentUser, router, hasShadow = true, showMoreIcon=tr
     : false;
 
   const openPostDetails = () => {
-    if(!showMoreIcon) return null;
-    console.log("ITEM ID: ",item?.id);
-    router.push({pathname: 'postDetails', params: {postId: item?.id ? item?.id : 6}})
+    if (!showMoreIcon) return null;
+    router.push({
+      pathname: "postDetails",
+      params: { postId: item?.id },
+    });
   };
-  
+
   return (
     <View style={[styles.container, hasShadow && shadowStyles]}>
       <View style={styles.header}>
@@ -107,8 +116,7 @@ const PostCard = ({ item, currentUser, router, hasShadow = true, showMoreIcon=tr
           </View>
         </View>
 
-        {
-          showMoreIcon && (
+        {showMoreIcon && (
           <TouchableOpacity onPress={openPostDetails}>
             <Icon
               name="threeDotsHorizontal"
@@ -117,8 +125,7 @@ const PostCard = ({ item, currentUser, router, hasShadow = true, showMoreIcon=tr
               color={theme.colors.text}
             />
           </TouchableOpacity>
-          )
-        }
+        )}
       </View>
 
       {/* POST BODY & MEDIA */}
@@ -178,11 +185,7 @@ const PostCard = ({ item, currentUser, router, hasShadow = true, showMoreIcon=tr
             <TouchableOpacity onPress={openPostDetails}>
               <Icon name="comment" size={24} color={theme.colors.textLight} />
             </TouchableOpacity>
-            <Text style={styles.count}>
-              {
-                item?.comments[0]?.count
-              }
-            </Text>
+            <Text style={styles.count}>{item?.comments[0]?.count}</Text>
           </View>
           <View style={styles.footerButton}>
             {loading ? (
