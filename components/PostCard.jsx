@@ -37,6 +37,9 @@ const PostCard = ({
   router,
   hasShadow = true,
   showMoreIcon = true,
+  showDelete = false,
+  onDelete = () => {},
+  onEdit = () => {},
 }) => {
   const shadowStyles = {
     shadowOffset: { width: 0, height: 2 },
@@ -100,6 +103,20 @@ const PostCard = ({
     });
   };
 
+  const handleOnDelete = () => {
+    Alert.alert("Confirm", "Are you sure you want to delete this post ?", [
+      {
+        text: 'Cancel',
+        style: 'cancel'
+      },
+      {
+        text: 'Delete',
+        onPress: () => onDelete(item),
+        style: 'destructive',
+      }
+    ])
+  }
+
   return (
     <View style={[styles.container, hasShadow && shadowStyles]}>
       <View style={styles.header}>
@@ -126,6 +143,27 @@ const PostCard = ({
             />
           </TouchableOpacity>
         )}
+
+        {
+          showDelete && currentUser.id == item?.userId && (
+            <View style={styles.actions}>
+              <TouchableOpacity onPress={() => onEdit(item)}>
+                <Icon
+                  name="edit"
+                  size={hp(2.5)}
+                  color={theme.colors.text}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={handleOnDelete}>
+                <Icon
+                  name="delete"
+                  size={hp(2.5)}
+                  color={theme.colors.rose}
+                />
+              </TouchableOpacity>
+            </View>
+          )
+        }
       </View>
 
       {/* POST BODY & MEDIA */}
