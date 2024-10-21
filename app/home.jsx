@@ -42,10 +42,11 @@ const Home = () => {
   };
 
   const handlePostEvent = async (payload) => {
-    // console.log("GOT POST EVENT",payload)
     if (payload.eventType == "INSERT" && payload?.new?.id) {
-      let newPost = { ...payload.new };
+      let newPost = { ...payload.new, comments: [{ count: 0 }], postLikes: [] };
+
       let res = await getUserData(newPost.userId);
+
       newPost.user = res.success ? res.data : {};
       setPosts((prevPosts) => [newPost, ...prevPosts]);
     }
@@ -61,7 +62,27 @@ const Home = () => {
       )
       .subscribe();
 
+    let commentChannel = supabase
+      .channel("comments")
+      .on(
+        "postgres_changes",
+        { event: "INSERT", schema: "public", table: "comments" },
+        (payload) => {
+          const newComment = payload.new;
+
+          setPosts((prevPosts) =>
+            prevPosts.map((post) =>
+              post.id === newComment.postId
+                ? { ...post, comments: [{ count: post.comments[0].count + 1 }] }
+                : post
+            )
+          );
+        }
+      )
+      .subscribe();
+
     return () => {
+      supabase.removeChannel(commentChannel);
       supabase.removeChannel(postChannel);
     };
   }, []);
@@ -107,7 +128,12 @@ const Home = () => {
           contentContainerStyle={styles.listStyle}
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
-            <PostCard item={item} currentUser={user} router={router} />
+            <PostCard
+              setPosts={setPosts}
+              item={item}
+              currentUser={user}
+              router={router}
+            />
           )}
           onEndReached={() => {
             getPosts();
