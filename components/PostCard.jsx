@@ -1,5 +1,5 @@
 import { Alert, Share, StyleSheet, Text, View } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { theme } from "../constants/theme";
 import { hp, stripHtmlTags, wp } from "../helpers/common";
 import Avatar from "./Avatar";
@@ -52,7 +52,7 @@ const PostCard = ({
   const [loading, setLoading] = useState(false);
   useEffect(() => {
     setLikes(item?.postLikes);
-  }, []);
+  }, [item.postLikes]);
 
   const createdAt = moment(item?.created_at).format("MMM D");
 
@@ -94,7 +94,7 @@ const PostCard = ({
   const liked = likes?.filter((like) => like.userId == currentUser?.id)[0]
     ? true
     : false;
-
+    
   const openPostDetails = () => {
     if (!showMoreIcon) return null;
     router.push({

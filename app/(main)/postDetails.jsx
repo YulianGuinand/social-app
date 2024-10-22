@@ -47,30 +47,29 @@ const postDetails = () => {
 
   useEffect(() => {
     getPostDetails();
-    // let commentChannel = supabase
-    // .channel("comments")
-    //   .on(
-    //     "postgres_changes",
-    //     { event: "INSERT",
-    //       schema: "public",
-    //       table: "comments",
-    //       filter: `postId=eq.${postId}`
-    //     },
-    //     handleNewComment
-    //   )
-    //   .subscribe();
-
-
-    //   return () => {
-    //   supabase.removeChannel(commentChannel);
-
-    // };
   }, []);
 
   const getPostDetails = async () => {
     // FETCH POST DETAILS HERE
     let res = await fetchPostDetails(postId);
-    if (res.success) setPost(res.data);
+    
+    if (res.success) {
+      const likesData = []
+
+      res.data.postLikes.forEach((like) => {
+        likesData.push(like)
+      })
+
+      likesData.forEach(like => {
+        if(like.userId == user.id) {
+          res.data.isLiked = true;
+        } else {
+          res.data.isLiked = false;
+        }
+      })
+
+      setPost(res.data)
+    };
     setStartLoading(false);
   };
 
