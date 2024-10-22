@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Alert,
   FlatList,
@@ -20,6 +20,8 @@ import { fetchPosts } from "../services/postService";
 import PostCard from "../components/PostCard";
 import Loading from "../components/Loading";
 import { getUserData } from "../services/userService";
+import {Context} from '../app/_layout';
+
 
 var limit = 0;
 const Home = () => {
@@ -28,17 +30,50 @@ const Home = () => {
 
   const [posts, setPosts] = useState([]);
   const [hasMore, setHasMore] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+
 
   const getPosts = async () => {
-    if (!hasMore) return null;
-    limit += 2;
+    // if (!hasMore) return null;
+    
+    limit = 2; 
+
     let res = await fetchPosts(limit);
 
     if (res.success) {
       if (posts.length == res.data.length) setHasMore(false);
+      
+      const likesData = []
+      res.data.forEach(post => {
+        post.postLikes.forEach(like => {
+          likesData.push(like)
+        })
+      })
+      
+      if(likesData.length != 0) {
+        likesData.forEach(like => {
+          res.data.forEach(post => {
+            if(like.postId == post.id && like.userId == user.id) {
+              post.isLiked = true;
+            } else {
+              post.isLiked = false;
+            }
+          })
+        })
+      } else {
+        res.data.forEach(post => {
+          post.isLiked = false;
+        })
+      }
       setPosts(res.data);
     }
   };
+
+  const handleRefresh = () => {
+    setRefreshing(true);
+    getPosts();
+    setRefreshing(false);
+  }
 
   const handlePostEvent = async (payload) => {
     if (payload.eventType == "INSERT" && payload?.new?.id) {
@@ -81,6 +116,15 @@ const Home = () => {
         handlePostEvent
       )
       .subscribe();
+    
+      let likeChannel = supabase
+      .channel("postLikes")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "postLikes" },
+        getPosts
+      )
+      .subscribe();
 
     let commentChannel = supabase
       .channel("comments")
@@ -104,6 +148,7 @@ const Home = () => {
     return () => {
       supabase.removeChannel(commentChannel);
       supabase.removeChannel(postChannel);
+      supabase.removeChannel(likeChannel);
     };
   }, []);
 
@@ -170,6 +215,8 @@ const Home = () => {
               </View>
             )
           }
+          refreshing={refreshing}
+          onRefresh={handleRefresh}
         />
       </View>
     </ScreenWrapper>
