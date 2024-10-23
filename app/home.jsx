@@ -20,8 +20,7 @@ import { fetchPosts } from "../services/postService";
 import PostCard from "../components/PostCard";
 import Loading from "../components/Loading";
 import { getUserData } from "../services/userService";
-import {Context} from '../app/_layout';
-
+import { Context } from "../app/_layout";
 
 var limit = 0;
 const Home = () => {
@@ -32,38 +31,37 @@ const Home = () => {
   const [hasMore, setHasMore] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 
-
   const getPosts = async () => {
     // if (!hasMore) return null;
-    
-    limit = 2; 
+
+    limit = 2;
 
     let res = await fetchPosts(limit);
 
     if (res.success) {
       if (posts.length == res.data.length) setHasMore(false);
-      
-      const likesData = []
-      res.data.forEach(post => {
-        post.postLikes.forEach(like => {
-          likesData.push(like)
-        })
-      })
-      
-      if(likesData.length != 0) {
-        likesData.forEach(like => {
-          res.data.forEach(post => {
-            if(like.postId == post.id && like.userId == user.id) {
+
+      const likesData = [];
+      res.data.forEach((post) => {
+        post.postLikes.forEach((like) => {
+          likesData.push(like);
+        });
+      });
+
+      if (likesData.length != 0) {
+        likesData.forEach((like) => {
+          res.data.forEach((post) => {
+            if (like.postId == post.id && like.userId == user.id) {
               post.isLiked = true;
             } else {
               post.isLiked = false;
             }
-          })
-        })
+          });
+        });
       } else {
-        res.data.forEach(post => {
+        res.data.forEach((post) => {
           post.isLiked = false;
-        })
+        });
       }
       setPosts(res.data);
     }
@@ -73,7 +71,7 @@ const Home = () => {
     setRefreshing(true);
     getPosts();
     setRefreshing(false);
-  }
+  };
 
   const handlePostEvent = async (payload) => {
     if (payload.eventType == "INSERT" && payload?.new?.id) {
@@ -85,17 +83,19 @@ const Home = () => {
       setPosts((prevPosts) => [newPost, ...prevPosts]);
     }
 
-    if(payload.eventType == 'DELETE' && payload.old.id){
-      setPosts(prevPosts => {
-        let updatedPosts = prevPosts.filter(post => post.id != payload.old.id);
+    if (payload.eventType == "DELETE" && payload.old.id) {
+      setPosts((prevPosts) => {
+        let updatedPosts = prevPosts.filter(
+          (post) => post.id != payload.old.id
+        );
         return updatedPosts;
-      })
+      });
     }
 
-    if(payload.eventType == 'UPDATE' && payload?.new?.id){
-      setPosts(prevPosts => {
-        let updatedPosts = prevPosts.map(post => {
-          if(post.id == payload.new.id) {
+    if (payload.eventType == "UPDATE" && payload?.new?.id) {
+      setPosts((prevPosts) => {
+        let updatedPosts = prevPosts.map((post) => {
+          if (post.id == payload.new.id) {
             post.body = payload.new.body;
             post.file = payload.new.file;
           }
@@ -103,7 +103,7 @@ const Home = () => {
         });
 
         return updatedPosts;
-      })
+      });
     }
   };
 
@@ -116,8 +116,8 @@ const Home = () => {
         handlePostEvent
       )
       .subscribe();
-    
-      let likeChannel = supabase
+
+    let likeChannel = supabase
       .channel("postLikes")
       .on(
         "postgres_changes",

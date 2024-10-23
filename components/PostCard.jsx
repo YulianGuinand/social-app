@@ -94,7 +94,7 @@ const PostCard = ({
   const liked = likes?.filter((like) => like.userId == currentUser?.id)[0]
     ? true
     : false;
-    
+
   const openPostDetails = () => {
     if (!showMoreIcon) return null;
     router.push({
@@ -106,32 +106,41 @@ const PostCard = ({
   const handleOnDelete = () => {
     Alert.alert("Confirm", "Are you sure you want to delete this post ?", [
       {
-        text: 'Cancel',
-        style: 'cancel'
+        text: "Cancel",
+        style: "cancel",
       },
       {
-        text: 'Delete',
+        text: "Delete",
         onPress: () => onDelete(item),
-        style: 'destructive',
-      }
-    ])
-  }
+        style: "destructive",
+      },
+    ]);
+  };
+
+  const openProfile = (userId) => {
+    router.push({
+      pathname: "profile",
+      params: { userId: userId },
+    });
+  };
 
   return (
     <View style={[styles.container, hasShadow && shadowStyles]}>
       <View style={styles.header}>
         {/* USER INFO AND POST TIME */}
-        <View style={styles.userInfo}>
-          <Avatar
-            size={hp(4.5)}
-            uri={item?.user?.image}
-            rounded={theme.radius.md}
-          />
-          <View style={{ gap: 2 }}>
-            <Text style={styles.username}>{item?.user?.name}</Text>
-            <Text style={styles.postTime}>{createdAt}</Text>
+        <TouchableOpacity onPress={() => openProfile(item?.user?.id)}>
+          <View style={styles.userInfo}>
+            <Avatar
+              size={hp(4.5)}
+              uri={item?.user?.image}
+              rounded={theme.radius.md}
+            />
+            <View style={{ gap: 2 }}>
+              <Text style={styles.username}>{item?.user?.name}</Text>
+              <Text style={styles.postTime}>{createdAt}</Text>
+            </View>
           </View>
-        </View>
+        </TouchableOpacity>
 
         {showMoreIcon && (
           <TouchableOpacity onPress={openPostDetails}>
@@ -144,26 +153,16 @@ const PostCard = ({
           </TouchableOpacity>
         )}
 
-        {
-          showDelete && currentUser.id == item?.userId && (
-            <View style={styles.actions}>
-              <TouchableOpacity onPress={() => onEdit(item)}>
-                <Icon
-                  name="edit"
-                  size={hp(2.5)}
-                  color={theme.colors.text}
-                />
-              </TouchableOpacity>
-              <TouchableOpacity onPress={handleOnDelete}>
-                <Icon
-                  name="delete"
-                  size={hp(2.5)}
-                  color={theme.colors.rose}
-                />
-              </TouchableOpacity>
-            </View>
-          )
-        }
+        {showDelete && currentUser.id == item?.userId && (
+          <View style={styles.actions}>
+            <TouchableOpacity onPress={() => onEdit(item)}>
+              <Icon name="edit" size={hp(2.5)} color={theme.colors.text} />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={handleOnDelete}>
+              <Icon name="delete" size={hp(2.5)} color={theme.colors.rose} />
+            </TouchableOpacity>
+          </View>
+        )}
       </View>
 
       {/* POST BODY & MEDIA */}
