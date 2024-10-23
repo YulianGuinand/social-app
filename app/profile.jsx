@@ -132,11 +132,11 @@ const Profile = () => {
   );
 };
 
-const UserHeader = ({ user, router, handleLogOut }) => {
+const UserHeader = ({ user, router, handleLogOut, nbPosts = 0 }) => {
   const { user: currentUser, setAuth } = useAuth();
   return (
     <View
-      style={{ flex: 1, backgroundColor: "white", paddingHorizontal: hp(4) }}
+      style={{ flex: 1, backgroundColor: "white", paddingHorizontal: wp(4) }}
     >
       <View>
         <Header title="Profile" mb={30} />
@@ -146,11 +146,11 @@ const UserHeader = ({ user, router, handleLogOut }) => {
       </View>
 
       <View style={styles.container}>
-        <View style={{ gap: 15 }}>
-          <View style={styles.avataContainer}>
+        <View style={styles.avatarContainer}>
+          <View>
             <Avatar
               uri={user?.image}
-              size={hp(12)}
+              size={hp(9)}
               rounded={theme.radius.xxl * 1.4}
             />
             {currentUser.id == user.id ? (
@@ -163,17 +163,38 @@ const UserHeader = ({ user, router, handleLogOut }) => {
             ) : null}
           </View>
 
-          {/* USERNAME AND ADRESS */}
-          <View style={{ alignItems: "center", gap: 4 }}>
-            <Text style={styles.userName}>{user && user.name}</Text>
+          <View style={{ width: "50%", alignItems: "center" }}>
+            <View
+              style={{
+                width: hp(9),
+                height: hp(4),
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
+              <Text style={{ fontSize: hp(1.6) }}>{nbPosts}</Text>
+              <Text>publications</Text>
+            </View>
           </View>
+        </View>
 
-          {/* EMAIL, PHONE, BIO */}
-          <View style={{ gap: 10 }}>
-            {user && user.bio && (
-              <Text style={styles.infoText}>{user.bio}</Text>
-            )}
-          </View>
+        {/* USERNAME */}
+        <View
+          style={{
+            alignItems: "start",
+            flexDirection: "column",
+          }}
+        >
+          <Text style={styles.userName}>{user && user.name}</Text>
+          <Text style={{ color: theme.colors.textLight, fontSize: hp(1.3) }}>
+            developpeur
+          </Text>
+        </View>
+
+        {/* BIO */}
+        <View style={{ gap: 10 }}>
+          {user && user.bio && <Text style={styles.infoText}>{user.bio}</Text>}
         </View>
       </View>
     </View>
@@ -194,10 +215,15 @@ const styles = StyleSheet.create({
     width: wp(100),
     height: hp(20),
   },
-  avataContainer: {
-    height: hp(12),
-    width: hp(12),
-    alignSelf: "center",
+  avatarContainer: {
+    // flex: 1,
+    height: hp(9),
+    width: "100%",
+    justifyContent: "space-between",
+    alignItems: "center",
+    flexDirection: "row",
+    alignSelf: "start",
+    marginBottom: 9,
   },
   editIcon: {
     position: "absolute",
@@ -213,7 +239,7 @@ const styles = StyleSheet.create({
     elevation: 7,
   },
   userName: {
-    fontSize: hp(3),
+    fontSize: hp(2),
     fontWeight: "500",
     color: theme.colors.textDark,
   },
