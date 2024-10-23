@@ -18,7 +18,6 @@ import Icon from "../../assets/icons";
 import ScreenWrapper from "../../components/ScreenWrapper";
 import CommentItem from "../../components/CommentItem";
 import { supabase } from "../../lib/supabase";
-import { getUserData } from "../../services/userService";
 
 const postDetails = () => {
   const { postId } = useLocalSearchParams();
@@ -31,45 +30,43 @@ const postDetails = () => {
 
   const [post, setPost] = useState(null);
 
-  const handleNewComment = async (payload) => {
-    if (payload.new) {
-      let newComment = { ...payload };
-      let res = await getUserData(newComment.userId);
-      newComment.user = res.success ? res.data : {};
-      setPost((prevPost) => {
-        return {
-          ...prevPost,
-          comments: [newComment, ...prevPost.comments],
-        };
-      });
-    }
-  };
-
   useEffect(() => {
     getPostDetails();
+    let commentChannel = supabase
+      .channel("comments")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "comments" },
+        getPostDetails
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(commentChannel);
+    };
   }, []);
 
   const getPostDetails = async () => {
     // FETCH POST DETAILS HERE
     let res = await fetchPostDetails(postId);
-    
+
     if (res.success) {
-      const likesData = []
+      const likesData = [];
 
       res.data.postLikes.forEach((like) => {
-        likesData.push(like)
-      })
+        likesData.push(like);
+      });
 
-      likesData.forEach(like => {
-        if(like.userId == user.id) {
+      likesData.forEach((like) => {
+        if (like.userId == user.id) {
           res.data.isLiked = true;
         } else {
           res.data.isLiked = false;
         }
-      })
+      });
 
-      setPost(res.data)
-    };
+      setPost(res.data);
+    }
     setStartLoading(false);
   };
 
@@ -133,16 +130,16 @@ const postDetails = () => {
   const onDeletePost = async (item) => {
     // DELETE POST HERE
     let res = await removePost(post.id);
-    if(res.success) {
+    if (res.success) {
       router.back();
     } else {
-      Alert.alert('Post', res.msg)
+      Alert.alert("Post", res.msg);
     }
-  }
+  };
   const onEditPost = async (item) => {
     router.back();
-    router.push({pathname: 'newPost', params: {...item}});
-  }
+    router.push({ pathname: "newPost", params: { ...item } });
+  };
 
   return (
     <ScreenWrapper bg="white" style={styles.container}>
