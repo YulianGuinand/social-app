@@ -6,7 +6,7 @@ import Avatar from './Avatar'
 import moment from 'moment'
 import Icon from '../assets/icons'
 
-const CommentItem = ({item, canDelete=false, onDelete=() => {}}) => {
+const CommentItem = ({item, canDelete=false, onDelete=() => {}, commentId = undefined}) => {
   const createdAt = moment(item?.created_at).format('MMM d H:mm')
   const handleDelete = () => {
     Alert.alert("Confirm", "Are you sure you want to delete this comment ?", [
@@ -21,11 +21,12 @@ const CommentItem = ({item, canDelete=false, onDelete=() => {}}) => {
       }
     ])
   }
+  const hightlight = commentId == item.id;
 
   return (
     <View style={styles.container}>
       <Avatar uri={item?.user?.image}/>
-      <View style={styles.content}>
+      <View style={[styles.content, hightlight && styles.hightlight]}>
         <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
           <View style={styles.nameContainer}>
             <Text style={styles.text}>
@@ -74,9 +75,10 @@ const styles = StyleSheet.create({
     borderColor: 'continuous',
   },
   hightlight: {
-    borderWidth: 0.2,
     backgroundColor: 'white',
-    borderColor: theme.colors.dark,
+    // borderColor: theme.colors.dark,
+    // borderWidth: 0.2,
+    // backgroundColor: 'white',
     shadowColor: theme.colors.dark,
     shadowOffset: {width: 0, height: 0},
     shadowOpacity: 0.3,
