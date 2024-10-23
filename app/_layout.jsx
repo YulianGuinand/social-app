@@ -5,15 +5,18 @@ import { supabase } from "../lib/supabase";
 import { getUserData } from "../services/userService";
 import { LogBox } from "react-native";
 
-
 export const Context = createContext(null);
 
-LogBox.ignoreLogs(['Warning: TNodeChildrenRenderer:', 'Warning: MemoizedTNodeRenderer', 'Warning: TRenderEngineProvider'])
+LogBox.ignoreLogs([
+  "Warning: TNodeChildrenRenderer:",
+  "Warning: MemoizedTNodeRenderer",
+  "Warning: TRenderEngineProvider",
+]);
 const _layout = () => {
   const [rerender, setRerender] = useState(false);
   return (
     <AuthProvider>
-      <Context.Provider value={{rerender, setRerender}}>
+      <Context.Provider value={{ rerender, setRerender }}>
         <MainLayout />
       </Context.Provider>
     </AuthProvider>
@@ -24,18 +27,17 @@ const MainLayout = () => {
   const { setAuth, setUserData } = useAuth();
   const router = useRouter();
 
-  const updateUserData = async (user, email) => {
+  const updateUserData = async (user) => {
     let res = await getUserData(user?.id);
 
-    if (res.success) setUserData({...res.data, email});
+    if (res.success) setUserData({ ...res.data });
   };
 
   useEffect(() => {
     supabase.auth.onAuthStateChange((_event, session) => {
-
       if (session) {
         setAuth(session?.user);
-        updateUserData(session?.user, session?.user?.email);
+        updateUserData(session?.user);
         router.replace("/home");
       } else {
         setAuth(null);
@@ -50,7 +52,10 @@ const MainLayout = () => {
         headerShown: false,
       }}
     >
-      <Stack.Screen name="(main)/postDetails" options={{presentation: 'modal'}}/>
+      <Stack.Screen
+        name="(main)/postDetails"
+        options={{ presentation: "modal" }}
+      />
     </Stack>
   );
 };
