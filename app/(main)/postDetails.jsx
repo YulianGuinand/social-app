@@ -18,9 +18,10 @@ import Icon from "../../assets/icons";
 import ScreenWrapper from "../../components/ScreenWrapper";
 import CommentItem from "../../components/CommentItem";
 import { supabase } from "../../lib/supabase";
+import { createNotification } from "../../services/notificationService";
 
 const postDetails = () => {
-  const { postId } = useLocalSearchParams();
+  const { postId, commentId } = useLocalSearchParams();
   const { user } = useAuth();
   const router = useRouter();
   const [startLoading, setStartLoading] = useState(true);
@@ -104,6 +105,16 @@ const postDetails = () => {
     let res = await createComment(data);
     setLoading(false);
     if (res.success) {
+      if(user.id != post.userId) {
+        // SEND NOTIFICATION
+        let notify = {
+          senderId : user.id,
+          receiverId: post.userId,
+          title: "commented on your post",
+          data: JSON.stringify({postId: post.id, commentId: res?.data?.id})
+        }
+        createNotification(notify);
+      }
       inputRef?.current?.clear();
       commentRef.current = "";
       getPostDetails();
@@ -186,11 +197,12 @@ const postDetails = () => {
 
         {/* COMMENT LIST */}
         <View style={{ marginVertical: 15, gap: 17 }}>
-          {post?.comments?.map((comment) => (
+          {post?.comments?.map((comment, index) => (
             <CommentItem
               key={comment?.id?.toString()}
               item={comment}
               canDelete={user.id == comment.userId || user.id == post.userId}
+              commentId={commentId}
               onDelete={onDelete}
             />
           ))}
