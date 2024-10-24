@@ -65,8 +65,6 @@ const Profile = () => {
       }
     }
 
-    console.log("POSTS IMAGE : ", posts);
-    console.log("POSTS TEXT : ", postsText);
   };
 
   const handleLogOut = async () => {
