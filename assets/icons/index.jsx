@@ -21,6 +21,7 @@ import ThreeDotsCircle from "./ThreeDotsCircle";
 import ThreeDotsHorizontal from "./ThreeDotsHorizontal";
 import User from "./User";
 import Video from "./Video";
+import Message from "./Message";
 
 const icons = {
   home: Home,
@@ -44,6 +45,7 @@ const icons = {
   logout: Logout,
   image: Image,
   video: Video,
+  message: Message
 };
 
 const Icon = ({ name, ...props }) => {

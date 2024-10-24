@@ -199,6 +199,26 @@ const Home = () => {
                 </View>
               )}
             </Pressable>
+
+            <Pressable
+              onPress={() => {
+                // setNotificationCount(0);
+                router.push("threads");
+              }}
+            >
+              <Icon
+                name="message"
+                size={hp(4)}
+                strokeWidth={1.5}
+                color={theme.colors.text}
+              />
+              {/* {notificationCount > 0 && (
+                <View style={styles.pill}>
+                  <Text style={styles.pillText}>{notificationCount}</Text>
+                </View>
+              )} */}
+            </Pressable>
+
             <Pressable onPress={() => router.push("newPost")}>
               <Icon
                 name="plus"
