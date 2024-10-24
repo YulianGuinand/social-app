@@ -11,6 +11,7 @@ LogBox.ignoreLogs([
   "Warning: TNodeChildrenRenderer:",
   "Warning: MemoizedTNodeRenderer",
   "Warning: TRenderEngineProvider",
+  "[AuthApiError: Invalid Refresh Token",
 ]);
 const _layout = () => {
   const [rerender, setRerender] = useState(false);

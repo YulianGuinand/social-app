@@ -82,6 +82,44 @@ export const fetchPosts = async (limit = 10, userId) => {
   }
 };
 
+export const fetchPostsProfile = async (limit = 10, userId, withImage) => {
+  try {
+    let query = supabase
+      .from("posts")
+      .select(
+        `
+        *,
+        user: users (id, name, image),
+        postLikes (*),
+        comments (count)
+      `
+      )
+      .order("created_at", { ascending: false })
+      .eq("userId", userId);
+
+    // .neq("file", null)
+    // .limit(limit);
+    if (withImage) {
+      query = query.neq("file", null);
+    } else {
+      query = query.is("file", null);
+    }
+
+    query = query.limit(limit);
+
+    const { data, error } = await query;
+
+    if (error) {
+      console.log("fetchPosts error: ", error);
+      return { success: false, msg: "Could not fetch the posts" };
+    }
+    return { success: true, data: data };
+  } catch (error) {
+    console.log("fetchPosts error: ", error);
+    return { success: false, msg: "Could not fetch the posts" };
+  }
+};
+
 export const createPostLike = async (postLike) => {
   try {
     const { data, error } = await supabase
