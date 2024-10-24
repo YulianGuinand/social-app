@@ -21,7 +21,7 @@ const welcome = () => {
         />
         {/* TITLE */}
         <View style={{ gap: 20 }}>
-          <Text style={styles.title}>LinkUp!</Text>
+          <Text style={styles.title}>WeBDE!</Text>
           <Text style={styles.punchline}>
             Where every thought finds a home and every images tells stories!
           </Text>
