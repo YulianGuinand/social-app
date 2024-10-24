@@ -8,13 +8,16 @@ import {
 import React from "react";
 import { Image } from "expo-image";
 import { getSupabaseFileUrl } from "../services/imageService";
+import { hp } from "../helpers/common";
+import { useRouter } from "expo-router";
 
 const ProfileFeed = ({ dataList }) => {
+  const router = useRouter();
   return (
     <View
       style={{
-        width: 375,
-        height: 125,
+        width: "100%",
+        height: hp(14),
         flexDirection: "row",
         gap: 2,
       }}
@@ -23,10 +26,15 @@ const ProfileFeed = ({ dataList }) => {
         return (
           <TouchableOpacity
             key={index}
-            onPress={() => console.log("PRESS")}
+            onPress={() => {
+              router.push({
+                pathname: "postDetails",
+                params: { postId: item?.id },
+              });
+            }}
             style={{
-              width: 125,
-              height: 125,
+              width: "33%",
+              height: "100%",
             }}
           >
             <Image

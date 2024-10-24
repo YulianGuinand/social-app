@@ -126,6 +126,16 @@ const Profile = () => {
     }
   }, [withImage]);
 
+  let len = 0;
+  posts.forEach((item) => {
+    item.forEach((post) => {
+      len += 1;
+    });
+  });
+  postsText.forEach(() => {
+    len += 1;
+  });
+
   return (
     <ScreenWrapper bg="white">
       {withImage ? (
@@ -138,6 +148,7 @@ const Profile = () => {
               handleLogOut={handleLogOut}
               setWithImage={setWithImage}
               withImage={withImage}
+              nbPosts={len}
             />
           }
           ListHeaderComponentStyle={{ marginBottom: 10 }}
@@ -181,6 +192,7 @@ const Profile = () => {
               handleLogOut={handleLogOut}
               setWithImage={setWithImage}
               withImage={withImage}
+              nbPosts={len}
             />
           }
           ListHeaderComponentStyle={{ marginBottom: 10 }}
@@ -393,6 +405,7 @@ const styles = StyleSheet.create({
   listStyle: {
     paddingHorizontal: wp(4),
     paddingBottom: 30,
+    gap: 2,
   },
   noPosts: {
     fontSize: hp(2),
