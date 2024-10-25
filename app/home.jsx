@@ -20,8 +20,11 @@ import { fetchPosts } from "../services/postService";
 import PostCard from "../components/PostCard";
 import Loading from "../components/Loading";
 import { getUserData } from "../services/userService";
+import { StreamChat } from "stream-chat";
+import { getSupabaseFileUrl, getUserImageSrc } from "../services/imageService";
 
 var limit = 0;
+
 const Home = () => {
   const { user, setAuth } = useAuth();
 
