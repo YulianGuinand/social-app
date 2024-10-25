@@ -33,7 +33,7 @@ const Home = () => {
   const [refreshing, setRefreshing] = useState(false);
 
   const getPosts = async () => {
-    // if (!hasMore) return null;
+    if (!hasMore) return null;
 
     limit += 2;
 
