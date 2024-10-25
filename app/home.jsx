@@ -20,11 +20,11 @@ import { fetchPosts } from "../services/postService";
 import PostCard from "../components/PostCard";
 import Loading from "../components/Loading";
 import { getUserData } from "../services/userService";
-import { Context } from "../app/_layout";
 
 var limit = 0;
 const Home = () => {
   const { user, setAuth } = useAuth();
+
   const router = useRouter();
 
   const [posts, setPosts] = useState([]);

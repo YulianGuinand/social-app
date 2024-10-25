@@ -4,8 +4,8 @@ import { AuthProvider, useAuth } from "../contexts/AuthContext";
 import { supabase } from "../lib/supabase";
 import { getUserData } from "../services/userService";
 import { LogBox } from "react-native";
-
-export const Context = createContext(null);
+import { StreamChat } from "stream-chat";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 LogBox.ignoreLogs([
   "Warning: TNodeChildrenRenderer:",
@@ -14,13 +14,12 @@ LogBox.ignoreLogs([
   "[AuthApiError: Invalid Refresh Token",
 ]);
 const _layout = () => {
-  const [rerender, setRerender] = useState(false);
   return (
-    <AuthProvider>
-      <Context.Provider value={{ rerender, setRerender }}>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <AuthProvider>
         <MainLayout />
-      </Context.Provider>
-    </AuthProvider>
+      </AuthProvider>
+    </GestureHandlerRootView>
   );
 };
 
