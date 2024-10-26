@@ -44,7 +44,7 @@ export const fetchMessagesByThreadId = async (threadId) => {
       .from("messages")
       .select(`*`)
       .eq("threadId", threadId)
-      .order("created_at");
+      .order("created_at", { ascending: false });
 
     if (error) {
       console.log("fetchMessagesByThreadId error: ", error);

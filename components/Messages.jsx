@@ -28,14 +28,14 @@ const Messages = ({ user2, id }) => {
   };
 
   return (
-    <View style={{ marginBottom: hp(10) }}>
+    <View>
       <FlatList
         data={newMessages}
         showsVerticalScrollIndicator={false}
+        inverted
         contentContainerStyle={{
-          paddingTop: 20,
-          paddingHorizontal: wp(4),
-          width: "100%",
+          // width: "100%",
+          height: "100%",
           gap: 10,
         }}
         keyExtractor={(message) => message.id.toString()}
