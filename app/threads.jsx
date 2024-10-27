@@ -4,9 +4,10 @@ import ScreenWrapper from "../components/ScreenWrapper";
 import { useAuth } from "../contexts/AuthContext";
 import { fetchThreads } from "../services/threadService";
 import Thread from "../components/Thread";
-import { hp, wp } from "../helpers/common";
+import { wp } from "../helpers/common";
 import Header from "../components/Header";
 import Loading from "../components/Loading";
+import { supabase } from "../lib/supabase";
 
 const threads = () => {
   const { user } = useAuth();
@@ -14,18 +15,39 @@ const threads = () => {
   const [hasMore, setHasMore] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 
-  const getThreads = async () => {
-    if (!hasMore) return null;
+  const getThreads = async (reload = true) => {
+    if (!hasMore && reload) return null;
     let res = await fetchThreads(user?.id);
 
     if (res.success) {
-      if (threads.length == res.data.length) setHasMore(false);
+      if (threads.length == res.data.length && reload) setHasMore(false);
+      if (reload === false) {
+        setThreads([]);
+      }
       setThreads(res.data);
     }
   };
 
+  const handlethreads = (payload) => {
+    if (payload.eventType === "UPDATE" && payload.new) {
+      getThreads(false);
+    }
+  };
   useEffect(() => {
     getThreads();
+
+    let threadsChannel = supabase
+      .channel("threads")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "threads" },
+        (payload) => handlethreads(payload)
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(threadsChannel);
+    };
   }, []);
 
   const handleRefresh = () => {

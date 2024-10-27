@@ -5,7 +5,7 @@ import { hp, wp } from "../helpers/common";
 import Message from "./Message";
 import { fetchMessagesByThreadId } from "../services/messageService";
 
-const Messages = ({ user2, id }) => {
+const Messages = ({ user2, id, refresh }) => {
   const [newMessages, setNewMessages] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const { user } = useAuth();
@@ -19,6 +19,10 @@ const Messages = ({ user2, id }) => {
 
   useEffect(() => {
     getMessages();
+  }, [refresh]);
+
+  useEffect(() => {
+    getMessages();
   }, []);
 
   const handleRefresh = () => {
@@ -28,26 +32,24 @@ const Messages = ({ user2, id }) => {
   };
 
   return (
-    <View>
-      <FlatList
-        data={newMessages}
-        showsVerticalScrollIndicator={false}
-        inverted
-        contentContainerStyle={{
-          // width: "100%",
-          height: "100%",
-          gap: 10,
-        }}
-        keyExtractor={(message) => message.id.toString()}
-        renderItem={({ item }) => <Message message={item} user2={user2} />}
-        onEndReached={() => {
-          getMessages();
-        }}
-        onEndReachedThreshold={0}
-        refreshing={refreshing}
-        onRefresh={handleRefresh}
-      />
-    </View>
+    <FlatList
+      data={newMessages}
+      showsVerticalScrollIndicator={false}
+      inverted
+      contentContainerStyle={{
+        paddingTop: 10,
+        gap: 10,
+      }}
+      keyExtractor={(message) => message.id.toString()}
+      renderItem={({ item }) => <Message message={item} user2={user2} />}
+      onEndReached={() => {
+        getMessages();
+      }}
+      onEndReachedThreshold={0}
+      refreshing={refreshing}
+      onRefresh={handleRefresh}
+      automaticallyAdjustKeyboardInsets
+    />
   );
 };
 

@@ -76,6 +76,8 @@ const Thread = ({ item }) => {
   };
 
   const createdAt = moment(lastMessage?.created_at).fromNow();
+
+  const isLastMessageMine = item.lastSender === user.id;
   return (
     <TouchableOpacity
       style={{
@@ -100,12 +102,21 @@ const Thread = ({ item }) => {
 
         <View>
           <Text>{user2?.name}</Text>
-          <Text>{lastMessage?.body.slice(0, 15)}...</Text>
+          <Text style={{ fontWeight: isLastMessageMine ? "normal" : "bold" }}>
+            {lastMessage?.body.slice(0, 15)}...
+          </Text>
         </View>
       </View>
 
-      <View style={{ width: "50%", alignItems: "flex-end" }}>
-        <Text>{createdAt}</Text>
+      <View
+        style={{
+          width: "50%",
+          alignItems: "flex-end",
+        }}
+      >
+        <Text style={{ fontWeight: isLastMessageMine ? "normal" : "bold" }}>
+          {createdAt}
+        </Text>
       </View>
     </TouchableOpacity>
   );

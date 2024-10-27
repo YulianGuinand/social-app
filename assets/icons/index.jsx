@@ -45,7 +45,7 @@ const icons = {
   logout: Logout,
   image: Image,
   video: Video,
-  message: Message
+  message: Message,
 };
 
 const Icon = ({ name, ...props }) => {

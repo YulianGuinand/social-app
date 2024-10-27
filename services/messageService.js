@@ -56,3 +56,36 @@ export const fetchMessagesByThreadId = async (threadId) => {
     return { success: false, msg: "Could not fetch the Messages" };
   }
 };
+
+export const createOrUpdateMessage = async (message) => {
+  try {
+    // upload image
+    // if (message.file && typeof message.file == "object") {
+    //   let isImage = post?.file?.type == "image";
+    //   let folderName = isImage ? "postImages" : "postVideos";
+
+    //   let fileResult = await uploadFile(folderName, post?.file?.uri, isImage);
+
+    //   if (fileResult.success) post.file = fileResult.data;
+    //   else {
+    //     return fileResult;
+    //   }
+    // }
+
+    const { data, error } = await supabase
+      .from("messages")
+      .upsert(message)
+      .select()
+      .single();
+
+    if (error) {
+      console.log("CreateMessage Error: ", error);
+      return { success: false, msg: "Could not create your message" };
+    }
+
+    return { success: true, data: data };
+  } catch (error) {
+    console.log("CreateMessage error: ", error);
+    return { success: false, msg: "Could not create your message" };
+  }
+};
