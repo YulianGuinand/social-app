@@ -6,13 +6,15 @@ import Avatar from "./Avatar";
 import { fetchMessageById } from "../services/messageService";
 import moment from "moment";
 import { useRouter } from "expo-router";
+import { theme } from "../constants/theme";
+import { supabase } from "../lib/supabase";
 
 const Thread = ({ item }) => {
   const router = useRouter();
   const [user2, setUser2] = useState([]);
   const [lastMessage, setLastMessage] = useState();
 
-  const { user, setAuth } = useAuth();
+  const { user } = useAuth();
 
   const getUsers = async () => {
     let res;
@@ -35,9 +37,35 @@ const Thread = ({ item }) => {
     }
   };
 
+  const handleNewMessage = async (payload) => {
+    console.log(payload);
+
+    if (payload.eventType === "INSERT" && payload.new.id) {
+      setLastMessage(payload.new);
+    }
+  };
+
   useEffect(() => {
     getUsers();
     getLastMessage();
+
+    let messagesChannel = supabase
+      .channel("messages")
+      .on(
+        "postgres_changes",
+        {
+          event: "INSERT",
+          schema: "public",
+          table: "messages",
+          filter: `receiverId=eq.${user?.id}&senderId=eq.${user2?.id}`,
+        },
+        handleNewMessage
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(messagesChannel);
+    };
   }, []);
 
   const handleOnPress = () => {
@@ -48,12 +76,17 @@ const Thread = ({ item }) => {
   };
 
   const createdAt = moment(lastMessage?.created_at).fromNow();
+
+  const isLastMessageMine = item.lastSender === user.id;
   return (
     <TouchableOpacity
       style={{
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "space-between",
+        backgroundColor: "white",
+        padding: 15,
+        borderRadius: theme.radius.md,
       }}
       onPress={handleOnPress}
     >
@@ -69,12 +102,21 @@ const Thread = ({ item }) => {
 
         <View>
           <Text>{user2?.name}</Text>
-          <Text>{lastMessage?.body}</Text>
+          <Text style={{ fontWeight: isLastMessageMine ? "normal" : "bold" }}>
+            {lastMessage?.body.slice(0, 15)}...
+          </Text>
         </View>
       </View>
 
-      <View style={{ width: "50%", alignItems: "flex-end" }}>
-        <Text>{createdAt}</Text>
+      <View
+        style={{
+          width: "50%",
+          alignItems: "flex-end",
+        }}
+      >
+        <Text style={{ fontWeight: isLastMessageMine ? "normal" : "bold" }}>
+          {createdAt}
+        </Text>
       </View>
     </TouchableOpacity>
   );
