@@ -1,22 +1,13 @@
 import {
   Alert,
-  Keyboard,
   KeyboardAvoidingView,
-  Platform,
   Pressable,
-  SafeAreaView,
   StyleSheet,
-  Text,
-  TextInput,
-  TouchableWithoutFeedback,
   View,
 } from "react-native";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocalSearchParams } from "expo-router";
-import {
-  createOrUpdateMessage,
-  fetchMessagesByThreadId,
-} from "../../services/messageService";
+import { createOrUpdateMessage } from "../../services/messageService";
 import ScreenWrapper from "../../components/ScreenWrapper";
 import { useAuth } from "../../contexts/AuthContext";
 import Header from "../../components/Header";
@@ -24,7 +15,6 @@ import { getUserData } from "../../services/userService";
 import Messages from "../../components/Messages";
 import { hp, wp } from "../../helpers/common";
 import Input from "../../components/Input";
-import Button from "../../components/Button";
 import Loading from "../../components/Loading";
 import { supabase } from "../../lib/supabase";
 import Icon from "../../assets/icons";

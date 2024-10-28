@@ -24,11 +24,11 @@ const Messages = ({ user2, id, refresh }) => {
     getMessages();
   }, []);
 
-  const handleRefresh = () => {
-    setRefreshing(true);
-    getMessages();
-    setRefreshing(false);
-  };
+  // const handleRefresh = () => {
+  //   setRefreshing(true);
+  //   getMessages();
+  //   setRefreshing(false);
+  // };
 
   return (
     <FlatList
@@ -45,8 +45,8 @@ const Messages = ({ user2, id, refresh }) => {
         getMessages();
       }}
       onEndReachedThreshold={0}
-      refreshing={refreshing}
-      onRefresh={handleRefresh}
+      // refreshing={refreshing}
+      // onRefresh={handleRefresh}
       automaticallyAdjustKeyboardInsets
     />
   );

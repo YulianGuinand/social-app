@@ -1,5 +1,5 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import Avatar from "./Avatar";
 import { hp } from "../helpers/common";
@@ -25,10 +25,12 @@ const Message = ({ message, user2 }) => {
   const links = findLinksInText(message.body);
 
   const renderMinimizedImage = (imageData) => {
-    // Vérifie si l'image existe dans les données
     if (imageData && imageData.url) {
       return (
-        <View style={{ paddingTop: 0, marginTop: 0 }}>
+        <TouchableOpacity
+          onLongPress={() => console.log("PRESS")}
+          style={{ paddingTop: 0, marginTop: 0 }}
+        >
           <Image
             source={{ uri: imageData.url }}
             transition={100}
@@ -37,10 +39,10 @@ const Message = ({ message, user2 }) => {
               height: 300,
             }}
           />
-        </View>
+        </TouchableOpacity>
       );
     }
-    return null; // Retourne rien si aucune image n’est présente
+    return null;
   };
 
   const imageUrl = getSupabaseFileUrl(message.file);
@@ -65,21 +67,26 @@ const Message = ({ message, user2 }) => {
         {message.file ? (
           <View style={{ gap: 5 }}>
             {isVideo ? (
-              <Video
-                style={{
-                  width: 200,
-                  height: hp(40),
-                  borderRadius: theme.radius.xl,
-                }}
-                source={imageUrl}
-                useNativeControls
-                resizeMode="cover"
-                isLooping
-                posterSource={imageUrl.uri}
-              />
+              <TouchableOpacity onLongPress={() => console.log("PRESS")}>
+                <Video
+                  style={{
+                    width: 200,
+                    height: hp(40),
+                    borderRadius: theme.radius.xl,
+                  }}
+                  source={imageUrl}
+                  useNativeControls
+                  resizeMode="cover"
+                  isLooping
+                  posterSource={imageUrl.uri}
+                />
+              </TouchableOpacity>
             ) : (
               <>
-                <TouchableOpacity onPress={() => setState(true)}>
+                <TouchableOpacity
+                  onLongPress={() => console.log("PRESS")}
+                  onPress={() => setState(true)}
+                >
                   <Image
                     source={imageUrl}
                     contentFit="cover"
@@ -101,15 +108,17 @@ const Message = ({ message, user2 }) => {
             )}
 
             {message.body && (
-              <Text
-                style={{
-                  padding: 8,
-                  backgroundColor: "white",
-                  borderRadius: theme.radius.md,
-                }}
-              >
-                {message.body}
-              </Text>
+              <TouchableOpacity onLongPress={() => console.log("PRESS")}>
+                <Text
+                  style={{
+                    padding: 8,
+                    backgroundColor: "white",
+                    borderRadius: theme.radius.md,
+                  }}
+                >
+                  {message.body}
+                </Text>
+              </TouchableOpacity>
             )}
           </View>
         ) : links.length > 0 ? (
@@ -134,7 +143,9 @@ const Message = ({ message, user2 }) => {
               renderDescription={() => null}
               renderText={() => null}
               renderTitle={(title) => (
-                <Text style={{ paddingBottom: 8 }}>{title}</Text>
+                <TouchableOpacity onLongPress={() => console.log("PRESS")}>
+                  <Text style={{ paddingBottom: 8 }}>{title}</Text>
+                </TouchableOpacity>
               )}
               text={links[0]}
               enableAnimation
@@ -153,14 +164,16 @@ const Message = ({ message, user2 }) => {
                 overflow: "hidden",
               }}
               renderText={(text) => (
-                <Text
-                  style={{
-                    paddingHorizontal: 8,
-                    fontWeight: theme.fonts.bold,
-                  }}
-                >
-                  {text}
-                </Text>
+                <TouchableOpacity onLongPress={() => console.log("PRESS")}>
+                  <Text
+                    style={{
+                      paddingHorizontal: 8,
+                      fontWeight: theme.fonts.bold,
+                    }}
+                  >
+                    {text}
+                  </Text>
+                </TouchableOpacity>
               )}
               renderMinimizedImage={() => null}
               renderImage={() => null}
@@ -170,15 +183,17 @@ const Message = ({ message, user2 }) => {
             />
           </View>
         ) : (
-          <Text
-            style={{
-              padding: 8,
-              backgroundColor: "white",
-              borderRadius: theme.radius.md,
-            }}
-          >
-            {message.body}
-          </Text>
+          <TouchableOpacity onLongPress={() => console.log("PRESS")}>
+            <Text
+              style={{
+                padding: 8,
+                backgroundColor: "white",
+                borderRadius: theme.radius.md,
+              }}
+            >
+              {message.body}
+            </Text>
+          </TouchableOpacity>
         )}
 
         {/* REACTIONS */}
