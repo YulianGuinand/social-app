@@ -38,9 +38,6 @@ const Messages = ({ user2, id, refresh, setRefresh }) => {
           console.log(payload);
           if (payload.eventType == "INSERT") {
             getMessages();
-          } else if (payload.eventType == "DELETE") {
-            console.log("DELETED");
-            // getMessages();
           }
         }
       )
@@ -51,11 +48,11 @@ const Messages = ({ user2, id, refresh, setRefresh }) => {
     };
   }, []);
 
-  // const handleRefresh = () => {
-  //   setRefreshing(true);
-  //   getMessages();
-  //   setRefreshing(false);
-  // };
+  const handleRefresh = () => {
+    setRefreshing(true);
+    getMessages();
+    setRefreshing(false);
+  };
 
   return (
     <FlatList
@@ -74,8 +71,8 @@ const Messages = ({ user2, id, refresh, setRefresh }) => {
         getMessages();
       }}
       onEndReachedThreshold={0}
-      // refreshing={refreshing}
-      // onRefresh={handleRefresh}
+      refreshing={refreshing}
+      onRefresh={handleRefresh}
       automaticallyAdjustKeyboardInsets
     />
   );

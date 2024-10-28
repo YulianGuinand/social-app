@@ -30,7 +30,7 @@ const Message = ({ message, user2, setRefresh }) => {
     if (imageData && imageData.url) {
       return (
         <TouchableOpacity
-          onLongPress={() => setIsShow(true)}
+          onLongPress={() => setIsShow((prev) => !prev)}
           style={{ paddingTop: 0, marginTop: 0 }}
         >
           <Image
@@ -72,7 +72,7 @@ const Message = ({ message, user2, setRefresh }) => {
         {message.file ? (
           <View style={{ gap: 5 }}>
             {isVideo ? (
-              <TouchableOpacity onLongPress={() => setIsShow(true)}>
+              <TouchableOpacity onLongPress={() => setIsShow((prev) => !prev)}>
                 <Video
                   style={{
                     width: 200,
@@ -89,7 +89,7 @@ const Message = ({ message, user2, setRefresh }) => {
             ) : (
               <>
                 <TouchableOpacity
-                  onLongPress={() => setIsShow(true)}
+                  onLongPress={() => setIsShow((prev) => !prev)}
                   onPress={() => setState(true)}
                 >
                   <Image
@@ -113,7 +113,7 @@ const Message = ({ message, user2, setRefresh }) => {
             )}
 
             {message.body && (
-              <TouchableOpacity onLongPress={() => setIsShow(true)}>
+              <TouchableOpacity onLongPress={() => setIsShow((prev) => !prev)}>
                 <Text
                   style={{
                     padding: 8,
@@ -148,7 +148,9 @@ const Message = ({ message, user2, setRefresh }) => {
               renderDescription={() => null}
               renderText={() => null}
               renderTitle={(title) => (
-                <TouchableOpacity onLongPress={() => setIsShow(true)}>
+                <TouchableOpacity
+                  onLongPress={() => setIsShow((prev) => !prev)}
+                >
                   <Text style={{ paddingBottom: 8 }}>{title}</Text>
                 </TouchableOpacity>
               )}
@@ -169,7 +171,9 @@ const Message = ({ message, user2, setRefresh }) => {
                 overflow: "hidden",
               }}
               renderText={(text) => (
-                <TouchableOpacity onLongPress={() => setIsShow(true)}>
+                <TouchableOpacity
+                  onLongPress={() => setIsShow((prev) => !prev)}
+                >
                   <Text
                     style={{
                       paddingHorizontal: 8,
@@ -188,7 +192,7 @@ const Message = ({ message, user2, setRefresh }) => {
             />
           </View>
         ) : (
-          <TouchableOpacity onLongPress={() => setIsShow(true)}>
+          <TouchableOpacity onLongPress={() => setIsShow((prev) => !prev)}>
             <Text
               style={{
                 padding: 8,
@@ -227,6 +231,7 @@ const Message = ({ message, user2, setRefresh }) => {
           onChoose={() => setIsShow(false)}
           reactions={reactions}
           setRefresh={setRefresh}
+          mine={message?.senderId === user.id}
         />
       </View>
     </View>

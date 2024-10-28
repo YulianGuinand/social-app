@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { hp } from "../helpers/common";
 import { theme } from "../constants/theme";
 import { TouchableOpacity } from "react-native";
@@ -16,6 +16,7 @@ const ReactionModal = ({
   onChoose,
   reactions,
   setRefresh,
+  mine,
 }) => {
   const { user } = useAuth();
   let reaction = {};
@@ -87,7 +88,12 @@ const ReactionModal = ({
   }, []);
 
   return (
-    <View style={styles.container}>
+    <View
+      style={[
+        styles.container,
+        { transform: mine ? [{ translateX: -150 }] : [{ translateX: 50 }] },
+      ]}
+    >
       {ReactionItems.map((reaction) => {
         return (
           <TouchableOpacity
@@ -118,6 +124,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-evenly",
     flexDirection: "row",
-    bottom: 50,
+    top: "50%",
   },
 });
