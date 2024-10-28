@@ -9,10 +9,12 @@ import { Image } from "expo-image";
 import { getSupabaseFileUrl } from "../services/imageService";
 import { Video } from "expo-av";
 import ImageView from "react-native-image-viewing";
+import ReactionModal from "./ReactionModal";
 
-const Message = ({ message, user2 }) => {
+const Message = ({ message, user2, setRefresh }) => {
   const { user } = useAuth();
   const [state, setState] = useState(false);
+  const [isShow, setIsShow] = useState(false);
 
   const findLinksInText = (text) => {
     const urlRegex = /(https?:\/\/[^\s]+)/g;
@@ -28,7 +30,7 @@ const Message = ({ message, user2 }) => {
     if (imageData && imageData.url) {
       return (
         <TouchableOpacity
-          onLongPress={() => console.log("PRESS")}
+          onLongPress={() => setIsShow(true)}
           style={{ paddingTop: 0, marginTop: 0 }}
         >
           <Image
@@ -45,6 +47,9 @@ const Message = ({ message, user2 }) => {
     return null;
   };
 
+  let reactions = [];
+  if (message.reactions) reactions = message.reactions;
+
   const imageUrl = getSupabaseFileUrl(message.file);
   const isVideo = imageUrl?.uri.includes("postVideos");
 
@@ -56,7 +61,7 @@ const Message = ({ message, user2 }) => {
           alignItems: message?.senderId === user.id ? "flex-end" : "flex-start",
           justifyContent:
             message?.senderId === user.id ? "flex-end" : "flex-start",
-          marginBottom: message?.reactions.length > 0 ? 10 : 0,
+          marginBottom: reactions.length > 0 ? 10 : 0,
         },
       ]}
     >
@@ -67,7 +72,7 @@ const Message = ({ message, user2 }) => {
         {message.file ? (
           <View style={{ gap: 5 }}>
             {isVideo ? (
-              <TouchableOpacity onLongPress={() => console.log("PRESS")}>
+              <TouchableOpacity onLongPress={() => setIsShow(true)}>
                 <Video
                   style={{
                     width: 200,
@@ -84,7 +89,7 @@ const Message = ({ message, user2 }) => {
             ) : (
               <>
                 <TouchableOpacity
-                  onLongPress={() => console.log("PRESS")}
+                  onLongPress={() => setIsShow(true)}
                   onPress={() => setState(true)}
                 >
                   <Image
@@ -108,7 +113,7 @@ const Message = ({ message, user2 }) => {
             )}
 
             {message.body && (
-              <TouchableOpacity onLongPress={() => console.log("PRESS")}>
+              <TouchableOpacity onLongPress={() => setIsShow(true)}>
                 <Text
                   style={{
                     padding: 8,
@@ -143,7 +148,7 @@ const Message = ({ message, user2 }) => {
               renderDescription={() => null}
               renderText={() => null}
               renderTitle={(title) => (
-                <TouchableOpacity onLongPress={() => console.log("PRESS")}>
+                <TouchableOpacity onLongPress={() => setIsShow(true)}>
                   <Text style={{ paddingBottom: 8 }}>{title}</Text>
                 </TouchableOpacity>
               )}
@@ -164,7 +169,7 @@ const Message = ({ message, user2 }) => {
                 overflow: "hidden",
               }}
               renderText={(text) => (
-                <TouchableOpacity onLongPress={() => console.log("PRESS")}>
+                <TouchableOpacity onLongPress={() => setIsShow(true)}>
                   <Text
                     style={{
                       paddingHorizontal: 8,
@@ -183,7 +188,7 @@ const Message = ({ message, user2 }) => {
             />
           </View>
         ) : (
-          <TouchableOpacity onLongPress={() => console.log("PRESS")}>
+          <TouchableOpacity onLongPress={() => setIsShow(true)}>
             <Text
               style={{
                 padding: 8,
@@ -197,7 +202,7 @@ const Message = ({ message, user2 }) => {
         )}
 
         {/* REACTIONS */}
-        {message.reactions.length > 0 && (
+        {reactions.length > 0 && (
           <Text
             style={[
               styles.reactions,
@@ -212,6 +217,17 @@ const Message = ({ message, user2 }) => {
             })}
           </Text>
         )}
+
+        {/* REACTIONS MODAL */}
+
+        <ReactionModal
+          isShow={isShow}
+          messageId={message.id}
+          threadId={message.threadId}
+          onChoose={() => setIsShow(false)}
+          reactions={reactions}
+          setRefresh={setRefresh}
+        />
       </View>
     </View>
   );

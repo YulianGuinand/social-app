@@ -2,9 +2,10 @@ import { FlatList, StyleSheet } from "react-native";
 import React, { useEffect, useState } from "react";
 import Message from "./Message";
 import { fetchMessagesByThreadId } from "../services/messageService";
+import { supabase } from "../lib/supabase";
 
 var limit = 2;
-const Messages = ({ user2, id, refresh }) => {
+const Messages = ({ user2, id, refresh, setRefresh }) => {
   const [newMessages, setNewMessages] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
 
@@ -22,6 +23,32 @@ const Messages = ({ user2, id, refresh }) => {
 
   useEffect(() => {
     getMessages();
+
+    let reactionChannel = supabase
+      .channel("reactions")
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "reactions",
+          filter: `threadId=eq.${id}`,
+        },
+        (payload) => {
+          console.log(payload);
+          if (payload.eventType == "INSERT") {
+            getMessages();
+          } else if (payload.eventType == "DELETE") {
+            console.log("DELETED");
+            // getMessages();
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(reactionChannel);
+    };
   }, []);
 
   // const handleRefresh = () => {
@@ -40,7 +67,9 @@ const Messages = ({ user2, id, refresh }) => {
         gap: 10,
       }}
       keyExtractor={(message) => message.id.toString()}
-      renderItem={({ item }) => <Message message={item} user2={user2} />}
+      renderItem={({ item }) => (
+        <Message setRefresh={setRefresh} message={item} user2={user2} />
+      )}
       onEndReached={() => {
         getMessages();
       }}

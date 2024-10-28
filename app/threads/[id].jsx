@@ -133,7 +133,12 @@ const ThreadScreen = () => {
     <ScreenWrapper>
       <View style={{ paddingHorizontal: wp(4), flex: 1 }}>
         <Header title={user?.name} />
-        <Messages user2={user} id={id} refresh={refresh} />
+        <Messages
+          user2={user}
+          id={id}
+          refresh={refresh}
+          setRefresh={setRefresh}
+        />
         {file && (
           <View
             style={{ width: "100%", alignItems: "flex-end", marginBottom: 10 }}
