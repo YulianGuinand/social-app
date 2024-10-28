@@ -1,14 +1,18 @@
-import { StyleSheet, Text, View } from "react-native";
-import React from "react";
+import { Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import React, { useEffect, useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import Avatar from "./Avatar";
-import { hp } from "../helpers/common";
+import { hp, wp } from "../helpers/common";
 import { theme } from "../constants/theme";
 import { LinkPreview } from "@flyerhq/react-native-link-preview";
 import { Image } from "expo-image";
+import { getSupabaseFileUrl } from "../services/imageService";
+import { Video } from "expo-av";
+import ImageView from "react-native-image-viewing";
 
 const Message = ({ message, user2 }) => {
   const { user } = useAuth();
+  const [state, setState] = useState(false);
 
   const findLinksInText = (text) => {
     const urlRegex = /(https?:\/\/[^\s]+)/g;
@@ -39,6 +43,9 @@ const Message = ({ message, user2 }) => {
     return null; // Retourne rien si aucune image n’est présente
   };
 
+  const imageUrl = getSupabaseFileUrl(message.file);
+  const isVideo = imageUrl?.uri.includes("postVideos");
+
   return (
     <View
       style={[
@@ -54,7 +61,57 @@ const Message = ({ message, user2 }) => {
         <Avatar uri={user2?.image} size={hp(4)} />
       )}
       <View style={styles.body}>
-        {links.length > 0 ? (
+        {message.file ? (
+          <View style={{ gap: 5 }}>
+            {isVideo ? (
+              <Video
+                style={{
+                  width: 200,
+                  height: hp(40),
+                  borderRadius: theme.radius.xl,
+                }}
+                source={imageUrl}
+                useNativeControls
+                resizeMode="cover"
+                isLooping
+                posterSource={imageUrl.uri}
+              />
+            ) : (
+              <>
+                <TouchableOpacity onPress={() => setState(true)}>
+                  <Image
+                    source={imageUrl}
+                    contentFit="cover"
+                    style={{
+                      height: hp(30),
+                      width: 200,
+                      borderRadius: theme.radius.xl,
+                    }}
+                    transition={100}
+                  />
+                </TouchableOpacity>
+                <ImageView
+                  images={[imageUrl]}
+                  imageIndex={0}
+                  visible={state}
+                  onRequestClose={() => setState(false)}
+                />
+              </>
+            )}
+
+            {message.body && (
+              <Text
+                style={{
+                  padding: 8,
+                  backgroundColor: "white",
+                  borderRadius: theme.radius.md,
+                }}
+              >
+                {message.body}
+              </Text>
+            )}
+          </View>
+        ) : links.length > 0 ? (
           <View style={{ gap: 8 }}>
             <LinkPreview
               metadataContainerStyle={{
@@ -63,7 +120,7 @@ const Message = ({ message, user2 }) => {
                 alignItems: "center",
               }}
               textContainerStyle={{
-                marginHorizontal: 0,
+                marginHorizontal: 2,
                 marginVertical: 0,
               }}
               containerStyle={{

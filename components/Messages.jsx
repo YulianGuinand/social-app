@@ -1,17 +1,16 @@
-import { FlatList, StyleSheet, Text, View } from "react-native";
+import { FlatList, StyleSheet } from "react-native";
 import React, { useEffect, useState } from "react";
-import { useAuth } from "../contexts/AuthContext";
-import { hp, wp } from "../helpers/common";
 import Message from "./Message";
 import { fetchMessagesByThreadId } from "../services/messageService";
 
+var limit = 2;
 const Messages = ({ user2, id, refresh }) => {
   const [newMessages, setNewMessages] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
-  const { user } = useAuth();
 
   const getMessages = async () => {
-    let res = await fetchMessagesByThreadId(id);
+    limit += 2;
+    let res = await fetchMessagesByThreadId(id, limit);
     if (res.success) {
       setNewMessages(res.data);
     }

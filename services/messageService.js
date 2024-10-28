@@ -1,4 +1,5 @@
 import { supabase } from "../lib/supabase";
+import { uploadFile } from "./imageService";
 
 export const fetchMessages = async (userId, user2Id) => {
   try {
@@ -38,13 +39,14 @@ export const fetchMessageById = async (messageId) => {
   }
 };
 
-export const fetchMessagesByThreadId = async (threadId) => {
+export const fetchMessagesByThreadId = async (threadId, limit = 5) => {
   try {
     const { data, error } = await supabase
       .from("messages")
       .select(`*`)
       .eq("threadId", threadId)
-      .order("created_at", { ascending: false });
+      .order("created_at", { ascending: false })
+      .limit(limit);
 
     if (error) {
       console.log("fetchMessagesByThreadId error: ", error);
@@ -60,17 +62,21 @@ export const fetchMessagesByThreadId = async (threadId) => {
 export const createOrUpdateMessage = async (message) => {
   try {
     // upload image
-    // if (message.file && typeof message.file == "object") {
-    //   let isImage = post?.file?.type == "image";
-    //   let folderName = isImage ? "postImages" : "postVideos";
+    if (message.file && typeof message.file == "object") {
+      let isImage = message?.file?.type == "image";
+      let folderName = isImage ? "postImages" : "postVideos";
 
-    //   let fileResult = await uploadFile(folderName, post?.file?.uri, isImage);
+      let fileResult = await uploadFile(
+        folderName,
+        message?.file?.uri,
+        isImage
+      );
 
-    //   if (fileResult.success) post.file = fileResult.data;
-    //   else {
-    //     return fileResult;
-    //   }
-    // }
+      if (fileResult.success) message.file = fileResult.data;
+      else {
+        return fileResult;
+      }
+    }
 
     const { data, error } = await supabase
       .from("messages")

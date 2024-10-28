@@ -41,6 +41,7 @@
     "react-linkify": "^1.0.0-alpha",
     "react-native": "0.74.5",
     "react-native-gesture-handler": "~2.16.1",
+    "react-native-image-viewing": "^0.2.2",
     "react-native-pell-rich-editor": "^1.9.0",
     "react-native-reanimated": "~3.10.1",
     "react-native-render-html": "^6.3.4",
