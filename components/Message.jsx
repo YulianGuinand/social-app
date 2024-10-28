@@ -1,8 +1,8 @@
-import { Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import Avatar from "./Avatar";
-import { hp, wp } from "../helpers/common";
+import { hp } from "../helpers/common";
 import { theme } from "../constants/theme";
 import { LinkPreview } from "@flyerhq/react-native-link-preview";
 import { Image } from "expo-image";
@@ -54,6 +54,7 @@ const Message = ({ message, user2 }) => {
           alignItems: message?.senderId === user.id ? "flex-end" : "flex-start",
           justifyContent:
             message?.senderId === user.id ? "flex-end" : "flex-start",
+          marginBottom: message?.reactions.length > 0 ? 10 : 0,
         },
       ]}
     >
@@ -179,6 +180,23 @@ const Message = ({ message, user2 }) => {
             {message.body}
           </Text>
         )}
+
+        {/* REACTIONS */}
+        {message.reactions.length > 0 && (
+          <Text
+            style={[
+              styles.reactions,
+              {
+                left: message?.senderId === user.id ? 10 : null,
+                right: message?.senderId === user.id ? null : 10,
+              },
+            ]}
+          >
+            {message.reactions.map((reaction) => {
+              return reaction.body;
+            })}
+          </Text>
+        )}
       </View>
     </View>
   );
@@ -194,6 +212,15 @@ const styles = StyleSheet.create({
   body: {
     width: "fit-content",
     maxWidth: 200,
-    overflow: "hidden",
+  },
+  reactions: {
+    position: "absolute",
+    bottom: 0,
+    transform: [{ translateY: 13 }],
+    backgroundColor: "white",
+    padding: 5,
+    borderRadius: theme.radius.md,
+    flexDirection: "row",
+    gap: 5,
   },
 });
