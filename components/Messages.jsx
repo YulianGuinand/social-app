@@ -5,7 +5,14 @@ import { fetchMessagesByThreadId } from "../services/messageService";
 import { supabase } from "../lib/supabase";
 
 var limit = 2;
-const Messages = ({ user2, id, refresh, setRefresh }) => {
+const Messages = ({
+  user2,
+  id,
+  refresh,
+  setRefresh,
+  setIsVisible,
+  setMessageId,
+}) => {
   const [newMessages, setNewMessages] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
 
@@ -64,8 +71,15 @@ const Messages = ({ user2, id, refresh, setRefresh }) => {
         gap: 10,
       }}
       keyExtractor={(message) => message.id.toString()}
-      renderItem={({ item }) => (
-        <Message setRefresh={setRefresh} message={item} user2={user2} />
+      renderItem={({ item, index }) => (
+        <Message
+          setRefresh={setRefresh}
+          message={item}
+          user2={user2}
+          isLast={index === 0}
+          setIsVisible={setIsVisible}
+          setMessageId={setMessageId}
+        />
       )}
       onEndReached={() => {
         getMessages();

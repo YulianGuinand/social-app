@@ -9,12 +9,18 @@ import { Image } from "expo-image";
 import { getSupabaseFileUrl } from "../services/imageService";
 import { Video } from "expo-av";
 import ImageView from "react-native-image-viewing";
-import ReactionModal from "./ReactionModal";
+import { removeReaction } from "../services/reactionService";
 
-const Message = ({ message, user2, setRefresh }) => {
+const Message = ({
+  message,
+  user2,
+  isLast,
+  setIsVisible,
+  setMessageId,
+  setRefresh,
+}) => {
   const { user } = useAuth();
   const [state, setState] = useState(false);
-  const [isShow, setIsShow] = useState(false);
 
   const findLinksInText = (text) => {
     const urlRegex = /(https?:\/\/[^\s]+)/g;
@@ -30,7 +36,13 @@ const Message = ({ message, user2, setRefresh }) => {
     if (imageData && imageData.url) {
       return (
         <TouchableOpacity
-          onLongPress={() => setIsShow((prev) => !prev)}
+          onLongPress={() => {
+            setMessageId(message.id);
+            {
+              setMessageId(message.id);
+              setIsVisible((prev) => !prev);
+            }
+          }}
           style={{ paddingTop: 0, marginTop: 0 }}
         >
           <Image
@@ -53,15 +65,25 @@ const Message = ({ message, user2, setRefresh }) => {
   const imageUrl = getSupabaseFileUrl(message.file);
   const isVideo = imageUrl?.uri.includes("postVideos");
 
+  // DELETE REACTIONS
+  const deleteReaction = async (reactionId) => {
+    let res = await removeReaction(reactionId);
+
+    if (res.success) {
+      setRefresh((prev) => !prev);
+    }
+  };
+
   return (
     <View
       style={[
         styles.container,
         {
+          elevation: isLast ? 100 : 0,
           alignItems: message?.senderId === user.id ? "flex-end" : "flex-start",
           justifyContent:
             message?.senderId === user.id ? "flex-end" : "flex-start",
-          marginBottom: reactions.length > 0 ? 10 : 0,
+          marginBottom: message.reactions.length > 0 ? 20 : 0,
         },
       ]}
     >
@@ -72,7 +94,12 @@ const Message = ({ message, user2, setRefresh }) => {
         {message.file ? (
           <View style={{ gap: 5 }}>
             {isVideo ? (
-              <TouchableOpacity onLongPress={() => setIsShow((prev) => !prev)}>
+              <TouchableOpacity
+                onLongPress={() => {
+                  setMessageId(message.id);
+                  setIsVisible((prev) => !prev);
+                }}
+              >
                 <Video
                   style={{
                     width: 200,
@@ -89,7 +116,10 @@ const Message = ({ message, user2, setRefresh }) => {
             ) : (
               <>
                 <TouchableOpacity
-                  onLongPress={() => setIsShow((prev) => !prev)}
+                  onLongPress={() => {
+                    setMessageId(message.id);
+                    setIsVisible((prev) => !prev);
+                  }}
                   onPress={() => setState(true)}
                 >
                   <Image
@@ -113,7 +143,12 @@ const Message = ({ message, user2, setRefresh }) => {
             )}
 
             {message.body && (
-              <TouchableOpacity onLongPress={() => setIsShow((prev) => !prev)}>
+              <TouchableOpacity
+                onLongPress={() => {
+                  setMessageId(message.id);
+                  setIsVisible((prev) => !prev);
+                }}
+              >
                 <Text
                   style={{
                     padding: 8,
@@ -149,7 +184,10 @@ const Message = ({ message, user2, setRefresh }) => {
               renderText={() => null}
               renderTitle={(title) => (
                 <TouchableOpacity
-                  onLongPress={() => setIsShow((prev) => !prev)}
+                  onLongPress={() => {
+                    setMessageId(message.id);
+                    setIsVisible((prev) => !prev);
+                  }}
                 >
                   <Text style={{ paddingBottom: 8 }}>{title}</Text>
                 </TouchableOpacity>
@@ -172,7 +210,10 @@ const Message = ({ message, user2, setRefresh }) => {
               }}
               renderText={(text) => (
                 <TouchableOpacity
-                  onLongPress={() => setIsShow((prev) => !prev)}
+                  onLongPress={() => {
+                    setMessageId(message.id);
+                    setIsVisible((prev) => !prev);
+                  }}
                 >
                   <Text
                     style={{
@@ -192,7 +233,12 @@ const Message = ({ message, user2, setRefresh }) => {
             />
           </View>
         ) : (
-          <TouchableOpacity onLongPress={() => setIsShow((prev) => !prev)}>
+          <TouchableOpacity
+            onLongPress={() => {
+              setMessageId(message.id);
+              setIsVisible((prev) => !prev);
+            }}
+          >
             <Text
               style={{
                 padding: 8,
@@ -206,33 +252,28 @@ const Message = ({ message, user2, setRefresh }) => {
         )}
 
         {/* REACTIONS */}
-        {reactions.length > 0 && (
-          <Text
+        {message.reactions.length > 0 && (
+          <View
             style={[
               styles.reactions,
               {
-                left: message?.senderId === user.id ? 10 : null,
-                right: message?.senderId === user.id ? null : 10,
+                left: message?.senderId === user.id ? -15 : null,
+                right: message?.senderId === user.id ? null : -15,
               },
             ]}
           >
             {message.reactions.map((reaction) => {
-              return reaction.body;
+              return (
+                <TouchableOpacity
+                  key={reaction.id}
+                  onPress={() => deleteReaction(reaction.id)}
+                >
+                  <Text style={{ fontSize: 16 }}>{reaction.body}</Text>
+                </TouchableOpacity>
+              );
             })}
-          </Text>
+          </View>
         )}
-
-        {/* REACTIONS MODAL */}
-
-        <ReactionModal
-          isShow={isShow}
-          messageId={message.id}
-          threadId={message.threadId}
-          onChoose={() => setIsShow(false)}
-          reactions={reactions}
-          setRefresh={setRefresh}
-          mine={message?.senderId === user.id}
-        />
       </View>
     </View>
   );
@@ -251,8 +292,8 @@ const styles = StyleSheet.create({
   },
   reactions: {
     position: "absolute",
-    bottom: 0,
-    transform: [{ translateY: 13 }],
+    bottom: "-10%",
+    transform: [{ translateY: 20 }],
     backgroundColor: "white",
     padding: 5,
     borderRadius: theme.radius.md,
