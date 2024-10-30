@@ -1,9 +1,9 @@
-import { StyleSheet, View } from "react-native";
 import React from "react";
-import UserInfo from "./UserInfo";
-import PostMedia from "./Media";
-import PostActions from "./Actions";
+import { StyleSheet, View } from "react-native";
 import { theme } from "../../../constants/theme";
+import PostActions from "./Actions";
+import PostMedia from "./Media";
+import UserInfo from "./UserInfo";
 
 const PostCard = ({
   item,

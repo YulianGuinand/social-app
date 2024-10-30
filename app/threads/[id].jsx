@@ -1,3 +1,8 @@
+import { Video } from "expo-av";
+import { Image } from "expo-image";
+import * as ImagePicker from "expo-image-picker";
+import { useLocalSearchParams } from "expo-router";
+import React, { useEffect, useState } from "react";
 import {
   Alert,
   KeyboardAvoidingView,
@@ -7,27 +12,22 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useEffect, useState } from "react";
-import { useLocalSearchParams } from "expo-router";
-import { createOrUpdateMessage } from "../../services/messageService";
-import { useAuth } from "../../contexts/AuthContext";
-import { getUserData } from "../../services/userService";
-import { hp, wp } from "../../helpers/common";
-import { supabase } from "../../lib/supabase";
 import Icon from "../../assets/icons";
-import { theme } from "../../constants/theme";
-import { updateLastMessage } from "../../services/threadService";
-import * as ImagePicker from "expo-image-picker";
-import { Image } from "expo-image";
-import { getSupabaseFileUrl } from "../../services/imageService";
-import { Video } from "expo-av";
-import { createOrUpdateReaction } from "../../services/reactionService";
-import ScreenWrapper from "../../components/shared/ScreenWrapper";
-import Header from "../../components/shared/Header";
 import Messages from "../../components/features/Chat/Messages/Messages";
+import ReactionsPicker from "../../components/features/Chat/Reaction/ReactionsPicker";
+import Header from "../../components/shared/Header";
 import Input from "../../components/shared/Input";
 import Loading from "../../components/shared/Loading";
-import ReactionsPicker from "../../components/features/Chat/Reaction/ReactionsPicker";
+import ScreenWrapper from "../../components/shared/ScreenWrapper";
+import { theme } from "../../constants/theme";
+import { useAuth } from "../../contexts/AuthContext";
+import { hp, wp } from "../../helpers/common";
+import { supabase } from "../../lib/supabase";
+import { getSupabaseFileUrl } from "../../services/imageService";
+import { createOrUpdateMessage } from "../../services/messageService";
+import { createOrUpdateReaction } from "../../services/reactionService";
+import { updateLastMessage } from "../../services/threadService";
+import { getUserData } from "../../services/userService";
 
 const ThreadScreen = () => {
   const { id, user2Id } = useLocalSearchParams();

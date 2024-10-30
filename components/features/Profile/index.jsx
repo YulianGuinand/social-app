@@ -1,9 +1,9 @@
-import { Alert } from "react-native";
-import React, { useEffect, useState } from "react";
 import { useLocalSearchParams, useRouter } from "expo-router";
+import React, { useEffect, useState } from "react";
+import { Alert } from "react-native";
 import { useAuth } from "../../../contexts/AuthContext";
-import { fetchPostsProfile } from "../../../services/postService";
 import { supabase } from "../../../lib/supabase";
+import { fetchPostsProfile } from "../../../services/postService";
 import { getUserData } from "../../../services/userService";
 import ScreenWrapper from "../../shared/ScreenWrapper";
 import PostImage from "./PostList/Image";

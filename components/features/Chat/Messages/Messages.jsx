@@ -1,8 +1,8 @@
-import { FlatList, StyleSheet } from "react-native";
 import React, { useEffect, useState } from "react";
-import Message from "./Message/Message";
-import { fetchMessagesByThreadId } from "../../../../services/messageService";
+import { FlatList, StyleSheet } from "react-native";
 import { supabase } from "../../../../lib/supabase";
+import { fetchMessagesByThreadId } from "../../../../services/messageService";
+import Message from "./Message/Message";
 
 var limit = 2;
 const Messages = ({

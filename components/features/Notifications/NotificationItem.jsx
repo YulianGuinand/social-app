@@ -1,8 +1,8 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import moment from "moment";
 import React from "react";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { theme } from "../../../constants/theme";
 import { hp } from "../../../helpers/common";
-import moment from "moment";
 import Avatar from "../../shared/Avatar";
 
 const NotificationItem = ({ item, router }) => {

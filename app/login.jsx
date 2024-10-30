@@ -9,13 +9,13 @@ import {
   View,
 } from "react-native";
 import Icon from "../assets/icons";
+import BackButton from "../components/shared/BackButton";
+import Button from "../components/shared/Button";
+import Input from "../components/shared/Input";
+import ScreenWrapper from "../components/shared/ScreenWrapper";
 import { theme } from "../constants/theme";
 import { hp, wp } from "../helpers/common";
 import { supabase } from "../lib/supabase";
-import ScreenWrapper from "../components/shared/ScreenWrapper";
-import BackButton from "../components/shared/BackButton";
-import Input from "../components/shared/Input";
-import Button from "../components/shared/Button";
 
 const login = () => {
   const router = useRouter();

@@ -1,17 +1,23 @@
-import { Alert, Share, StyleSheet, Text, View } from "react-native";
 import React, { useEffect, useState } from "react";
-import { TouchableOpacity } from "react-native";
+import {
+  Alert,
+  Share,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import Icon from "../../../../assets/icons";
 import { theme } from "../../../../constants/theme";
 import { hp, stripHtmlTags } from "../../../../helpers/common";
-import {
-  createPostLike,
-  removePostLike,
-} from "../../../../services/postService";
 import {
   downloadFile,
   getSupabaseFileUrl,
 } from "../../../../services/imageService";
-import Icon from "../../../../assets/icons";
+import {
+  createPostLike,
+  removePostLike,
+} from "../../../../services/postService";
 import Loading from "../../../shared/Loading";
 
 const PostActions = ({ item, currentUser, openPostDetails }) => {

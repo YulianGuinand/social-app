@@ -1,13 +1,13 @@
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { fetchNotifications } from "../services/notificationService";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
+import NotificationItem from "../components/features/Notifications/NotificationItem";
+import Header from "../components/shared/Header";
+import ScreenWrapper from "../components/shared/ScreenWrapper";
+import { theme } from "../constants/theme";
 import { useAuth } from "../contexts/AuthContext";
 import { hp, wp } from "../helpers/common";
-import { theme } from "../constants/theme";
-import { useRouter } from "expo-router";
-import ScreenWrapper from "../components/shared/ScreenWrapper";
-import Header from "../components/shared/Header";
-import NotificationItem from "../components/features/Notifications/NotificationItem";
+import { fetchNotifications } from "../services/notificationService";
 
 const Notifications = () => {
   const [notifications, setNotifications] = useState([]);

@@ -1,13 +1,13 @@
-import { FlatList, StyleSheet, Text, View } from "react-native";
 import React, { useEffect, useState } from "react";
+import { FlatList, StyleSheet, Text, View } from "react-native";
+import Thread from "../components/features/Threads/Thread/Thread";
+import Header from "../components/shared/Header";
+import Loading from "../components/shared/Loading";
+import ScreenWrapper from "../components/shared/ScreenWrapper";
 import { useAuth } from "../contexts/AuthContext";
-import { fetchThreads } from "../services/threadService";
 import { wp } from "../helpers/common";
 import { supabase } from "../lib/supabase";
-import ScreenWrapper from "../components/shared/ScreenWrapper";
-import Header from "../components/shared/Header";
-import Thread from "../components/features/Threads/Thread/Thread";
-import Loading from "../components/shared/Loading";
+import { fetchThreads } from "../services/threadService";
 
 const threads = () => {
   const { user } = useAuth();

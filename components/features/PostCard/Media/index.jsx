@@ -1,10 +1,10 @@
-import { StyleSheet, View } from "react-native";
-import React from "react";
-import RenderHTML from "react-native-render-html";
-import { Image } from "expo-image";
 import { Video } from "expo-av";
-import { hp, wp } from "../../../../helpers/common";
+import { Image } from "expo-image";
+import React from "react";
+import { StyleSheet, View } from "react-native";
+import RenderHTML from "react-native-render-html";
 import { theme } from "../../../../constants/theme";
+import { hp, wp } from "../../../../helpers/common";
 import { getSupabaseFileUrl } from "../../../../services/imageService";
 
 const textStyle = {

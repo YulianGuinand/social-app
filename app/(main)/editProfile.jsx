@@ -1,3 +1,7 @@
+import { Image } from "expo-image";
+import * as ImagePicker from "expo-image-picker";
+import { useRouter } from "expo-router";
+import React, { useEffect, useState } from "react";
 import {
   Alert,
   Pressable,
@@ -6,20 +10,16 @@ import {
   Text,
   View,
 } from "react-native";
-import React, { useEffect, useState } from "react";
-import { useAuth } from "../../contexts/AuthContext";
-import { getUserImageSrc, uploadFile } from "../../services/imageService";
-import { Image } from "expo-image";
-import { updateUser } from "../../services/userService";
-import { useRouter } from "expo-router";
-import * as ImagePicker from "expo-image-picker";
-import ScreenWrapper from "../../components/shared/ScreenWrapper";
-import Header from "../../components/shared/Header";
 import Icon from "../../assets/icons";
-import { theme } from "../../constants/theme";
-import { hp, wp } from "../../helpers/common";
-import Input from "../../components/shared/Input";
 import Button from "../../components/shared/Button";
+import Header from "../../components/shared/Header";
+import Input from "../../components/shared/Input";
+import ScreenWrapper from "../../components/shared/ScreenWrapper";
+import { theme } from "../../constants/theme";
+import { useAuth } from "../../contexts/AuthContext";
+import { hp, wp } from "../../helpers/common";
+import { getUserImageSrc, uploadFile } from "../../services/imageService";
+import { updateUser } from "../../services/userService";
 
 const EditProfile = () => {
   const router = useRouter();

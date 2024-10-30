@@ -1,13 +1,17 @@
 import React from "react";
-import { useAuth } from "../../../../contexts/AuthContext";
-import Header from "../../../shared/Header";
-import { theme } from "../../../../constants/theme";
-import Avatar from "../../../shared/Avatar";
-import { hp } from "../../../../helpers/common";
+import {
+  Pressable,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import Icon from "../../../../assets/icons";
-import { StyleSheet, Text, View } from "react-native";
-import { TouchableOpacity } from "react-native";
-import { Pressable } from "react-native";
+import { theme } from "../../../../constants/theme";
+import { useAuth } from "../../../../contexts/AuthContext";
+import { hp } from "../../../../helpers/common";
+import Avatar from "../../../shared/Avatar";
+import Header from "../../../shared/Header";
 
 const UserHeader = ({
   user,

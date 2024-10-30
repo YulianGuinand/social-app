@@ -1,13 +1,13 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { LinkPreview } from "@flyerhq/react-native-link-preview";
+import { Video } from "expo-av";
+import { Image } from "expo-image";
 import React, { useState } from "react";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import ImageView from "react-native-image-viewing";
+import { theme } from "../../../../../constants/theme";
 import { useAuth } from "../../../../../contexts/AuthContext";
 import { hp } from "../../../../../helpers/common";
-import { theme } from "../../../../../constants/theme";
-import { LinkPreview } from "@flyerhq/react-native-link-preview";
-import { Image } from "expo-image";
 import { getSupabaseFileUrl } from "../../../../../services/imageService";
-import { Video } from "expo-av";
-import ImageView from "react-native-image-viewing";
 import { removeReaction } from "../../../../../services/reactionService";
 import Avatar from "../../../../shared/Avatar";
 

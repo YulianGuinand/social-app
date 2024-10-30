@@ -1,8 +1,8 @@
 import React from "react";
 import { FlatList, StyleSheet, Text, View } from "react-native";
-import Loading from "../../../shared/Loading";
-import { hp, wp } from "../../../../helpers/common";
 import { theme } from "../../../../constants/theme";
+import { hp, wp } from "../../../../helpers/common";
+import Loading from "../../../shared/Loading";
 import PostCard from "../../PostCard";
 
 const PostList = ({
