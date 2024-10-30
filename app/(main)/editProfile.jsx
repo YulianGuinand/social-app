@@ -7,19 +7,19 @@ import {
   View,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import ScreenWrapper from "../../components/ScreenWrapper";
-import { hp, wp } from "../../helpers/common";
-import { theme } from "../../constants/theme";
-import Header from "../../components/Header";
 import { useAuth } from "../../contexts/AuthContext";
 import { getUserImageSrc, uploadFile } from "../../services/imageService";
 import { Image } from "expo-image";
-import Icon from "../../assets/icons";
-import Input from "../../components/Input";
-import Button from "../../components/Button";
 import { updateUser } from "../../services/userService";
 import { useRouter } from "expo-router";
 import * as ImagePicker from "expo-image-picker";
+import ScreenWrapper from "../../components/shared/ScreenWrapper";
+import Header from "../../components/shared/Header";
+import Icon from "../../assets/icons";
+import { theme } from "../../constants/theme";
+import { hp, wp } from "../../helpers/common";
+import Input from "../../components/shared/Input";
+import Button from "../../components/shared/Button";
 
 const EditProfile = () => {
   const router = useRouter();

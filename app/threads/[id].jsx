@@ -1,31 +1,18 @@
 import {
   Alert,
-  Keyboard,
   KeyboardAvoidingView,
-  Platform,
   Pressable,
-  SafeAreaView,
   StyleSheet,
   Text,
-  TextInput,
-  TouchableWithoutFeedback,
+  TouchableOpacity,
   View,
 } from "react-native";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocalSearchParams } from "expo-router";
-import {
-  createOrUpdateMessage,
-  fetchMessagesByThreadId,
-} from "../../services/messageService";
-import ScreenWrapper from "../../components/ScreenWrapper";
+import { createOrUpdateMessage } from "../../services/messageService";
 import { useAuth } from "../../contexts/AuthContext";
-import Header from "../../components/Header";
 import { getUserData } from "../../services/userService";
-import Messages from "../../components/Messages";
 import { hp, wp } from "../../helpers/common";
-import Input from "../../components/Input";
-import Button from "../../components/Button";
-import Loading from "../../components/Loading";
 import { supabase } from "../../lib/supabase";
 import Icon from "../../assets/icons";
 import { theme } from "../../constants/theme";
@@ -34,6 +21,13 @@ import * as ImagePicker from "expo-image-picker";
 import { Image } from "expo-image";
 import { getSupabaseFileUrl } from "../../services/imageService";
 import { Video } from "expo-av";
+import { createOrUpdateReaction } from "../../services/reactionService";
+import ScreenWrapper from "../../components/shared/ScreenWrapper";
+import Header from "../../components/shared/Header";
+import Messages from "../../components/features/Chat/Messages/Messages";
+import Input from "../../components/shared/Input";
+import Loading from "../../components/shared/Loading";
+import ReactionsPicker from "../../components/features/Chat/Reaction/ReactionsPicker";
 
 const ThreadScreen = () => {
   const { id, user2Id } = useLocalSearchParams();
@@ -43,6 +37,10 @@ const ThreadScreen = () => {
   const [body, setBody] = useState("");
   const [refresh, setRefresh] = useState(false);
   const [file, setFile] = useState(file);
+
+  // EMOJI
+  const [isVisible, setIsVisible] = useState(false);
+  const [messageId, setMessageId] = useState(null);
 
   const getUser = async () => {
     let res = await getUserData(user2Id);
@@ -139,11 +137,66 @@ const ThreadScreen = () => {
 
     return getSupabaseFileUrl(file)?.uri;
   };
+
+  // REACTIONS ITEMS
+  const ReactionItems = [
+    {
+      id: 0,
+      emoji: "😇",
+      title: "like",
+    },
+    {
+      id: 1,
+      emoji: "🥰",
+      title: "love",
+    },
+    {
+      id: 2,
+      emoji: "🤗",
+      title: "care",
+    },
+    {
+      id: 3,
+      emoji: "😘",
+      title: "kiss",
+    },
+    {
+      id: 4,
+      emoji: "😂",
+      title: "laugh",
+    },
+    {
+      id: 5,
+      emoji: "😎",
+      title: "cool",
+    },
+  ];
+
+  let reaction = {};
+  const handleOnChoose = async (item) => {
+    let data = {
+      userId: user.id,
+      body: item.emoji,
+      messageId: messageId,
+      threadId: id,
+    };
+    let res = await createOrUpdateReaction(data);
+    reaction = { ...data, id: res };
+    setIsVisible(false);
+  };
+
   return (
     <ScreenWrapper>
       <View style={{ paddingHorizontal: wp(4), flex: 1 }}>
         <Header title={user?.name} />
-        <Messages user2={user} id={id} refresh={refresh} />
+        <Messages
+          user2={user}
+          id={id}
+          refresh={refresh}
+          setRefresh={setRefresh}
+          setIsVisible={setIsVisible}
+          setMessageId={setMessageId}
+        />
         {file && (
           <View
             style={{ width: "100%", alignItems: "flex-end", marginBottom: 10 }}
@@ -235,6 +288,44 @@ const ThreadScreen = () => {
           )}
         </KeyboardAvoidingView>
       </View>
+
+      <ReactionsPicker
+        isVisible={isVisible}
+        onClose={() => setIsVisible(false)}
+      >
+        <>
+          <View
+            style={{
+              width: "100%",
+              flexDirection: "row",
+              justifyContent: "center",
+              alignContent: "center",
+              gap: 10,
+              marginTop: 20,
+            }}
+          >
+            {ReactionItems.map((item) => {
+              return (
+                <View
+                  key={item.id}
+                  style={{ alignItems: "center", justifyContent: "center" }}
+                >
+                  <TouchableOpacity
+                    onPress={() => handleOnChoose(item)}
+                    style={{
+                      padding: 6,
+                      borderRadius: theme.radius.md,
+                      backgroundColor: theme.colors.darkLight,
+                    }}
+                  >
+                    <Text style={{ fontSize: 30 }}>{item.emoji}</Text>
+                  </TouchableOpacity>
+                </View>
+              );
+            })}
+          </View>
+        </>
+      </ReactionsPicker>
     </ScreenWrapper>
   );
 };

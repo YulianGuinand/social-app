@@ -9,16 +9,16 @@ import {
 } from "../../services/postService";
 import { hp, wp } from "../../helpers/common";
 import { theme } from "../../constants/theme";
-import PostCard from "../../components/PostCard";
 import { useAuth } from "../../contexts/AuthContext";
-import Loading from "../../components/Loading";
-import Input from "../../components/Input";
 import { TouchableOpacity } from "react-native";
-import Icon from "../../assets/icons";
-import ScreenWrapper from "../../components/ScreenWrapper";
-import CommentItem from "../../components/CommentItem";
 import { supabase } from "../../lib/supabase";
 import { createNotification } from "../../services/notificationService";
+import ScreenWrapper from "../../components/shared/ScreenWrapper";
+import Input from "../../components/shared/Input";
+import Loading from "../../components/shared/Loading";
+import Icon from "../../assets/icons";
+import CommentItem from "../../components/features/PostDetails/CommentList/Item/CommentItem";
+import PostCard from "../../components/features/PostCard";
 
 const postDetails = () => {
   const { postId, commentId } = useLocalSearchParams();
@@ -105,14 +105,14 @@ const postDetails = () => {
     let res = await createComment(data);
     setLoading(false);
     if (res.success) {
-      if(user.id != post.userId) {
+      if (user.id != post.userId) {
         // SEND NOTIFICATION
         let notify = {
-          senderId : user.id,
+          senderId: user.id,
           receiverId: post.userId,
           title: "commented on your post",
-          data: JSON.stringify({postId: post.id, commentId: res?.data?.id})
-        }
+          data: JSON.stringify({ postId: post.id, commentId: res?.data?.id }),
+        };
         createNotification(notify);
       }
       inputRef?.current?.clear();

@@ -1,7 +1,7 @@
 import React from "react";
 import { StyleSheet, TextInput, View } from "react-native";
-import { theme } from "../constants/theme";
-import { hp } from "../helpers/common";
+import { theme } from "../../constants/theme";
+import { hp } from "../../helpers/common";
 
 const Input = (props) => {
   return (

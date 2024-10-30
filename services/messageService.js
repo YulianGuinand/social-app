@@ -43,7 +43,11 @@ export const fetchMessagesByThreadId = async (threadId, limit = 5) => {
   try {
     const { data, error } = await supabase
       .from("messages")
-      .select(`*`)
+      .select(
+        `*,
+        reactions (*)
+        `
+      )
       .eq("threadId", threadId)
       .order("created_at", { ascending: false })
       .limit(limit);

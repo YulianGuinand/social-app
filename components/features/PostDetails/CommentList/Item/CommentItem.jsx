@@ -1,10 +1,10 @@
 import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import React, { useEffect } from "react";
-import { theme } from "../constants/theme";
-import { hp } from "../helpers/common";
-import Avatar from "./Avatar";
+import React from "react";
+import { theme } from "../../../../../constants/theme";
+import { hp } from "../../../../../helpers/common";
 import moment from "moment";
-import Icon from "../assets/icons";
+import Icon from "../../../../../assets/icons";
+import Avatar from "../../../../shared/Avatar";
 
 const CommentItem = ({
   item,

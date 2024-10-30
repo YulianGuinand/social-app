@@ -2,8 +2,8 @@ import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { useRouter } from "expo-router";
 import BackButton from "./BackButton";
-import { hp } from "../helpers/common";
-import { theme } from "../constants/theme";
+import { hp } from "../../helpers/common";
+import { theme } from "../../constants/theme";
 
 const Header = ({ title, showBackButton = true, mb = 10 }) => {
   const router = useRouter();

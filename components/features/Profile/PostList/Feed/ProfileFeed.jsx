@@ -1,14 +1,8 @@
-import {
-  Pressable,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { TouchableOpacity, View } from "react-native";
 import React from "react";
 import { Image } from "expo-image";
-import { getSupabaseFileUrl } from "../services/imageService";
-import { hp } from "../helpers/common";
+import { getSupabaseFileUrl } from "../../../../../services/imageService";
+import { hp } from "../../../../../helpers/common";
 import { useRouter } from "expo-router";
 
 const ProfileFeed = ({ dataList }) => {
@@ -54,5 +48,3 @@ const ProfileFeed = ({ dataList }) => {
 };
 
 export default ProfileFeed;
-
-const styles = StyleSheet.create({});

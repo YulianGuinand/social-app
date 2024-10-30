@@ -2,10 +2,10 @@ import { useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import React from "react";
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
-import Button from "../components/Button";
-import ScreenWrapper from "../components/ScreenWrapper";
 import { theme } from "../constants/theme";
 import { hp, wp } from "../helpers/common";
+import ScreenWrapper from "../components/shared/ScreenWrapper";
+import Button from "../components/shared/Button";
 
 const welcome = () => {
   const router = useRouter();

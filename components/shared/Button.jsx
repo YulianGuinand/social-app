@@ -1,7 +1,7 @@
 import React from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import { theme } from "../constants/theme";
-import { hp } from "../helpers/common";
+import { theme } from "../../constants/theme";
+import { hp } from "../../helpers/common";
 import Loading from "./Loading";
 
 const Button = ({

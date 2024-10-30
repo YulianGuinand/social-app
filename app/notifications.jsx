@@ -1,68 +1,66 @@
-import { ScrollView, StyleSheet, Text, View } from 'react-native'
-import React, { useEffect, useState } from 'react'
-import { fetchNotifications } from '../services/notificationService';
-import { useAuth } from '../contexts/AuthContext';
-import { hp, wp } from '../helpers/common';
-import { theme } from '../constants/theme';
-import ScreenWrapper from '../components/ScreenWrapper';
-import { useRouter } from 'expo-router';
-import NotificationItem from '../components/NotificationItem';
-import Loading from '../components/Loading';
-import Header from '../components/Header';
+import { ScrollView, StyleSheet, Text, View } from "react-native";
+import React, { useEffect, useState } from "react";
+import { fetchNotifications } from "../services/notificationService";
+import { useAuth } from "../contexts/AuthContext";
+import { hp, wp } from "../helpers/common";
+import { theme } from "../constants/theme";
+import { useRouter } from "expo-router";
+import ScreenWrapper from "../components/shared/ScreenWrapper";
+import Header from "../components/shared/Header";
+import NotificationItem from "../components/features/Notifications/NotificationItem";
 
 const Notifications = () => {
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(false);
-  const {user} = useAuth()
-  const router = useRouter()
+  const { user } = useAuth();
+  const router = useRouter();
 
   useEffect(() => {
     getNotifications();
-  }, [])
+  }, []);
 
   const getNotifications = async () => {
-    setLoading(true)
+    setLoading(true);
     let res = await fetchNotifications(user.id);
-    setLoading(false)
-    if(res.success) {
-      setNotifications(res.data)
+    setLoading(false);
+    if (res.success) {
+      setNotifications(res.data);
     }
-  }
+  };
 
-  if(loading) {
+  if (loading) {
     return (
       <ScreenWrapper bg="white">
-        <View style={{marginTop: 50}}>
-          <Loading/>
+        <View style={{ marginTop: 50 }}>
+          <Loading />
         </View>
       </ScreenWrapper>
-    )
+    );
   }
 
   return (
     <ScreenWrapper>
       <View style={styles.container}>
         <Header title="Notifications" />
-        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.listStyle}>
-          {
-            notifications.length == 0 && (
-              <Text style={styles.noData}>No notifications yet</Text>
-            )
-          }
-          {
-            notifications.map(item => {
-              return (
-                <NotificationItem item={item} key={item?.id} router={router}/>
-              )
-            })
-          }
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.listStyle}
+        >
+          {notifications.length == 0 && (
+            <Text style={styles.noData}>No notifications yet</Text>
+          )}
+          {notifications.map((item) => {
+            return (
+              <NotificationItem item={item} key={item?.id} router={router} />
+            );
+          })}
         </ScrollView>
       </View>
     </ScreenWrapper>
-  )
-}
+  );
+};
 
-export default Notifications
+export default Notifications;
 
 const styles = StyleSheet.create({
   container: {
@@ -71,12 +69,12 @@ const styles = StyleSheet.create({
   },
   listStyle: {
     paddingVertical: 20,
-    gap: 10
+    gap: 10,
   },
   noData: {
     fontSize: hp(1.8),
     fontWeight: theme.fonts.medium,
     color: theme.colors.text,
-    textAlign: 'center',
-  }
-})
+    textAlign: "center",
+  },
+});

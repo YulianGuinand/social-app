@@ -1,13 +1,13 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React, { useEffect, useState } from "react";
-import { getUserData } from "../services/userService";
-import { useAuth } from "../contexts/AuthContext";
-import Avatar from "./Avatar";
-import { fetchMessageById } from "../services/messageService";
+import { getUserData } from "../../../../services/userService";
+import { useAuth } from "../../../../contexts/AuthContext";
+import { fetchMessageById } from "../../../../services/messageService";
 import moment from "moment";
 import { useRouter } from "expo-router";
-import { theme } from "../constants/theme";
-import { supabase } from "../lib/supabase";
+import { theme } from "../../../../constants/theme";
+import { supabase } from "../../../../lib/supabase";
+import Avatar from "../../../shared/Avatar";
 
 const Thread = ({ item }) => {
   const router = useRouter();
@@ -123,7 +123,3 @@ const Thread = ({ item }) => {
 };
 
 export default Thread;
-
-const styles = StyleSheet.create({
-  avatar: {},
-});

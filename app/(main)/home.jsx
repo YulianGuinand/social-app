@@ -1,11 +1,11 @@
 import React from "react";
-import {Image, View, Alert, StyleSheet, Text } from "react-native";
-import ScreenWrapper from "../../components/ScreenWrapper";
+import { Image, View, Alert, StyleSheet, Text } from "react-native";
 import { supabase } from "../../lib/supabase";
 import { StatusBar } from "expo-status-bar";
+import ScreenWrapper from "../../components/shared/ScreenWrapper";
+import Button from "../../components/shared/Button";
 import { hp, wp } from "../../helpers/common";
 import { theme } from "../../constants/theme";
-import Button from "../../components/Button";
 
 const Home = () => {
   const onLogout = async () => {
@@ -29,9 +29,7 @@ const Home = () => {
         {/* TITLE */}
         <View style={{ gap: 20 }}>
           <Text style={styles.title}>Sorry!</Text>
-          <Text style={styles.punchline}>
-            Something went wrong...
-          </Text>
+          <Text style={styles.punchline}>Something went wrong...</Text>
         </View>
 
         <View style={styles.footer}>
@@ -40,7 +38,7 @@ const Home = () => {
             buttonStyle={{ marginHorizontal: wp(3) }}
             onPress={onLogout}
           />
-          </View>
+        </View>
       </View>
     </ScreenWrapper>
   );
@@ -78,4 +76,3 @@ const styles = StyleSheet.create({
     width: "100%",
   },
 });
-
