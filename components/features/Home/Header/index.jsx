@@ -1,9 +1,9 @@
 import React from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import { theme } from "../../../../constants/theme";
-import Avatar from "../../../shared/Avatar";
 import Icon from "../../../../assets/icons";
+import { theme } from "../../../../constants/theme";
 import { hp, wp } from "../../../../helpers/common";
+import Avatar from "../../../shared/Avatar";
 
 const HeaderPost = ({
   router,

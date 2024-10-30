@@ -1,11 +1,11 @@
-import { StyleSheet, View } from "react-native";
-import ScreenWrapper from "../../shared/ScreenWrapper";
+import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
+import { StyleSheet, View } from "react-native";
 import { useAuth } from "../../../contexts/AuthContext";
+import { supabase } from "../../../lib/supabase";
 import { fetchPosts } from "../../../services/postService";
 import { getUserData } from "../../../services/userService";
-import { supabase } from "../../../lib/supabase";
-import { useRouter } from "expo-router";
+import ScreenWrapper from "../../shared/ScreenWrapper";
 import HeaderPost from "./Header";
 import PostList from "./PostList";
 

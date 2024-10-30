@@ -1,7 +1,7 @@
-import { FlatList, StyleSheet } from "react-native";
 import React from "react";
-import UserHeader from "../../UserHeader";
+import { FlatList, StyleSheet } from "react-native";
 import { wp } from "../../../../../helpers/common";
+import UserHeader from "../../UserHeader";
 import ProfileFeed from "../Feed/ProfileFeed";
 
 const PostImage = ({

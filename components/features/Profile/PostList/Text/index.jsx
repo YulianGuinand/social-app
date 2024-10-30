@@ -1,8 +1,8 @@
-import { FlatList, StyleSheet } from "react-native";
 import React from "react";
-import UserHeader from "../../UserHeader";
-import PostCard from "../../../PostCard";
+import { FlatList, StyleSheet } from "react-native";
 import { wp } from "../../../../../helpers/common";
+import PostCard from "../../../PostCard";
+import UserHeader from "../../UserHeader";
 
 const PostText = ({
   postsText,

@@ -1,13 +1,11 @@
+import React from "react";
 import {
   Modal,
-  Pressable,
   StyleSheet,
   TouchableWithoutFeedback,
   View,
 } from "react-native";
-import React from "react";
-import { theme } from "../../../../constants/theme";
-import { MaterialIcons } from "@expo/vector-icons";
+import { theme } from "../../../../../constants/theme";
 
 const ReactionsPicker = ({ isVisible, children, onClose }) => {
   return (

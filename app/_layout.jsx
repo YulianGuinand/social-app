@@ -1,9 +1,9 @@
 import { Stack, useRouter } from "expo-router";
 import React, { createContext, useEffect, useState } from "react";
+import { LogBox } from "react-native";
 import { AuthProvider, useAuth } from "../contexts/AuthContext";
 import { supabase } from "../lib/supabase";
 import { getUserData } from "../services/userService";
-import { LogBox } from "react-native";
 
 export const Context = createContext(null);
 

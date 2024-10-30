@@ -1,28 +1,28 @@
+import { Video } from "expo-av";
+import { Image } from "expo-image";
+import * as ImagePicker from "expo-image-picker";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Alert,
   Pressable,
   ScrollView,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from "react-native";
-import React, { useEffect, useRef, useState } from "react";
-import { hp, wp } from "../helpers/common";
+import Icon from "../assets/icons";
+import Avatar from "../components/shared/Avatar";
+import Button from "../components/shared/Button";
+import Header from "../components/shared/Header";
+import RichTextEditor from "../components/shared/RichTextEditor";
+import ScreenWrapper from "../components/shared/ScreenWrapper";
 import { theme } from "../constants/theme";
 import { useAuth } from "../contexts/AuthContext";
-import { useLocalSearchParams, useRouter } from "expo-router";
-import Icon from "../assets/icons";
-import { TouchableOpacity } from "react-native";
-import * as ImagePicker from "expo-image-picker";
-import { Image } from "expo-image";
+import { hp, wp } from "../helpers/common";
 import { getSupabaseFileUrl } from "../services/imageService";
-import { Video } from "expo-av";
 import { createOrUpdatePost } from "../services/postService";
-import Header from "../components/shared/Header";
-import Avatar from "../components/shared/Avatar";
-import RichTextEditor from "../components/shared/RichTextEditor";
-import Button from "../components/shared/Button";
-import ScreenWrapper from "../components/shared/ScreenWrapper";
 
 const NewPost = () => {
   const post = useLocalSearchParams();

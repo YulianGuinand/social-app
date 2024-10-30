@@ -1,24 +1,22 @@
-import { Alert, ScrollView, StyleSheet, Text, View } from "react-native";
-import React, { useEffect, useRef, useState } from "react";
 import { useLocalSearchParams, useRouter } from "expo-router";
+import React, { useEffect, useRef, useState } from "react";
+import { Alert, ScrollView, StyleSheet, Text, View } from "react-native";
+import PostCard from "../../components/features/PostCard";
+import CommentInput from "../../components/features/PostDetails/CommentInput";
+import CommentList from "../../components/features/PostDetails/CommentList";
+import Loading from "../../components/shared/Loading";
+import ScreenWrapper from "../../components/shared/ScreenWrapper";
+import { theme } from "../../constants/theme";
+import { useAuth } from "../../contexts/AuthContext";
+import { hp, wp } from "../../helpers/common";
+import { supabase } from "../../lib/supabase";
+import { createNotification } from "../../services/notificationService";
 import {
   createComment,
   fetchPostDetails,
   removeComment,
   removePost,
 } from "../../services/postService";
-import { hp, wp } from "../../helpers/common";
-import { theme } from "../../constants/theme";
-import { useAuth } from "../../contexts/AuthContext";
-import { TouchableOpacity } from "react-native";
-import { supabase } from "../../lib/supabase";
-import { createNotification } from "../../services/notificationService";
-import ScreenWrapper from "../../components/shared/ScreenWrapper";
-import Input from "../../components/shared/Input";
-import Loading from "../../components/shared/Loading";
-import Icon from "../../assets/icons";
-import CommentItem from "../../components/features/PostDetails/CommentList/Item/CommentItem";
-import PostCard from "../../components/features/PostCard";
 
 const postDetails = () => {
   const { postId, commentId } = useLocalSearchParams();
@@ -170,49 +168,20 @@ const postDetails = () => {
         />
 
         {/* COMMENT INPUT */}
-        <View style={styles.inputContainer}>
-          <Input
-            inputRef={inputRef}
-            placeholder="Type comment..."
-            placeholderTextcolor={theme.colors.text}
-            onChangeText={(value) => (commentRef.current = value)}
-            containerStyle={{
-              flex: 1,
-              height: hp(6.2),
-              borderRadius: theme.radius.xl,
-              borderCurve: "continuous",
-            }}
-          />
-
-          {loading ? (
-            <View style={styles.loading}>
-              <Loading size="small" />
-            </View>
-          ) : (
-            <TouchableOpacity style={styles.sendIcon} onPress={onNewComment}>
-              <Icon name="send" color={theme.colors.primaryDark} />
-            </TouchableOpacity>
-          )}
-        </View>
+        <CommentInput
+          inputRef={inputRef}
+          commentRef={commentRef}
+          loading={loading}
+          onNewComment={onNewComment}
+        />
 
         {/* COMMENT LIST */}
-        <View style={{ marginVertical: 15, gap: 17 }}>
-          {post?.comments?.map((comment, index) => (
-            <CommentItem
-              key={comment?.id?.toString()}
-              item={comment}
-              canDelete={user.id == comment.userId || user.id == post.userId}
-              commentId={commentId}
-              onDelete={onDelete}
-            />
-          ))}
-
-          {post?.comments?.length == 0 && (
-            <Text style={{ color: theme.colors.text, marginLeft: 5 }}>
-              Be first to comment!
-            </Text>
-          )}
-        </View>
+        <CommentList
+          post={post}
+          user={user}
+          commentId={commentId}
+          onDelete={onDelete}
+        />
       </ScrollView>
     </ScreenWrapper>
   );
@@ -226,23 +195,8 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     paddingVertical: wp(7),
   },
-  inputContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 10,
-  },
   list: {
     paddingHorizontal: wp(4),
-  },
-  sendIcon: {
-    alignItems: "center",
-    justifyContent: "center",
-    borderWidth: 0.8,
-    borderColor: theme.colors.primary,
-    borderRadius: theme.radius.lg,
-    borderCurve: "continuous",
-    height: hp(5.8),
-    width: hp(5.8),
   },
   center: {
     flex: 1,
@@ -253,12 +207,5 @@ const styles = StyleSheet.create({
     fontSize: hp(2.5),
     color: theme.colors.text,
     fontWeight: theme.fonts.medium,
-  },
-  loading: {
-    height: hp(5.8),
-    width: hp(5.8),
-    justifyContent: "center",
-    alignItems: "center",
-    transform: [{ scale: 1.3 }],
   },
 });

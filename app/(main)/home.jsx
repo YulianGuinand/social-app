@@ -1,11 +1,11 @@
-import React from "react";
-import { Image, View, Alert, StyleSheet, Text } from "react-native";
-import { supabase } from "../../lib/supabase";
 import { StatusBar } from "expo-status-bar";
-import ScreenWrapper from "../../components/shared/ScreenWrapper";
+import React from "react";
+import { Alert, Image, StyleSheet, Text, View } from "react-native";
 import Button from "../../components/shared/Button";
-import { hp, wp } from "../../helpers/common";
+import ScreenWrapper from "../../components/shared/ScreenWrapper";
 import { theme } from "../../constants/theme";
+import { hp, wp } from "../../helpers/common";
+import { supabase } from "../../lib/supabase";
 
 const Home = () => {
   const onLogout = async () => {

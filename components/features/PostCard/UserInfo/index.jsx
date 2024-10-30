@@ -1,12 +1,10 @@
-import { StyleSheet, Text, View } from "react-native";
+import moment from "moment";
 import React from "react";
-import { TouchableOpacity } from "react-native";
+import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import Icon from "../../../../assets/icons";
 import { theme } from "../../../../constants/theme";
 import { hp } from "../../../../helpers/common";
 import Avatar from "../../../shared/Avatar";
-import Icon from "../../../../assets/icons";
-import { Alert } from "react-native";
-import moment from "moment";
 
 const UserInfo = ({
   item,
