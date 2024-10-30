@@ -10,14 +10,9 @@ import {
 import React, { useEffect, useState } from "react";
 import { useLocalSearchParams } from "expo-router";
 import { createOrUpdateMessage } from "../../services/messageService";
-import ScreenWrapper from "../../components/ScreenWrapper";
 import { useAuth } from "../../contexts/AuthContext";
-import Header from "../../components/Header";
 import { getUserData } from "../../services/userService";
-import Messages from "../../components/Messages";
 import { hp, wp } from "../../helpers/common";
-import Input from "../../components/Input";
-import Loading from "../../components/Loading";
 import { supabase } from "../../lib/supabase";
 import Icon from "../../assets/icons";
 import { theme } from "../../constants/theme";
@@ -26,8 +21,13 @@ import * as ImagePicker from "expo-image-picker";
 import { Image } from "expo-image";
 import { getSupabaseFileUrl } from "../../services/imageService";
 import { Video } from "expo-av";
-import ReactionsPicker from "../../components/ReactionsPicker";
 import { createOrUpdateReaction } from "../../services/reactionService";
+import ScreenWrapper from "../../components/shared/ScreenWrapper";
+import Header from "../../components/shared/Header";
+import Messages from "../../components/features/Chat/Messages/Messages";
+import Input from "../../components/shared/Input";
+import Loading from "../../components/shared/Loading";
+import ReactionsPicker from "../../components/features/Chat/Reaction/ReactionsPicker";
 
 const ThreadScreen = () => {
   const { id, user2Id } = useLocalSearchParams();
@@ -174,13 +174,6 @@ const ThreadScreen = () => {
 
   let reaction = {};
   const handleOnChoose = async (item) => {
-    // if (reaction && reaction.body === item.emoji) {
-    //   await removeReaction(reaction.id);
-    //   setRefresh((prev) => !prev);
-    //   reaction = {};
-    //   onChoose();
-    //   return;
-    // }
     let data = {
       userId: user.id,
       body: item.emoji,
