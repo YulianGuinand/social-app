@@ -42,7 +42,6 @@ const Messages = ({
           filter: `threadId=eq.${id}`,
         },
         (payload) => {
-          console.log(payload);
           if (payload.eventType == "INSERT") {
             getMessages();
           }
