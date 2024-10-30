@@ -5,7 +5,7 @@ import {
   TouchableWithoutFeedback,
   View,
 } from "react-native";
-import { theme } from "../../../../constants/theme";
+import { theme } from "../../../../../constants/theme";
 
 const ReactionsPicker = ({ isVisible, children, onClose }) => {
   return (

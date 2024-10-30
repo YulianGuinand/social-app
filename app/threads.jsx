@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { FlatList, StyleSheet, Text, View } from "react-native";
-import Thread from "../components/features/Threads/Thread/Thread";
+import Thread from "../components/features/Threads/Thread";
 import Header from "../components/shared/Header";
 import Loading from "../components/shared/Loading";
 import ScreenWrapper from "../components/shared/ScreenWrapper";
