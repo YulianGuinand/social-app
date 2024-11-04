@@ -4,7 +4,14 @@ import { theme } from "../../../../constants/theme";
 import { createOrUpdateReaction } from "../../../../services/reactionService";
 import ReactionsPicker from "./ReactionPicker";
 
-const ReactionModal = ({ isVisible, setIsVisible, user, messageId, id }) => {
+const ReactionModal = ({
+  isVisible,
+  setIsVisible,
+  user,
+  messageId,
+  id,
+  setReply,
+}) => {
   // REACTIONS ITEMS
   const ReactionItems = [
     {
@@ -51,6 +58,12 @@ const ReactionModal = ({ isVisible, setIsVisible, user, messageId, id }) => {
     reaction = { ...data, id: res };
     setIsVisible(false);
   };
+
+  const onReply = () => {
+    setReply({ isReplying: true, messageId: messageId });
+    setIsVisible(false);
+  };
+
   return (
     <ReactionsPicker isVisible={isVisible} onClose={() => setIsVisible(false)}>
       <>
@@ -64,6 +77,7 @@ const ReactionModal = ({ isVisible, setIsVisible, user, messageId, id }) => {
             marginTop: 20,
           }}
         >
+          {/* REACTIONS */}
           {ReactionItems.map((item) => {
             return (
               <View
@@ -83,6 +97,21 @@ const ReactionModal = ({ isVisible, setIsVisible, user, messageId, id }) => {
               </View>
             );
           })}
+        </View>
+
+        {/* REPLY */}
+        <View
+          style={{
+            width: "100%",
+            flexDirection: "row",
+            justifyContent: "center",
+            alignContent: "center",
+            marginTop: 20,
+          }}
+        >
+          <TouchableOpacity onPress={onReply}>
+            <Text>REPLY</Text>
+          </TouchableOpacity>
         </View>
       </>
     </ReactionsPicker>

@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import { theme } from "../../../../../../constants/theme";
+import { getUserData } from "../../../../../../services/userService";
 import MessageImage from "./Image";
 import MessageVideo from "./Video";
 
@@ -12,7 +13,18 @@ const MessageFile = ({
   imageUrl,
   setState,
   state,
+  reply,
 }) => {
+  const [userReply, setUserReply] = useState();
+  const getReplyData = async () => {
+    let res = await getUserData(reply?.senderId);
+    if (res.success) setUserReply(res.data);
+  };
+
+  useEffect(() => {
+    if (reply) getReplyData();
+  }, []);
+
   return (
     <View style={{ gap: 5 }}>
       {isVideo ? (
@@ -45,6 +57,7 @@ const MessageFile = ({
               padding: 8,
               backgroundColor: "white",
               borderRadius: theme.radius.md,
+              alignSelf: "flex-start",
             }}
           >
             {message.body}

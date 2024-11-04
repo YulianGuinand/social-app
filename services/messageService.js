@@ -39,12 +39,32 @@ export const fetchMessageById = async (messageId) => {
   }
 };
 
+export const fetchRepliedMessageById = async (messageId) => {
+  try {
+    const { data, error } = await supabase
+      .from("messages")
+      .select("*, senderId (*)")
+      .eq("id", messageId);
+
+    if (error) {
+      console.log("FetchMessageById error : ", error);
+      return { success: false, msg: "Could not fetch the Message" };
+    }
+
+    return { success: true, data: data };
+  } catch (error) {
+    console.log("FetchMessageById error : ", error);
+    return { success: false, msg: "Could not fetch the Message" };
+  }
+};
+
 export const fetchMessagesByThreadId = async (threadId, limit = 5) => {
   try {
     const { data, error } = await supabase
       .from("messages")
       .select(
         `*,
+        messageReplyId (*),
         reactions (*)
         `
       )

@@ -3,6 +3,7 @@ import React from "react";
 import { TouchableOpacity } from "react-native";
 import ImageView from "react-native-image-viewing";
 import { theme } from "../../../../../../../constants/theme";
+import { hp } from "../../../../../../../helpers/common";
 
 const MessageImage = ({
   message,

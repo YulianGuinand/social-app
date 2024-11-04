@@ -5,7 +5,7 @@ import { Pressable, StyleSheet, View } from "react-native";
 import Icon from "../../../../assets/icons";
 import { theme } from "../../../../constants/theme";
 
-const ChatFile = ({ getFileType, getFileUri, setFile }) => {
+const ChatFile = ({ getFileType, getFileUri, setFile, file }) => {
   return (
     <View style={{ width: "100%", alignItems: "flex-end", marginBottom: 10 }}>
       <View

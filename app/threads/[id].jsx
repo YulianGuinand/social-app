@@ -5,6 +5,7 @@ import { Alert, View } from "react-native";
 import ChatFile from "../../components/features/Chat/Files";
 import ChatInput from "../../components/features/Chat/Input";
 import Messages from "../../components/features/Chat/Messages";
+import ReplyPreview from "../../components/features/Chat/Messages/Message/ReplyPreview";
 import ReactionModal from "../../components/features/Chat/Reaction";
 import Header from "../../components/shared/Header";
 import ScreenWrapper from "../../components/shared/ScreenWrapper";
@@ -24,6 +25,11 @@ const ThreadScreen = () => {
   const [body, setBody] = useState("");
   const [refresh, setRefresh] = useState(false);
   const [file, setFile] = useState(file);
+
+  const [reply, setReply] = useState({
+    isReplying: false,
+    messageId: 40,
+  });
 
   // EMOJI
   const [isVisible, setIsVisible] = useState(false);
@@ -62,6 +68,7 @@ const ThreadScreen = () => {
       senderId: currentUser.id,
       receiverId: user2Id,
       threadId: id,
+      messageReplyId: reply?.isReplying ? reply?.messageId : null,
     };
 
     // CREATE MESSAGE
@@ -75,6 +82,8 @@ const ThreadScreen = () => {
     } else {
       Alert.alert("Message", res.msg);
     }
+
+    setReply({ isReplying: false, messageId: null });
   };
 
   const handleMessages = () => {
@@ -142,7 +151,13 @@ const ThreadScreen = () => {
             getFileType={getFileType}
             getFileUri={getFileUri}
             setFile={setFile}
+            file={file}
           />
+        )}
+
+        {/* REPLYING */}
+        {reply?.isReplying && (
+          <ReplyPreview setReply={setReply} reply={reply} />
         )}
 
         <ChatInput
@@ -161,6 +176,7 @@ const ThreadScreen = () => {
         user={user}
         messageId={messageId}
         id={id}
+        setReply={setReply}
       />
     </ScreenWrapper>
   );

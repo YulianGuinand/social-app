@@ -4,6 +4,7 @@ import ArrowLeft from "./ArrowLeft";
 import Call from "./Call";
 import Camera from "./Camera";
 import Comment from "./Comment";
+import Cross from "./Cross";
 import Delete from "./Delete";
 import Edit from "./Edit";
 import Heart from "./Heart";
@@ -13,6 +14,7 @@ import Location from "./Location";
 import Lock from "./Lock";
 import Logout from "./logout";
 import Mail from "./Mail";
+import Message from "./Message";
 import Plus from "./Plus";
 import Search from "./Search";
 import Send from "./Send";
@@ -21,7 +23,6 @@ import ThreeDotsCircle from "./ThreeDotsCircle";
 import ThreeDotsHorizontal from "./ThreeDotsHorizontal";
 import User from "./User";
 import Video from "./Video";
-import Message from "./Message";
 
 const icons = {
   home: Home,
@@ -46,6 +47,7 @@ const icons = {
   image: Image,
   video: Video,
   message: Message,
+  cross: Cross,
 };
 
 const Icon = ({ name, ...props }) => {
