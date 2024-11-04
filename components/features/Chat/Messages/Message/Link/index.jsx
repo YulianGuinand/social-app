@@ -3,8 +3,15 @@ import { Image } from "expo-image";
 import React from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import { theme } from "../../../../../../constants/theme";
+import Reactions from "../Reactions";
 
-const MessageLink = ({ message, setMessageId, setIsVisible, links }) => {
+const MessageLink = ({
+  message,
+  setMessageId,
+  setIsVisible,
+  links,
+  deleteReaction,
+}) => {
   const renderMinimizedImage = (imageData) => {
     if (imageData && imageData.url) {
       return (
@@ -30,7 +37,7 @@ const MessageLink = ({ message, setMessageId, setIsVisible, links }) => {
   };
 
   return (
-    <View style={{ gap: 8 }}>
+    <View style={{}}>
       <LinkPreview
         metadataContainerStyle={{
           flexDirection: "column",
@@ -43,7 +50,7 @@ const MessageLink = ({ message, setMessageId, setIsVisible, links }) => {
         }}
         containerStyle={{
           flexDirection: "column-reverse",
-          backgroundColor: "white",
+          backgroundColor: "#EEEEEE",
           borderRadius: theme.radius.md,
           overflow: "hidden",
         }}
@@ -72,26 +79,30 @@ const MessageLink = ({ message, setMessageId, setIsVisible, links }) => {
         }}
         containerStyle={{
           flexDirection: "column-reverse",
-          backgroundColor: "white",
+          backgroundColor: "#EEEEEE",
           borderRadius: theme.radius.md,
           overflow: "hidden",
         }}
         renderText={(text) => (
-          <TouchableOpacity
-            onLongPress={() => {
-              setMessageId(message.id);
-              setIsVisible((prev) => !prev);
-            }}
-          >
-            <Text
-              style={{
-                paddingHorizontal: 8,
-                fontWeight: theme.fonts.bold,
+          <View style={{ gap: 20 }}>
+            <TouchableOpacity
+              onLongPress={() => {
+                setMessageId(message.id);
+                setIsVisible((prev) => !prev);
               }}
             >
-              {text}
-            </Text>
-          </TouchableOpacity>
+              <Text
+                style={{
+                  paddingHorizontal: 8,
+                  fontWeight: theme.fonts.bold,
+                }}
+              >
+                {text}
+              </Text>
+            </TouchableOpacity>
+            {/* REACTIONS */}
+            <Reactions message={message} deleteReaction={deleteReaction} />
+          </View>
         )}
         renderMinimizedImage={() => null}
         renderImage={() => null}

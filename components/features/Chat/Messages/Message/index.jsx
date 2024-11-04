@@ -11,6 +11,7 @@ import { getUserData } from "../../../../../services/userService";
 import Avatar from "../../../../shared/Avatar";
 import MessageFile from "./File";
 import MessageLink from "./Link";
+import Reactions from "./Reactions";
 
 const Message = ({
   message,
@@ -92,6 +93,7 @@ const Message = ({
                 setMessageId={setMessageId}
                 setIsVisible={setIsVisible}
                 links={links}
+                deleteReaction={deleteReaction}
               />
             ) : (
               // MESSAGE TEXT
@@ -105,17 +107,9 @@ const Message = ({
                   message={message}
                   reply={message.messageReplyId}
                   user={user}
+                  deleteReaction={deleteReaction}
                 />
               </TouchableOpacity>
-            )}
-
-            {/* REACTIONS */}
-            {message.reactions.length > 0 && (
-              <Reactions
-                message={message}
-                user={user}
-                deleteReaction={deleteReaction}
-              />
             )}
           </View>
         </View>
@@ -126,32 +120,7 @@ const Message = ({
 
 export default Message;
 
-const Reactions = ({ message, user, deleteReaction }) => {
-  return (
-    <View
-      style={[
-        styles.reactions,
-        {
-          left: message?.senderId === user.id ? -15 : null,
-          right: message?.senderId === user.id ? null : -15,
-        },
-      ]}
-    >
-      {message.reactions.map((reaction) => {
-        return (
-          <TouchableOpacity
-            key={reaction.id}
-            onPress={() => deleteReaction(reaction.id)}
-          >
-            <Text style={{ fontSize: 16 }}>{reaction.body}</Text>
-          </TouchableOpacity>
-        );
-      })}
-    </View>
-  );
-};
-
-const MessageText = ({ message, reply, user }) => {
+const MessageText = ({ message, reply, user, deleteReaction }) => {
   const [userReply, setUserReply] = useState();
   const getReplyData = async () => {
     let res = await getUserData(reply?.senderId);
@@ -164,6 +133,7 @@ const MessageText = ({ message, reply, user }) => {
 
   return (
     <View>
+      {/* REPLY */}
       {reply && (
         <View
           style={{
@@ -177,6 +147,7 @@ const MessageText = ({ message, reply, user }) => {
 
           {reply?.file && (
             <View>
+              {/* IMAGE  */}
               {reply?.file.includes("postImages") ? (
                 <View>
                   <Image
@@ -187,6 +158,7 @@ const MessageText = ({ message, reply, user }) => {
                   />
                 </View>
               ) : (
+                // VIDEO
                 <View>
                   <Video
                     source={getSupabaseFileUrl(reply?.file)}
@@ -219,15 +191,29 @@ const MessageText = ({ message, reply, user }) => {
           alignSelf: message?.senderId === user.id ? "flex-end" : "flex-start",
         }}
       >
-        <Text
+        <View
           style={{
-            padding: 8,
-            backgroundColor: "white",
+            flexDirection: "column",
             borderRadius: theme.radius.md,
+            // overflow: "hidden",
+            backgroundColor:
+              message?.senderId === user.id ? theme.colors.primary : "#EEEEEE",
           }}
         >
-          {message.body}
-        </Text>
+          <Text
+            style={{
+              padding: 6,
+              color:
+                message?.senderId === user.id ? "white" : theme.colors.text,
+              fontSize: 20,
+            }}
+          >
+            {message.body}
+          </Text>
+
+          {/* REACTIONS */}
+          <Reactions message={message} deleteReaction={deleteReaction} />
+        </View>
       </View>
     </View>
   );
@@ -240,15 +226,5 @@ const styles = StyleSheet.create({
   },
   body: {
     maxWidth: 200,
-  },
-  reactions: {
-    position: "absolute",
-    bottom: "-10%",
-    transform: [{ translateY: 20 }],
-    backgroundColor: "white",
-    padding: 5,
-    borderRadius: theme.radius.md,
-    flexDirection: "row",
-    gap: 5,
   },
 });
