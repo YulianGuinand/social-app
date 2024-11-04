@@ -73,6 +73,11 @@ const ThreadScreen = () => {
     }, 5000);
 
     setIsVisible(false);
+    setRefresh(true);
+
+    setTimeout(() => {
+      setRefresh(false);
+    }, 1000);
   };
 
   const onSubmit = async () => {
