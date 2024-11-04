@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { theme } from "../../../../../constants/theme";
 import { useAuth } from "../../../../../contexts/AuthContext";
 import { hp } from "../../../../../helpers/common";
 import { getSupabaseFileUrl } from "../../../../../services/imageService";
 import { removeReaction } from "../../../../../services/reactionService";
+import { getUserData } from "../../../../../services/userService";
 import Avatar from "../../../../shared/Avatar";
 import MessageFile from "./File";
 import MessageLink from "./Link";
@@ -50,7 +51,6 @@ const Message = ({
       style={[
         styles.container,
         {
-          elevation: isLast ? 100 : 0,
           alignItems: message?.senderId === user.id ? "flex-end" : "flex-start",
           justifyContent:
             message?.senderId === user.id ? "flex-end" : "flex-start",
@@ -58,57 +58,62 @@ const Message = ({
         },
       ]}
     >
-      {message?.senderId !== user.id && (
-        <Avatar uri={user2?.image} size={hp(4)} />
-      )}
-      <View style={styles.body}>
-        {message.file ? (
-          // MESSAGE LINKS
-          <MessageFile
-            isVideo={isVideo}
-            setMessageId={setMessageId}
-            setIsVisible={setIsVisible}
-            message={message}
-            imageUrl={imageUrl}
-            setState={setState}
-            state={state}
-          />
-        ) : links.length > 0 ? (
-          // MESSAGE LINKS
-          <MessageLink
-            message={message}
-            setMessageId={setMessageId}
-            setIsVisible={setIsVisible}
-            links={links}
-          />
-        ) : (
-          // MESSAGE TEXT
-          <TouchableOpacity
-            onLongPress={() => {
-              setMessageId(message.id);
-              setIsVisible((prev) => !prev);
-            }}
+      <View
+        style={{
+          flexDirection: "row",
+          alignItems: message.messageReplyId ? "flex-end" : "center",
+          gap: 10,
+        }}
+      >
+        {message?.senderId !== user.id && (
+          <Avatar uri={user2?.image} size={hp(4)} />
+        )}
+        <View style={{ flexDirection: "column" }}>
+          <View
+            style={[styles.body, { marginTop: message.messageReplyId ? 0 : 0 }]}
           >
-            <Text
-              style={{
-                padding: 8,
-                backgroundColor: "white",
-                borderRadius: theme.radius.md,
-              }}
-            >
-              {message.body}
-            </Text>
-          </TouchableOpacity>
-        )}
+            {message.file ? (
+              // MESSAGE LINKS
+              <MessageFile
+                isVideo={isVideo}
+                setMessageId={setMessageId}
+                setIsVisible={setIsVisible}
+                message={message}
+                imageUrl={imageUrl}
+                setState={setState}
+                state={state}
+                reply={message.messageReplyId}
+              />
+            ) : links.length > 0 ? (
+              // MESSAGE LINKS
+              <MessageLink
+                message={message}
+                setMessageId={setMessageId}
+                setIsVisible={setIsVisible}
+                links={links}
+              />
+            ) : (
+              // MESSAGE TEXT
+              <TouchableOpacity
+                onLongPress={() => {
+                  setMessageId(message.id);
+                  setIsVisible((prev) => !prev);
+                }}
+              >
+                <MessageText message={message} reply={message.messageReplyId} />
+              </TouchableOpacity>
+            )}
 
-        {/* REACTIONS */}
-        {message.reactions.length > 0 && (
-          <Reactions
-            message={message}
-            user={user}
-            deleteReaction={deleteReaction}
-          />
-        )}
+            {/* REACTIONS */}
+            {message.reactions.length > 0 && (
+              <Reactions
+                message={message}
+                user={user}
+                deleteReaction={deleteReaction}
+              />
+            )}
+          </View>
+        </View>
       </View>
     </View>
   );
@@ -141,13 +146,57 @@ const Reactions = ({ message, user, deleteReaction }) => {
   );
 };
 
+const MessageText = ({ message, reply }) => {
+  const [userReply, setUserReply] = useState();
+  const getReplyData = async () => {
+    let res = await getUserData(reply?.senderId);
+    if (res.success) setUserReply(res.data);
+  };
+
+  useEffect(() => {
+    if (reply) getReplyData();
+  }, []);
+
+  return (
+    <View>
+      {reply && (
+        <View
+          style={{
+            marginBottom: 5,
+            flexDirection: "row",
+            alignItems: "center",
+            gap: 5,
+          }}
+        >
+          <Avatar uri={userReply?.image} size={hp(2.5)} />
+          <Text style={{ fontSize: 12, fontWeight: "bold" }}>
+            @{userReply?.name}
+          </Text>
+          <Text style={{ fontSize: 11 }}>{reply?.body}</Text>
+        </View>
+      )}
+
+      <View style={{ alignSelf: "flex-start" }}>
+        <Text
+          style={{
+            padding: 8,
+            backgroundColor: "white",
+            borderRadius: theme.radius.md,
+          }}
+        >
+          {message.body}
+        </Text>
+      </View>
+    </View>
+  );
+};
+
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     gap: 10,
   },
   body: {
-    width: "fit-content",
     maxWidth: 200,
   },
   reactions: {

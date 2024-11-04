@@ -38,8 +38,6 @@ const Thread = ({ item }) => {
   };
 
   const handleNewMessage = async (payload) => {
-    console.log(payload);
-
     if (payload.eventType === "INSERT" && payload.new.id) {
       setLastMessage(payload.new);
     }

@@ -45,6 +45,7 @@ export const fetchMessagesByThreadId = async (threadId, limit = 5) => {
       .from("messages")
       .select(
         `*,
+        messageReplyId (*),
         reactions (*)
         `
       )
