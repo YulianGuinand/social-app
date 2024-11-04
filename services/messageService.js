@@ -119,3 +119,22 @@ export const createOrUpdateMessage = async (message) => {
     return { success: false, msg: "Could not create your message" };
   }
 };
+
+export const removeMessage = async (messageId) => {
+  try {
+    const { error } = await supabase
+      .from("messages")
+      .delete()
+      .eq("id", messageId);
+
+    if (error) {
+      console.log("Removing Message error: ", error);
+      return { success: false, msg: "Could not remove the message" };
+    }
+
+    return { success: true };
+  } catch (error) {
+    console.log("Removing Message error: ", error);
+    return { success: false, msg: "Could not remove the message" };
+  }
+};

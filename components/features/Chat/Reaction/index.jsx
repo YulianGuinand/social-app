@@ -1,6 +1,9 @@
-import React from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import React, { useState } from "react";
+import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import Icon from "../../../../assets/icons";
 import { theme } from "../../../../constants/theme";
+import { hp, wp } from "../../../../helpers/common";
+import { fetchMessageById } from "../../../../services/messageService";
 import { createOrUpdateReaction } from "../../../../services/reactionService";
 import ReactionsPicker from "./ReactionPicker";
 
@@ -11,7 +14,11 @@ const ReactionModal = ({
   messageId,
   id,
   setReply,
+  onDelete,
+  currentUser,
 }) => {
+  const [mine, setMine] = useState(false);
+
   // REACTIONS ITEMS
   const ReactionItems = [
     {
@@ -46,7 +53,6 @@ const ReactionModal = ({
     },
   ];
 
-  let reaction = {};
   const handleOnChoose = async (item) => {
     let data = {
       userId: user.id,
@@ -64,56 +70,106 @@ const ReactionModal = ({
     setIsVisible(false);
   };
 
+  const getMessageData = async () => {
+    let res = await fetchMessageById(messageId);
+
+    if (res.success) {
+      setMine(res.data[0]?.senderId == currentUser.id);
+    }
+  };
+
+  if (isVisible) {
+    getMessageData();
+  }
+
+  const handleOnDelete = () => {
+    Alert.alert("Confirm", "Are you sure you want to delete this message ?", [
+      {
+        text: "Cancel",
+        style: "cancel",
+      },
+      {
+        text: "Delete",
+        onPress: () => onDelete(messageId),
+        style: "destructive",
+      },
+    ]);
+  };
+
   return (
     <ReactionsPicker isVisible={isVisible} onClose={() => setIsVisible(false)}>
-      <>
-        <View
-          style={{
-            width: "100%",
-            flexDirection: "row",
-            justifyContent: "center",
-            alignContent: "center",
-            gap: 10,
-            marginTop: 20,
-          }}
-        >
-          {/* REACTIONS */}
-          {ReactionItems.map((item) => {
-            return (
-              <View
-                key={item.id}
-                style={{ alignItems: "center", justifyContent: "center" }}
+      <View
+        style={{
+          width: "100%",
+          flexDirection: "row",
+          justifyContent: "center",
+          alignContent: "center",
+          gap: 10,
+          marginTop: 20,
+        }}
+      >
+        {/* REACTIONS */}
+        {ReactionItems.map((item) => {
+          return (
+            <View
+              key={item.id}
+              style={{ alignItems: "center", justifyContent: "center" }}
+            >
+              <TouchableOpacity
+                onPress={() => handleOnChoose(item)}
+                style={{
+                  padding: 6,
+                  borderRadius: theme.radius.md,
+                  backgroundColor: theme.colors.darkLight,
+                }}
               >
-                <TouchableOpacity
-                  onPress={() => handleOnChoose(item)}
-                  style={{
-                    padding: 6,
-                    borderRadius: theme.radius.md,
-                    backgroundColor: theme.colors.darkLight,
-                  }}
-                >
-                  <Text style={{ fontSize: 30 }}>{item.emoji}</Text>
-                </TouchableOpacity>
-              </View>
-            );
-          })}
-        </View>
+                <Text style={{ fontSize: 30 }}>{item.emoji}</Text>
+              </TouchableOpacity>
+            </View>
+          );
+        })}
+      </View>
 
-        {/* REPLY */}
-        <View
+      {/* REPLY */}
+      <View
+        style={{
+          height: "70%",
+          justifyContent: "space-around",
+          alignItems: "flex-start",
+          paddingHorizontal: wp(4),
+          marginTop: 20,
+        }}
+      >
+        <TouchableOpacity
+          onPress={onReply}
           style={{
-            width: "100%",
             flexDirection: "row",
-            justifyContent: "center",
-            alignContent: "center",
-            marginTop: 20,
+            alignItems: "center",
+            gap: 20,
+            width: "100%",
+            height: "50%",
           }}
         >
-          <TouchableOpacity onPress={onReply}>
-            <Text>REPLY</Text>
+          <Icon name="reply" size={hp(4)} color={theme.colors.primary} />
+          <Text style={{ fontSize: hp(2) }}>Reply</Text>
+        </TouchableOpacity>
+
+        {mine && (
+          <TouchableOpacity
+            onPress={handleOnDelete}
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              gap: 20,
+              width: "100%",
+              height: "50%",
+            }}
+          >
+            <Icon name="delete" size={hp(4)} color={theme.colors.primary} />
+            <Text style={{ fontSize: hp(2) }}>Delete</Text>
           </TouchableOpacity>
-        </View>
-      </>
+        )}
+      </View>
     </ReactionsPicker>
   );
 };
