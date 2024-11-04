@@ -100,7 +100,11 @@ const Message = ({
                   setIsVisible((prev) => !prev);
                 }}
               >
-                <MessageText message={message} reply={message.messageReplyId} />
+                <MessageText
+                  message={message}
+                  reply={message.messageReplyId}
+                  user={user}
+                />
               </TouchableOpacity>
             )}
 
@@ -146,7 +150,7 @@ const Reactions = ({ message, user, deleteReaction }) => {
   );
 };
 
-const MessageText = ({ message, reply }) => {
+const MessageText = ({ message, reply, user }) => {
   const [userReply, setUserReply] = useState();
   const getReplyData = async () => {
     let res = await getUserData(reply?.senderId);
@@ -176,7 +180,11 @@ const MessageText = ({ message, reply }) => {
         </View>
       )}
 
-      <View style={{ alignSelf: "flex-start" }}>
+      <View
+        style={{
+          alignSelf: message?.senderId === user.id ? "flex-end" : "flex-start",
+        }}
+      >
         <Text
           style={{
             padding: 8,
