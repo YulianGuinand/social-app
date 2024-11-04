@@ -15,7 +15,6 @@ import MessageLink from "./Link";
 const Message = ({
   message,
   user2,
-  isLast,
   setIsVisible,
   setMessageId,
   setRefresh,
@@ -63,7 +62,7 @@ const Message = ({
       <View
         style={{
           flexDirection: "row",
-          alignItems: message.messageReplyId ? "flex-end" : "center",
+          alignItems: "flex-end",
           gap: 10,
         }}
       >

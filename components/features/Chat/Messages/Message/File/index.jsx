@@ -57,6 +57,7 @@ const MessageFile = ({
               padding: 8,
               backgroundColor: "white",
               borderRadius: theme.radius.md,
+              alignSelf: "flex-start",
             }}
           >
             {message.body}
