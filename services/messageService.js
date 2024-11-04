@@ -21,6 +21,7 @@ export const fetchMessages = async (userId, user2Id) => {
 };
 
 export const fetchMessageById = async (messageId) => {
+  if (!messageId) return null;
   try {
     const { data, error } = await supabase
       .from("messages")
