@@ -151,6 +151,7 @@ const ThreadScreen = () => {
             getFileType={getFileType}
             getFileUri={getFileUri}
             setFile={setFile}
+            file={file}
           />
         )}
 

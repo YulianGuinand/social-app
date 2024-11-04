@@ -1,3 +1,5 @@
+import { Video } from "expo-av";
+import { Image } from "expo-image";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { theme } from "../../../../../constants/theme";
@@ -172,11 +174,44 @@ const MessageText = ({ message, reply, user }) => {
             gap: 5,
           }}
         >
-          <Avatar uri={userReply?.image} size={hp(2.5)} />
-          <Text style={{ fontSize: 12, fontWeight: "bold" }}>
-            @{userReply?.name}
-          </Text>
-          <Text style={{ fontSize: 11 }}>{reply?.body}</Text>
+          {/* FILE */}
+
+          {reply?.file && (
+            <View>
+              {reply?.file.includes("postImages") ? (
+                <View>
+                  <Image
+                    source={getSupabaseFileUrl(reply?.file)}
+                    width={150}
+                    height={200}
+                    style={{ borderRadius: theme.radius.md }}
+                  />
+                </View>
+              ) : (
+                <View>
+                  <Video
+                    source={getSupabaseFileUrl(reply?.file)}
+                    style={{
+                      width: 150,
+                      height: 200,
+                      borderRadius: theme.radius.md,
+                    }}
+                    resizeMode="cover"
+                  />
+                </View>
+              )}
+            </View>
+          )}
+
+          {!reply?.file && (
+            <>
+              <Avatar uri={userReply?.image} size={hp(2.5)} />
+              <Text style={{ fontSize: 12, fontWeight: "bold" }}>
+                @{userReply?.name}
+              </Text>
+              <Text style={{ fontSize: 11 }}>{reply?.body}</Text>
+            </>
+          )}
         </View>
       )}
 

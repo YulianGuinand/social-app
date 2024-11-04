@@ -2,6 +2,7 @@ import { Video } from "expo-av";
 import React from "react";
 import { TouchableOpacity } from "react-native";
 import { theme } from "../../../../../../../constants/theme";
+import { hp } from "../../../../../../../helpers/common";
 
 const MessageVideo = ({ message, setMessageId, setIsVisible, imageUrl }) => {
   return (
