@@ -16,6 +16,7 @@ import Logout from "./logout";
 import Mail from "./Mail";
 import Message from "./Message";
 import Plus from "./Plus";
+import Reply from "./Reply";
 import Search from "./Search";
 import Send from "./Send";
 import Share from "./Share";
@@ -48,6 +49,7 @@ const icons = {
   video: Video,
   message: Message,
   cross: Cross,
+  reply: Reply,
 };
 
 const Icon = ({ name, ...props }) => {

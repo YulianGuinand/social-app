@@ -13,7 +13,10 @@ import { useAuth } from "../../contexts/AuthContext";
 import { wp } from "../../helpers/common";
 import { supabase } from "../../lib/supabase";
 import { getSupabaseFileUrl } from "../../services/imageService";
-import { createOrUpdateMessage } from "../../services/messageService";
+import {
+  createOrUpdateMessage,
+  removeMessage,
+} from "../../services/messageService";
 import { updateLastMessage } from "../../services/threadService";
 import { getUserData } from "../../services/userService";
 
@@ -55,6 +58,21 @@ const ThreadScreen = () => {
     if (!result.canceled) {
       setFile(result.assets[0]);
     }
+  };
+
+  const onDelete = async (messageId) => {
+    let res = await removeMessage(messageId);
+    if (res.success) {
+      setRefresh(true);
+    } else {
+      Alert.alert("Message", res.msg);
+    }
+
+    setTimeout(() => {
+      setRefresh(false);
+    }, 5000);
+
+    setIsVisible(false);
   };
 
   const onSubmit = async () => {
@@ -177,6 +195,8 @@ const ThreadScreen = () => {
         messageId={messageId}
         id={id}
         setReply={setReply}
+        onDelete={onDelete}
+        currentUser={currentUser}
       />
     </ScreenWrapper>
   );
