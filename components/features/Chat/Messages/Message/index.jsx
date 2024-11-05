@@ -75,7 +75,7 @@ const Message = ({
             style={[styles.body, { marginTop: message.messageReplyId ? 0 : 0 }]}
           >
             {message.file ? (
-              // MESSAGE LINKS
+              // MESSAGE FILE
               <MessageFile
                 isVideo={isVideo}
                 setMessageId={setMessageId}
@@ -94,6 +94,7 @@ const Message = ({
                 setIsVisible={setIsVisible}
                 links={links}
                 deleteReaction={deleteReaction}
+                mine={message?.senderId === user.id}
               />
             ) : (
               // MESSAGE TEXT

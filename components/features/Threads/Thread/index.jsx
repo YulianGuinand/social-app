@@ -32,7 +32,7 @@ const Thread = ({ item }) => {
   const getLastMessage = async () => {
     let res = await fetchMessageById(item.lastMessage);
 
-    if (res.success) {
+    if (res?.success) {
       setLastMessage(res.data[0]);
     }
   };

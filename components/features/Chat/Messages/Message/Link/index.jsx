@@ -3,7 +3,7 @@ import { Image } from "expo-image";
 import React from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import { theme } from "../../../../../../constants/theme";
-import Reactions from "../Reactions";
+import Reactions from "../Reactions/";
 
 const MessageLink = ({
   message,
@@ -11,6 +11,7 @@ const MessageLink = ({
   setIsVisible,
   links,
   deleteReaction,
+  mine,
 }) => {
   const renderMinimizedImage = (imageData) => {
     if (imageData && imageData.url) {
@@ -20,7 +21,7 @@ const MessageLink = ({
             setMessageId(message.id);
             setIsVisible((prev) => !prev);
           }}
-          style={{ paddingTop: 0, marginTop: 0 }}
+          style={{ padding: 0 }}
         >
           <Image
             source={{ uri: imageData.url }}
@@ -37,7 +38,7 @@ const MessageLink = ({
   };
 
   return (
-    <View style={{}}>
+    <View>
       <LinkPreview
         metadataContainerStyle={{
           flexDirection: "column",
@@ -50,7 +51,7 @@ const MessageLink = ({
         }}
         containerStyle={{
           flexDirection: "column-reverse",
-          backgroundColor: "#EEEEEE",
+          backgroundColor: mine ? theme.colors.primary : "#EEEEEE",
           borderRadius: theme.radius.md,
           overflow: "hidden",
         }}
@@ -64,52 +65,46 @@ const MessageLink = ({
               setIsVisible((prev) => !prev);
             }}
           >
-            <Text style={{ paddingBottom: 8 }}>{title}</Text>
+            <Text
+              style={{
+                paddingBottom: 8,
+                color: mine ? "white" : theme.colors.text,
+              }}
+            >
+              {title}
+            </Text>
           </TouchableOpacity>
         )}
         text={links[0]}
         enableAnimation
       />
-      <LinkPreview
-        textContainerStyle={{
-          marginHorizontal: 0,
-          marginVertical: 0,
-          paddingHorizontal: 8,
-          paddingTop: 10,
+      <TouchableOpacity
+        onLongPress={() => {
+          setMessageId(message.id);
+          setIsVisible((prev) => !prev);
         }}
-        containerStyle={{
-          flexDirection: "column-reverse",
-          backgroundColor: "#EEEEEE",
-          borderRadius: theme.radius.md,
-          overflow: "hidden",
-        }}
-        renderText={(text) => (
-          <View style={{ gap: 20 }}>
-            <TouchableOpacity
-              onLongPress={() => {
-                setMessageId(message.id);
-                setIsVisible((prev) => !prev);
-              }}
-            >
-              <Text
-                style={{
-                  paddingHorizontal: 8,
-                  fontWeight: theme.fonts.bold,
-                }}
-              >
-                {text}
-              </Text>
-            </TouchableOpacity>
-            {/* REACTIONS */}
-            <Reactions message={message} deleteReaction={deleteReaction} />
-          </View>
-        )}
-        renderMinimizedImage={() => null}
-        renderImage={() => null}
-        renderTitle={() => null}
-        renderDescription={() => null}
-        text={message.body}
-      />
+      >
+        <View
+          style={{
+            backgroundColor: mine ? theme.colors.primary : "#EEEEEE",
+            padding: 8,
+            borderRadius: theme.radius.md,
+
+            alignSelf: "flex-end",
+            gap: 10,
+          }}
+        >
+          <Text
+            style={{
+              color: mine ? "white" : theme.colors.text,
+              fontWeight: theme.fonts.bold,
+            }}
+          >
+            {message.body}
+          </Text>
+          <Reactions message={message} deleteReaction={deleteReaction} />
+        </View>
+      </TouchableOpacity>
     </View>
   );
 };
