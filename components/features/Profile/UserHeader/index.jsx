@@ -169,39 +169,43 @@ const UserHeader = ({
         style={{
           flexDirection: "row",
           width: "100%",
-          height: 30,
+          height: 50,
           marginTop: 15,
-          justifyContent: "space-between",
-          alignItems: "center",
+          justifyContent: "space-around",
         }}
       >
         <TouchableOpacity
           style={{
-            width: "50%",
-            height: "100%",
+            width: 70,
             alignItems: "center",
             justifyContent: "center",
-            backgroundColor: withImage ? theme.colors.primary : "white",
-            borderWidth: !withImage ? 1 : 0,
-            borderColor: !withImage && theme.colors.darkLight,
+            borderBottomWidth: withImage ? 2 : 0,
+            borderBottomColor: theme.colors.primary,
           }}
           onPress={() => setWithImage(true)}
         >
-          <Text style={{ color: withImage ? "white" : "black" }}>Image</Text>
+          <Icon
+            name="image"
+            color={withImage ? theme.colors.primary : theme.colors.text}
+            size={hp(2.4)}
+          />
         </TouchableOpacity>
+
         <TouchableOpacity
           style={{
-            width: "50%",
-            height: "100%",
+            width: 70,
             alignItems: "center",
             justifyContent: "center",
-            backgroundColor: !withImage ? theme.colors.primary : "white",
-            borderWidth: withImage ? 1 : 0,
-            borderColor: withImage && theme.colors.darkLight,
+            borderBottomWidth: !withImage ? 2 : 0,
+            borderBottomColor: theme.colors.primary,
           }}
           onPress={() => setWithImage(false)}
         >
-          <Text style={{ color: !withImage ? "white" : "black" }}>Text</Text>
+          <Icon
+            name="edit"
+            color={!withImage ? theme.colors.primary : theme.colors.text}
+            size={hp(2.4)}
+          />
         </TouchableOpacity>
       </View>
     </View>
