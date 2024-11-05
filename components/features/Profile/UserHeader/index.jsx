@@ -40,7 +40,12 @@ const UserHeader = ({
     if (res.success) {
       router.push({
         pathname: `/threads/${res.data.id}`,
-        params: { user2Id: res.data.user2_Id },
+        params: {
+          user2Id:
+            res.data.user1_id === currentUser.id
+              ? res.data.user2_id
+              : res.data.user1_id,
+        },
       });
     } else if (res.msg === "23505") {
       res = await fetchThreadByUsers(chat.user1_id, chat.user2_id);

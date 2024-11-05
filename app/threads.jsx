@@ -52,7 +52,7 @@ const threads = () => {
 
   const handleRefresh = () => {
     setRefreshing(true);
-    getThreads();
+    getThreads(false);
     setRefreshing(false);
   };
 
@@ -65,7 +65,9 @@ const threads = () => {
           showsVerticalScrollIndicator={false}
           contentContainerStyle={styles.listStyle}
           keyExtractor={(item) => item.id.toString()}
-          renderItem={({ item }) => <Thread item={item} />}
+          renderItem={({ item }) => (
+            <Thread item={item} handleRefresh={handleRefresh} />
+          )}
           onEndReached={() => {
             getThreads();
           }}

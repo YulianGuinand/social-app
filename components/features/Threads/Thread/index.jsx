@@ -1,15 +1,16 @@
 import { useRouter } from "expo-router";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import { Alert, Text, TouchableOpacity, View } from "react-native";
 import { theme } from "../../../../constants/theme";
 import { useAuth } from "../../../../contexts/AuthContext";
 import { supabase } from "../../../../lib/supabase";
 import { fetchMessageById } from "../../../../services/messageService";
+import { removeThread } from "../../../../services/threadService";
 import { getUserData } from "../../../../services/userService";
 import Avatar from "../../../shared/Avatar";
 
-const Thread = ({ item }) => {
+const Thread = ({ item, handleRefresh }) => {
   const router = useRouter();
   const [user2, setUser2] = useState([]);
   const [lastMessage, setLastMessage] = useState();
@@ -76,8 +77,32 @@ const Thread = ({ item }) => {
   const createdAt = moment(lastMessage?.created_at).fromNow();
 
   const isLastMessageMine = item.lastSender === user.id;
+
+  const deleteThread = async () => {
+    let res = await removeThread(item.id);
+
+    if (res.success) {
+      handleRefresh();
+    }
+  };
+
+  const onDeleteThread = () => {
+    Alert.alert("Confirm", "Are you sure you want to delete this chat ?", [
+      {
+        text: "Cancel",
+        style: "cancel",
+      },
+      {
+        text: "Delete",
+        onPress: () => deleteThread(),
+        style: "destructive",
+      },
+    ]);
+  };
+
   return (
     <TouchableOpacity
+      onLongPress={onDeleteThread}
       style={{
         flexDirection: "row",
         alignItems: "center",
