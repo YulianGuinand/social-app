@@ -78,3 +78,22 @@ export const fetchThreadByUsers = async (user1, user2) => {
     return { success: false, msg: "Could not fetch the Thread" };
   }
 };
+
+export const removeThread = async (threadId) => {
+  try {
+    const { error } = await supabase
+      .from("threads")
+      .delete()
+      .eq("id", threadId);
+
+    if (error) {
+      console.log("Removing Thread error: ", error);
+      return { success: false, msg: "Could not remove the Thread" };
+    }
+
+    return { success: true };
+  } catch (error) {
+    console.log("Removing Thread error: ", error);
+    return { success: false, msg: "Could not remove the Thread" };
+  }
+};
