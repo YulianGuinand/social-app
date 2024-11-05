@@ -15,6 +15,7 @@ const HeaderPost = ({
     <View style={styles.header}>
       <Text style={styles.title}>WeBDE</Text>
       <View style={styles.icons}>
+        {/* NOTIFICATIONS */}
         <Pressable
           onPress={() => {
             setNotificationCount(0);
@@ -34,6 +35,7 @@ const HeaderPost = ({
           )}
         </Pressable>
 
+        {/* THREADS */}
         <Pressable
           onPress={() => {
             router.push("threads");
@@ -47,6 +49,16 @@ const HeaderPost = ({
           />
         </Pressable>
 
+        {/* Search */}
+        <Pressable
+          onPress={() => {
+            router.push("search");
+          }}
+        >
+          <Text>S</Text>
+        </Pressable>
+
+        {/* CREATE POST */}
         <Pressable onPress={() => router.push("newPost")}>
           <Icon
             name="plus"
@@ -55,6 +67,8 @@ const HeaderPost = ({
             color={theme.colors.text}
           />
         </Pressable>
+
+        {/* PROFILE */}
         <Pressable onPress={() => router.push("profile")}>
           <Avatar
             uri={user?.image}

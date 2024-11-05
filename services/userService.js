@@ -19,6 +19,25 @@ export const getUserData = async (userId) => {
   }
 };
 
+export const searchUserByName = async (name) => {
+  try {
+    const { data, error } = await supabase
+      .from("users")
+      .select("*")
+      .ilike("name", `%${name}%`); // Utilise ilike pour une recherche insensible à la casse
+
+    if (error) {
+      console.error("Got error :", error);
+      return { success: false, msg: error?.message };
+    }
+
+    return { success: true, data: data };
+  } catch (error) {
+    console.log("Got error : ", error);
+    return { success: false, msg: error.message };
+  }
+};
+
 export const updateUser = async (userId, data) => {
   try {
     const { error } = await supabase
