@@ -18,10 +18,10 @@ const Thread = ({ item }) => {
 
   const getUsers = async () => {
     let res;
-    if (user.id == item.user1_Id) {
-      res = await getUserData(item.user2_Id);
+    if (user.id == item.user1_id) {
+      res = await getUserData(item.user2_id);
     } else {
-      res = await getUserData(item.user1_Id);
+      res = await getUserData(item.user1_id);
     }
 
     if (res.success) {

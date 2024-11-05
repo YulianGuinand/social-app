@@ -29,7 +29,7 @@ const PostImage = ({
           nbPosts={len}
         />
       }
-      ListHeaderComponentStyle={{ marginBottom: 10 }}
+      ListHeaderComponentStyle={{}}
       showsVerticalScrollIndicator={false}
       contentContainerStyle={styles.listStyle}
       keyExtractor={(_, index) => index}
