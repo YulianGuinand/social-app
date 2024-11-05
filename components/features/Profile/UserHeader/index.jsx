@@ -10,6 +10,10 @@ import Icon from "../../../../assets/icons";
 import { theme } from "../../../../constants/theme";
 import { useAuth } from "../../../../contexts/AuthContext";
 import { hp } from "../../../../helpers/common";
+import {
+  createOrUpdateChat,
+  fetchThreadByUsers,
+} from "../../../../services/threadService";
 import Avatar from "../../../shared/Avatar";
 import Header from "../../../shared/Header";
 
@@ -22,6 +26,39 @@ const UserHeader = ({
   withImage,
 }) => {
   const { user: currentUser } = useAuth();
+
+  const handleCreateChat = async () => {
+    if (user.id === currentUser.id) return null;
+
+    const chat = {
+      user1_id: currentUser.id,
+      user2_id: user.id,
+    };
+
+    let res = await createOrUpdateChat(chat);
+
+    if (res.success) {
+      router.push({
+        pathname: `/threads/${res.data.id}`,
+        params: { user2Id: res.data.user2_Id },
+      });
+    } else if (res.msg === "23505") {
+      res = await fetchThreadByUsers(chat.user1_id, chat.user2_id);
+
+      if (res.success) {
+        router.push({
+          pathname: `/threads/${res.data.id}`,
+          params: {
+            user2Id:
+              res.data.user1_id === currentUser.id
+                ? res.data.user2_id
+                : res.data.user1_id,
+          },
+        });
+      }
+    }
+  };
+
   return (
     <View style={{ flex: 1, backgroundColor: "white" }}>
       <View style={{ justifyContent: "center", marginBottom: 30 }}>
@@ -79,6 +116,53 @@ const UserHeader = ({
         <View style={{ gap: 10 }}>
           {user && user.bio && <Text style={styles.infoText}>{user.bio}</Text>}
         </View>
+      </View>
+
+      <View
+        style={{ width: "100%", flexDirection: "row", gap: 5, marginTop: 10 }}
+      >
+        <TouchableOpacity
+          onPress={() => {}}
+          style={{
+            backgroundColor: "white",
+            borderColor: theme.colors.primary,
+            borderWidth: 1,
+            borderCurve: "continuous",
+            flex: 1,
+            paddingVertical: 5,
+            borderRadius: theme.radius.xs,
+          }}
+        >
+          <Text
+            style={{
+              textAlign: "center",
+              color: theme.colors.primary,
+              fontWeight: theme.fonts.bold,
+            }}
+          >
+            Suivre
+          </Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          onPress={handleCreateChat}
+          style={{
+            backgroundColor: theme.colors.primary,
+            flex: 1,
+            paddingVertical: 5,
+            borderRadius: theme.radius.xs,
+          }}
+        >
+          <Text
+            style={{
+              textAlign: "center",
+              color: "white",
+              fontWeight: theme.fonts.bold,
+            }}
+          >
+            Écrire
+          </Text>
+        </TouchableOpacity>
       </View>
 
       <View

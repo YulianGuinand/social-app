@@ -77,7 +77,7 @@ const threads = () => {
               </View>
             ) : (
               <View style={{ marginVertical: threads.length == 0 ? 200 : 30 }}>
-                <Text>No more chats</Text>
+                <Text style={{ marginHorizontal: "auto" }}>No more chats</Text>
               </View>
             )
           }
@@ -94,5 +94,6 @@ export default threads;
 const styles = StyleSheet.create({
   listStyle: {
     marginTop: 10,
+    gap: 10,
   },
 });
