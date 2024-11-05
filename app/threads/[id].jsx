@@ -15,6 +15,7 @@ import { supabase } from "../../lib/supabase";
 import { getSupabaseFileUrl } from "../../services/imageService";
 import {
   createOrUpdateMessage,
+  fetchMessagesByThreadId,
   removeMessage,
 } from "../../services/messageService";
 import { updateLastMessage } from "../../services/threadService";
@@ -64,16 +65,20 @@ const ThreadScreen = () => {
     let res = await removeMessage(messageId);
     if (res.success) {
       setRefresh(true);
+
+      res = await fetchMessagesByThreadId(id);
+
+      if (res.success) {
+        await updateLastMessage(
+          res.data[0].threadId,
+          res.data[0].id,
+          res.data[0].senderId
+        );
+      }
     } else {
       Alert.alert("Message", res.msg);
     }
-
-    setTimeout(() => {
-      setRefresh(false);
-    }, 5000);
-
     setIsVisible(false);
-    setRefresh(true);
 
     setTimeout(() => {
       setRefresh(false);
