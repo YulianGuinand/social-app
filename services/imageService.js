@@ -1,7 +1,7 @@
 import { decode } from "base64-arraybuffer";
-import { supabase } from "../lib/supabase";
 import * as FileSystem from "expo-file-system";
 import { supabaseUrl } from "../constants";
+import { supabase } from "../lib/supabase";
 
 export const getUserImageSrc = (imagePath) => {
   if (imagePath) {

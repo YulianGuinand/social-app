@@ -1,8 +1,8 @@
-import { StyleSheet } from "react-native";
-import React from "react";
 import { Image } from "expo-image";
-import { hp } from "../../helpers/common";
+import React from "react";
+import { StyleSheet } from "react-native";
 import { theme } from "../../constants/theme";
+import { hp } from "../../helpers/common";
 import { getUserImageSrc } from "../../services/imageService";
 
 const Avatar = ({
