@@ -20,7 +20,7 @@ import { supabase } from "../lib/supabase";
 const signUp = () => {
   const router = useRouter();
   const emailRef = useRef("");
-  const nameRef = useRef("");
+  const usernameRef = useRef("");
   const passwordRef = useRef("");
   const [loading, setLoading] = useState(false);
 
@@ -30,7 +30,7 @@ const signUp = () => {
       return;
     }
 
-    let name = nameRef.current.trim();
+    let username = usernameRef.current.trim();
     let email = emailRef.current.trim();
     let password = passwordRef.current.trim();
 
@@ -44,7 +44,7 @@ const signUp = () => {
       password,
       options: {
         data: {
-          name,
+          username,
         },
       },
     });
@@ -75,7 +75,7 @@ const signUp = () => {
           <Input
             icon={<Icon name="user" size={26} strokeWidth={1.6} />}
             placeholder="Enter your username"
-            onChangeText={(value) => (nameRef.current = value)}
+            onChangeText={(value) => (usernameRef.current = value)}
           />
           <Input
             icon={<Icon name="mail" size={26} strokeWidth={1.6} />}

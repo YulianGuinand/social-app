@@ -137,7 +137,7 @@ const NewPost = () => {
             />
             <View style={{ gap: 2 }}>
               <Text style={styles.username}>
-                {currentUser && currentUser.name}
+                {currentUser && currentUser.username}
               </Text>
               <Text style={styles.publicText}>Public</Text>
             </View>

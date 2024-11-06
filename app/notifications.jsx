@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import NotificationItem from "../components/features/Notifications/NotificationItem";
 import Header from "../components/shared/Header";
+import Loading from "../components/shared/Loading";
 import ScreenWrapper from "../components/shared/ScreenWrapper";
 import { theme } from "../constants/theme";
 import { useAuth } from "../contexts/AuthContext";

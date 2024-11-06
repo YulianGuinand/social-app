@@ -165,7 +165,7 @@ const ThreadScreen = () => {
   return (
     <ScreenWrapper bg="white">
       <View style={{ paddingHorizontal: wp(4), flex: 1 }}>
-        <Header title={user?.name} />
+        <Header title={user?.username} />
         <Messages
           user2={user}
           id={id}

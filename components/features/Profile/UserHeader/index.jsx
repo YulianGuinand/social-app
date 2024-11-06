@@ -114,7 +114,7 @@ const UserHeader = ({
             flexDirection: "column",
           }}
         >
-          <Text style={styles.userName}>{user && user.name}</Text>
+          <Text style={styles.userName}>{user && user.username}</Text>
         </View>
 
         {/* BIO */}

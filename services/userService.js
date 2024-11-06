@@ -24,7 +24,7 @@ export const searchUserByName = async (name) => {
     const { data, error } = await supabase
       .from("users")
       .select("*")
-      .ilike("name", `%${name}%`); // Utilise ilike pour une recherche insensible à la casse
+      .ilike("username", `%${name}%`); // Utilise ilike pour une recherche insensible à la casse
 
     if (error) {
       console.error("Got error :", error);

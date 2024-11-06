@@ -27,7 +27,7 @@ export const fetchNotifications = async (receiverId) => {
       .select(
         `
           *,
-          sender: senderId(id, name, image)
+          sender: senderId(id, username, image)
         `
       )
       .eq("receiverId", receiverId)

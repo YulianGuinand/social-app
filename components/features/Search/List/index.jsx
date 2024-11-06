@@ -43,7 +43,7 @@ const SearchResult = ({ item }) => {
     >
       <View style={styles.resultContainer}>
         <Avatar uri={item.image} />
-        <Text>@{item.name}</Text>
+        <Text>@{item.username}</Text>
       </View>
     </TouchableHighlight>
   );

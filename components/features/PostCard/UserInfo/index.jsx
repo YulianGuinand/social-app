@@ -49,7 +49,7 @@ const UserInfo = ({
             rounded={theme.radius.md}
           />
           <View style={{ gap: 2 }}>
-            <Text style={styles.username}>{item?.user?.name}</Text>
+            <Text style={styles.username}>{item?.user?.username}</Text>
             <Text style={styles.postTime}>{createdAt}</Text>
           </View>
         </View>

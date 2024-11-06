@@ -40,7 +40,7 @@ const CommentItem = ({
           }}
         >
           <View style={styles.nameContainer}>
-            <Text style={styles.text}>{item?.user?.name}</Text>
+            <Text style={styles.text}>{item?.user?.username}</Text>
             <Text>·</Text>
             <Text style={[styles.text, { color: theme.colors.textLight }]}>
               {createdAt}

@@ -16,7 +16,7 @@ const NotificationItem = ({ item, router }) => {
     <TouchableOpacity style={styles.container} onPress={handleClick}>
       <Avatar uri={item?.sender?.image} size={hp(5)} />
       <View style={styles.nameTitle}>
-        <Text style={styles.text}>{item?.sender?.name}</Text>
+        <Text style={styles.text}>{item?.sender?.username}</Text>
         <Text style={[styles.text, { color: theme.colors.textDark }]}>
           {item?.title}
         </Text>

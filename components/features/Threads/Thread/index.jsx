@@ -124,7 +124,7 @@ const Thread = ({ item, handleRefresh }) => {
         <Avatar uri={user2?.image} size={45} />
 
         <View>
-          <Text>{user2?.name}</Text>
+          <Text>{user2?.username}</Text>
           <Text style={{ fontWeight: isLastMessageMine ? "normal" : "bold" }}>
             {lastMessage?.body.slice(0, 15)}...
           </Text>

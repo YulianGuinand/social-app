@@ -179,7 +179,7 @@ const MessageText = ({ message, reply, user, deleteReaction }) => {
             <>
               <Avatar uri={userReply?.image} size={hp(2.5)} />
               <Text style={{ fontSize: 12, fontWeight: "bold" }}>
-                @{userReply?.name}
+                @{userReply?.username}
               </Text>
               <Text style={{ fontSize: 11 }}>{reply?.body}</Text>
             </>
