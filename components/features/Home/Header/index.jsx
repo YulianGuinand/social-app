@@ -55,7 +55,12 @@ const HeaderPost = ({
             router.push("search");
           }}
         >
-          <Text>S</Text>
+          <Icon
+            name="search"
+            size={hp(3.2)}
+            strokeWidth={1.5}
+            color={theme.colors.text}
+          />
         </Pressable>
 
         {/* CREATE POST */}

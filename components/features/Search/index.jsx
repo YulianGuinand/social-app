@@ -61,7 +61,7 @@ const SearchScreen = () => {
   ]);
   return (
     <ScreenWrapper bg="white">
-      <View style={{ paddingHorizontal: wp(4) }}>
+      <View style={{ paddingHorizontal: wp(4), gap: 10 }}>
         {/* HEADER */}
         <Header title={"Search"} />
 
