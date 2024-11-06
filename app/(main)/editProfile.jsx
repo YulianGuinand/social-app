@@ -28,6 +28,8 @@ const EditProfile = () => {
 
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState({
+    firstname: "",
+    lastname: "",
     username: "",
     image: null,
     bio: "",
@@ -36,6 +38,8 @@ const EditProfile = () => {
   useEffect(() => {
     if (currentUser) {
       setUser({
+        firstname: currentUser.firstname || "",
+        lastname: currentUser.lastname || "",
         username: currentUser.username || "",
         image: currentUser.image || null,
         bio: currentUser.bio || "",
@@ -58,8 +62,8 @@ const EditProfile = () => {
 
   const onSubmit = async () => {
     let userData = { ...user };
-    let { username, image, bio } = userData;
-    if (!username || !bio) {
+    let { firstname, lastname, username, image, bio } = userData;
+    if (!username || !bio || !firstname || !lastname) {
       Alert.alert("Profile", "Please fill all the fields");
     }
     setLoading(true);
@@ -104,6 +108,18 @@ const EditProfile = () => {
             <Text style={{ fontSize: hp(1.5), color: theme.colors.text }}>
               Please fill your profile details
             </Text>
+            <Input
+              icon={<Icon name="user" />}
+              placeholder="Enter your firstname"
+              onChangeText={(value) => setUser({ ...user, firstname: value })}
+              value={user.firstname}
+            />
+            <Input
+              icon={<Icon name="user" />}
+              placeholder="Enter your lastname"
+              onChangeText={(value) => setUser({ ...user, lastname: value })}
+              value={user.lastname}
+            />
             <Input
               icon={<Icon name="user" />}
               placeholder="Enter your username"

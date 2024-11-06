@@ -20,16 +20,25 @@ import { supabase } from "../lib/supabase";
 const signUp = () => {
   const router = useRouter();
   const emailRef = useRef("");
+  const firstnameRef = useRef("");
+  const lastnameRef = useRef("");
   const usernameRef = useRef("");
   const passwordRef = useRef("");
   const [loading, setLoading] = useState(false);
 
   const onSubmit = async () => {
-    if (!emailRef.current || !passwordRef.current) {
+    if (
+      !emailRef.current ||
+      !passwordRef.current ||
+      !firstnameRef.current ||
+      !lastnameRef.current
+    ) {
       Alert.alert("Sign up", "please fill all the fields!");
       return;
     }
 
+    let firstname = firstnameRef.current.trim();
+    let lastname = lastnameRef.current.trim();
     let username = usernameRef.current.trim();
     let email = emailRef.current.trim();
     let password = passwordRef.current.trim();
@@ -45,6 +54,8 @@ const signUp = () => {
       options: {
         data: {
           username,
+          firstname,
+          lastname,
         },
       },
     });
@@ -72,6 +83,16 @@ const signUp = () => {
           <Text style={{ fontSize: hp(1.5), color: theme.colors.text }}>
             Please fill the details to create an account
           </Text>
+          <Input
+            icon={<Icon name="user" size={26} strokeWidth={1.6} />}
+            placeholder="Enter your firstname"
+            onChangeText={(value) => (firstnameRef.current = value)}
+          />
+          <Input
+            icon={<Icon name="user" size={26} strokeWidth={1.6} />}
+            placeholder="Enter your lastname"
+            onChangeText={(value) => (lastnameRef.current = value)}
+          />
           <Input
             icon={<Icon name="user" size={26} strokeWidth={1.6} />}
             placeholder="Enter your username"
