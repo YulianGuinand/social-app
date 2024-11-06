@@ -1,47 +1,42 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import React, { useRef, useState } from "react";
-import Input from "../../../shared/Input";
+import React, { useRef } from "react";
+import { StyleSheet, View } from "react-native";
 import { searchUserByName } from "../../../../services/userService";
-import { wp } from "../../../../helpers/common";
-import { theme } from "../../../../constants/theme";
+import Input from "../../../shared/Input";
 
 const SearchInput = ({ setResults }) => {
   const inputRef = useRef();
+  const debounceTimeout = useRef(null);
 
-  const handleOnChange = async () => {
-    if (inputRef.current.value === "") return null;
-    let res = await searchUserByName(inputRef.current.value);
-
-    if (res.success) {
+  const handleSearch = async (query) => {
+    if (query === "") {
       setResults([]);
-      setResults(res.data);
+      return;
     }
+    let res = await searchUserByName(query);
+    if (res.success) {
+      // console.log(res.data);
+      setResults(res.data);
+    } else {
+      setResults([]);
+    }
+  };
+
+  const handleOnChangeText = (value) => {
+    clearTimeout(debounceTimeout.current);
+
+    debounceTimeout.current = setTimeout(() => {
+      handleSearch(value);
+    }, 2000); // délai de 2000 ms
   };
 
   return (
     <View style={{ flexDirection: "row" }}>
       <Input
-        style={{ width: wp(65) }}
-        onChangeText={(value) => {
-          inputRef.current.value = value;
-        }}
+        style={{ width: "100%" }}
+        onChangeText={handleOnChangeText}
         inputRef={inputRef}
         placeholder="Search for user name"
       />
-      <TouchableOpacity
-        style={{
-          flex: 1,
-          borderRadius: theme.radius.md,
-          borderColor: theme.colors.primary,
-          borderWidth: 1,
-          borderCurve: "continuous",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-        onPress={handleOnChange}
-      >
-        <Text>Search</Text>
-      </TouchableOpacity>
     </View>
   );
 };
