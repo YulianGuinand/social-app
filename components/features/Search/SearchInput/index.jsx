@@ -14,7 +14,6 @@ const SearchInput = ({ setResults }) => {
     }
     let res = await searchUserByName(query);
     if (res.success) {
-      // console.log(res.data);
       setResults(res.data);
     } else {
       setResults([]);

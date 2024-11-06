@@ -61,6 +61,7 @@ export const fetchPosts = async (limit = 10) => {
 };
 
 export const fetchPostsProfile = async (limit = 10, userId, withImage) => {
+  if (!userId) return { sucess: false, msg: null };
   try {
     let query = supabase
       .from("posts")
@@ -82,7 +83,6 @@ export const fetchPostsProfile = async (limit = 10, userId, withImage) => {
     }
 
     query = query.limit(limit);
-
     const { data, error } = await query;
 
     if (error) {
@@ -137,6 +137,7 @@ export const removePostLike = async (postId, userId) => {
 };
 
 export const fetchPostDetails = async (postId) => {
+  if (!postId) return { sucess: false, msg: null };
   try {
     const { data, error } = await supabase
       .from("posts")
@@ -153,13 +154,13 @@ export const fetchPostDetails = async (postId) => {
       .single();
 
     if (error) {
-      console.log("fetchDetails error 1: ", error);
+      console.log("fetchDetails error: ", error);
       return { success: false, msg: "Could not fetch the post details" };
     }
 
     return { success: true, data: data };
   } catch (error) {
-    console.log("fetchDetails error 2: ", error);
+    console.log("fetchDetails error: ", error);
     return { success: false, msg: "Could not fetch the posts details" };
   }
 };
