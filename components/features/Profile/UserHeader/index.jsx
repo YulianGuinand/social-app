@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Icon from "../../../../assets/icons";
 import { theme } from "../../../../constants/theme";
 import { useAuth } from "../../../../contexts/AuthContext";
@@ -11,6 +11,11 @@ import {
 } from "../../../../services/threadService";
 import Avatar from "../../../shared/Avatar";
 import Header from "../../../shared/Header";
+import {
+  createOrUpdateFriendShip,
+  deleteFriendShip,
+  updateFriendShip,
+} from "../../../../services/FriendshipService";
 
 const UserHeader = ({
   user,
@@ -24,6 +29,7 @@ const UserHeader = ({
 }) => {
   const { user: currentUser } = useAuth();
 
+  // CREATE CHAT
   const handleCreateChat = async () => {
     if (user.id === currentUser.id) return null;
 
@@ -61,6 +67,48 @@ const UserHeader = ({
     }
   };
 
+  // CREATE FRIEND REQUEST
+  const createFriendShip = async (status = "waiting") => {
+    const friendShip = {
+      user1: currentUser.id,
+      user2: user.id,
+      status,
+    };
+
+    let res = await createOrUpdateFriendShip(friendShip);
+    if (res.success) {
+      setRelation(res.data);
+    }
+  };
+
+  // SUPPRESSION & REFUS
+  const onRemove = async (id) => {
+    let res = await deleteFriendShip(id);
+
+    if (res.success) {
+      setRelation(null);
+    }
+  };
+  const handleRemoveFriend = () => {
+    Alert.alert("Confirm", "Are you sure you want to refuse ?", [
+      {
+        text: "Cancel",
+        style: "cancel",
+      },
+      {
+        text: "Refus",
+        onPress: () => onRemove(relation.id),
+        style: "destructive",
+      },
+    ]);
+  };
+
+  // ACCEPTATION
+  const onAccept = async (status = "permit") => {
+    if (!relation) return null;
+    await updateFriendShip(relation.id, status);
+  };
+
   useEffect(() => {
     let friendShipChannel;
     if (relation && relation.user1 === currentUser.id) {
@@ -75,6 +123,7 @@ const UserHeader = ({
             filter: `user1=eq.${currentUser.id}`,
           },
           (payload) => {
+            console.log("NEW: ", payload);
             if (payload.eventType === "UPDATE" && payload.new) {
               setRelation({ ...relation, status: payload.new.status });
             }
@@ -93,6 +142,7 @@ const UserHeader = ({
             filter: `user2=eq.${currentUser.id}`,
           },
           (payload) => {
+            console.log("NEW: ", payload);
             if (payload.eventType === "UPDATE" && payload.new) {
               setRelation({ ...relation, status: payload.new.status });
             }
@@ -171,11 +221,13 @@ const UserHeader = ({
                 justifyContent: "space-between",
               }}
             >
+              {/* PERMISSION */}
               {relation.status === "permit" ? (
+                // PERMIS
                 <>
                   {/* REFUSER */}
                   <TouchableOpacity
-                    onPress={() => console.log("NE PLUS SUIVRE")}
+                    onPress={() => handleRemoveFriend()}
                     style={styles.containerBtnGauche}
                   >
                     <Text style={styles.textBtnGauche}>Ne plus suivre</Text>
@@ -183,7 +235,7 @@ const UserHeader = ({
 
                   {/* ACCEPTER */}
                   <TouchableOpacity
-                    onPress={() => console.log("ECRIRE")}
+                    onPress={() => handleCreateChat()}
                     style={styles.containerBtnDroit}
                   >
                     <Text style={styles.textBtnDroit}>Ecrire</Text>
@@ -192,17 +244,28 @@ const UserHeader = ({
               ) : // WAITING
               // IS MINE OR NOT ?
               relation.user1 === currentUser.id ? (
-                <TouchableOpacity
-                  onPress={() => console.log("WAITING")}
-                  style={styles.containerBtnGauche}
-                >
-                  <Text style={styles.textBtnGauche}>WAITING</Text>
-                </TouchableOpacity>
+                <>
+                  <TouchableOpacity
+                    onPress={() => console.log("WAITING")}
+                    style={styles.containerBtnGauche}
+                  >
+                    <Text style={styles.textBtnGauche}>WAITING</Text>
+                  </TouchableOpacity>
+
+                  {user.status === "Public" && (
+                    <TouchableOpacity
+                      onPress={() => handleCreateChat()}
+                      style={styles.containerBtnDroit}
+                    >
+                      <Text style={styles.textBtnDroit}>Ecrire</Text>
+                    </TouchableOpacity>
+                  )}
+                </>
               ) : (
                 <>
                   {/* REFUSER */}
                   <TouchableOpacity
-                    onPress={() => console.log("REFUSER")}
+                    onPress={() => handleRemoveFriend()}
                     style={styles.containerBtnGauche}
                   >
                     <Text style={styles.textBtnGauche}>REFUSER</Text>
@@ -210,7 +273,7 @@ const UserHeader = ({
 
                   {/* ACCEPTER */}
                   <TouchableOpacity
-                    onPress={() => console.log("ACCEPTER")}
+                    onPress={() => onAccept("permit")}
                     style={styles.containerBtnDroit}
                   >
                     <Text style={styles.textBtnDroit}>ACCEPTER</Text>
@@ -228,7 +291,7 @@ const UserHeader = ({
               }}
             >
               <TouchableOpacity
-                onPress={() => console.log("SUIVRE")}
+                onPress={() => createFriendShip("waiting")}
                 style={styles.containerBtnGauche}
               >
                 <Text style={styles.textBtnGauche}>SUIVRE</Text>
