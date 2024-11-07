@@ -3,7 +3,7 @@ import React, { createContext, useEffect, useState } from "react";
 import { LogBox } from "react-native";
 import { AuthProvider, useAuth } from "../contexts/AuthContext";
 import { supabase } from "../lib/supabase";
-import { getUserData } from "../services/userService";
+import { getUserDataToUpdate } from "../services/userService";
 
 export const Context = createContext(null);
 
@@ -29,7 +29,7 @@ const MainLayout = () => {
   const router = useRouter();
 
   const updateUserData = async (user) => {
-    let res = await getUserData(user?.id);
+    let res = await getUserDataToUpdate(user?.id);
 
     if (res.success) setUserData({ ...res.data });
   };
