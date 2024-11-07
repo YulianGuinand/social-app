@@ -1,11 +1,5 @@
 import React from "react";
-import {
-  Pressable,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Icon from "../../../../assets/icons";
 import { theme } from "../../../../constants/theme";
 import { useAuth } from "../../../../contexts/AuthContext";
@@ -81,14 +75,6 @@ const UserHeader = ({
               size={hp(9)}
               rounded={theme.radius.xxl * 1.4}
             />
-            {currentUser.id == user.id ? (
-              <Pressable
-                style={styles.editIcon}
-                onPress={() => router.push("editProfile")}
-              >
-                <Icon name="edit" strokeWidth={2.5} size={20} />
-              </Pressable>
-            ) : null}
           </View>
 
           <View style={{ width: "50%", alignItems: "center" }}>
@@ -110,7 +96,7 @@ const UserHeader = ({
         {/* USERNAME */}
         <View
           style={{
-            alignItems: "start",
+            alignItems: "flex-start",
             flexDirection: "column",
           }}
         >
@@ -126,48 +112,79 @@ const UserHeader = ({
       <View
         style={{ width: "100%", flexDirection: "row", gap: 5, marginTop: 10 }}
       >
-        <TouchableOpacity
-          onPress={() => {}}
-          style={{
-            backgroundColor: "white",
-            borderColor: theme.colors.primary,
-            borderWidth: 1,
-            borderCurve: "continuous",
-            flex: 1,
-            paddingVertical: 5,
-            borderRadius: theme.radius.xs,
-          }}
-        >
-          <Text
-            style={{
-              textAlign: "center",
-              color: theme.colors.primary,
-              fontWeight: theme.fonts.bold,
-            }}
-          >
-            Suivre
-          </Text>
-        </TouchableOpacity>
+        {currentUser.id !== user.id ? (
+          <>
+            <TouchableOpacity
+              onPress={() => {}}
+              style={{
+                backgroundColor: "white",
+                borderColor: theme.colors.primary,
+                borderWidth: 1,
+                borderCurve: "continuous",
+                flex: 1,
+                paddingVertical: 5,
+                borderRadius: theme.radius.xs,
+              }}
+            >
+              <Text
+                style={{
+                  textAlign: "center",
+                  color: theme.colors.primary,
+                  fontWeight: theme.fonts.bold,
+                }}
+              >
+                Suivre
+              </Text>
+            </TouchableOpacity>
 
-        <TouchableOpacity
-          onPress={handleCreateChat}
-          style={{
-            backgroundColor: theme.colors.primary,
-            flex: 1,
-            paddingVertical: 5,
-            borderRadius: theme.radius.xs,
-          }}
-        >
-          <Text
-            style={{
-              textAlign: "center",
-              color: "white",
-              fontWeight: theme.fonts.bold,
-            }}
-          >
-            Écrire
-          </Text>
-        </TouchableOpacity>
+            {user && user.status === "public" && (
+              <TouchableOpacity
+                onPress={handleCreateChat}
+                style={{
+                  backgroundColor: theme.colors.primary,
+                  flex: 1,
+                  paddingVertical: 5,
+                  borderRadius: theme.radius.xs,
+                }}
+              >
+                <Text
+                  style={{
+                    textAlign: "center",
+                    color: "white",
+                    fontWeight: theme.fonts.bold,
+                  }}
+                >
+                  Écrire
+                </Text>
+              </TouchableOpacity>
+            )}
+          </>
+        ) : (
+          <>
+            <TouchableOpacity
+              onPress={() => router.push("editProfile")}
+              style={{
+                backgroundColor: "white",
+                borderColor: theme.colors.primary,
+                borderWidth: 1,
+                borderCurve: "continuous",
+                flex: 1,
+                paddingVertical: 5,
+                borderRadius: theme.radius.xs,
+              }}
+            >
+              <Text
+                style={{
+                  textAlign: "center",
+                  color: theme.colors.primary,
+                  fontWeight: theme.fonts.bold,
+                }}
+              >
+                Modifier le profile
+              </Text>
+            </TouchableOpacity>
+          </>
+        )}
       </View>
 
       <View
@@ -239,19 +256,6 @@ const styles = StyleSheet.create({
     padding: 5,
     borderRadius: theme.radius.sm,
     backgroundColor: "transparent",
-  },
-  editIcon: {
-    position: "absolute",
-    bottom: 0,
-    right: -12,
-    padding: 7,
-    borderRadius: 50,
-    backgroundColor: "white",
-    shadowColor: theme.colors.textLight,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.4,
-    shadowRadius: 5,
-    elevation: 7,
   },
   userName: {
     fontSize: hp(2),

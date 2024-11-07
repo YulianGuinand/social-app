@@ -40,6 +40,7 @@
     "react-dom": "18.2.0",
     "react-linkify": "^1.0.0-alpha",
     "react-native": "0.74.5",
+    "react-native-dropdown-select-list": "^2.0.5",
     "react-native-gesture-handler": "~2.16.1",
     "react-native-image-viewing": "^0.2.2",
     "react-native-pell-rich-editor": "^1.9.0",

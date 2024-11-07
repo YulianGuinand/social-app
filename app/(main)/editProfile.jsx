@@ -11,6 +11,7 @@ import {
   Text,
   View,
 } from "react-native";
+import { SelectList } from "react-native-dropdown-select-list";
 import Icon from "../../assets/icons";
 import Button from "../../components/shared/Button";
 import Header from "../../components/shared/Header";
@@ -25,6 +26,8 @@ import { updateUser } from "../../services/userService";
 const EditProfile = () => {
   const router = useRouter();
 
+  const [selected, setSelected] = useState("");
+
   const { user: currentUser, setUserData } = useAuth();
 
   const [loading, setLoading] = useState(false);
@@ -35,6 +38,7 @@ const EditProfile = () => {
     image: null,
     bio: "",
     email: "",
+    status: "",
   });
 
   useEffect(() => {
@@ -46,7 +50,11 @@ const EditProfile = () => {
         image: currentUser.image || null,
         bio: currentUser.bio || "",
         email: currentUser.email || "",
+        status: currentUser.status || "",
       });
+      setSelected(
+        currentUser.status.charAt(0).toUpperCase() + currentUser.status.slice(1)
+      );
     }
   }, [currentUser]);
 
@@ -65,8 +73,8 @@ const EditProfile = () => {
 
   const onSubmit = async () => {
     let userData = { ...user };
-    let { firstname, lastname, username, image, bio } = userData;
-    if (!username || !bio || !firstname || !lastname) {
+    let { firstname, lastname, username, image, bio, status } = userData;
+    if (!username || !firstname || !lastname || !status) {
       Alert.alert("Profile", "Please fill all the fields");
     }
     setLoading(true);
@@ -90,6 +98,11 @@ const EditProfile = () => {
     user.image && typeof user.image == "object"
       ? user.image.uri
       : getUserImageSrc(user.image);
+
+  const statusData = [
+    { key: 1, value: "Privé" },
+    { key: 2, value: "Public" },
+  ];
   return (
     <ScreenWrapper bg="white">
       <KeyboardAvoidingView
@@ -115,30 +128,93 @@ const EditProfile = () => {
               <Text style={{ fontSize: hp(1.5), color: theme.colors.text }}>
                 Please fill your profile details
               </Text>
-              <Input
-                icon={<Icon name="user" />}
-                placeholder="Enter your firstname"
-                onChangeText={(value) => setUser({ ...user, firstname: value })}
-                value={user.firstname}
-              />
-              <Input
-                icon={<Icon name="user" />}
-                placeholder="Enter your lastname"
-                onChangeText={(value) => setUser({ ...user, lastname: value })}
-                value={user.lastname}
-              />
+
+              {/* FIRSTNAME & LASTNAME */}
+              <View
+                style={{
+                  flexDirection: "row",
+                  gap: 10,
+                  justifyContent: "space-between",
+                }}
+              >
+                <Input
+                  icon={<Icon name="user" />}
+                  placeholder="Enter your firstname"
+                  onChangeText={(value) =>
+                    setUser({ ...user, firstname: value })
+                  }
+                  value={user.firstname}
+                  containerStyle={{ flex: 1 }}
+                />
+                <Input
+                  icon={<Icon name="user" />}
+                  placeholder="Enter your lastname"
+                  onChangeText={(value) =>
+                    setUser({ ...user, lastname: value })
+                  }
+                  value={user.lastname}
+                  containerStyle={{ flex: 1 }}
+                />
+              </View>
+
+              {/* USERNAME */}
               <Input
                 icon={<Icon name="user" />}
                 placeholder="Enter your username"
                 onChangeText={(value) => setUser({ ...user, username: value })}
                 value={user.username}
               />
+
+              {/* EMAIL */}
               <Input
                 icon={<Icon name="mail" />}
                 placeholder="Enter your email"
                 onChangeText={(value) => setUser({ ...user, email: value })}
                 value={user.email}
               />
+
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  borderWidth: 0.4,
+                  borderColor: theme.colors.text,
+                  borderRadius: theme.radius.xxl,
+                  borderCurve: "continuous",
+                }}
+              >
+                <View
+                  style={{
+                    width: hp(7.2),
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Icon name={selected === "Public" ? "unlock" : "lock"} />
+                </View>
+                <View style={{ flex: 1 }}>
+                  <SelectList
+                    setSelected={(val) => {
+                      setSelected(val);
+                      setUser({ ...user, status: val });
+                    }}
+                    data={statusData}
+                    save="value"
+                    placeholder={selected}
+                    boxStyles={{
+                      height: hp(7.2),
+                      alignItems: "center",
+                      borderWidth: 0,
+                      paddingLeft: 0,
+                    }}
+                    dropdownStyles={{
+                      borderWidth: 0,
+                    }}
+                  />
+                </View>
+              </View>
+
+              {/* BIO */}
               <Input
                 placeholder="Enter your bio"
                 multiline={true}
@@ -146,6 +222,7 @@ const EditProfile = () => {
                 onChangeText={(value) => setUser({ ...user, bio: value })}
                 value={user.bio}
               />
+
               <Button title="Update" loading={loading} onPress={onSubmit} />
             </View>
           </ScrollView>
