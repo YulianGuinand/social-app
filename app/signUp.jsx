@@ -2,6 +2,7 @@ import { useRouter } from "expo-router";
 import React, { useRef, useState } from "react";
 import {
   Alert,
+  KeyboardAvoidingView,
   Pressable,
   StatusBar,
   StyleSheet,
@@ -20,16 +21,25 @@ import { supabase } from "../lib/supabase";
 const signUp = () => {
   const router = useRouter();
   const emailRef = useRef("");
+  const firstnameRef = useRef("");
+  const lastnameRef = useRef("");
   const usernameRef = useRef("");
   const passwordRef = useRef("");
   const [loading, setLoading] = useState(false);
 
   const onSubmit = async () => {
-    if (!emailRef.current || !passwordRef.current) {
+    if (
+      !emailRef.current ||
+      !passwordRef.current ||
+      !firstnameRef.current ||
+      !lastnameRef.current
+    ) {
       Alert.alert("Sign up", "please fill all the fields!");
       return;
     }
 
+    let firstname = firstnameRef.current.trim();
+    let lastname = lastnameRef.current.trim();
     let username = usernameRef.current.trim();
     let email = emailRef.current.trim();
     let password = passwordRef.current.trim();
@@ -45,6 +55,8 @@ const signUp = () => {
       options: {
         data: {
           username,
+          firstname,
+          lastname,
         },
       },
     });
@@ -58,7 +70,7 @@ const signUp = () => {
   return (
     <ScreenWrapper bg="white">
       <StatusBar style="dark" />
-      <View style={styles.container}>
+      <KeyboardAvoidingView behavior={"height"} style={styles.container}>
         <BackButton router={router} />
 
         {/* WELCOME TEXT */}
@@ -72,19 +84,39 @@ const signUp = () => {
           <Text style={{ fontSize: hp(1.5), color: theme.colors.text }}>
             Please fill the details to create an account
           </Text>
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              gap: 10,
+            }}
+          >
+            <Input
+              containerStyle={{ width: "45%" }}
+              icon={<Icon name="user" size={26} strokeWidth={1.6} />}
+              placeholder="Firstname"
+              onChangeText={(value) => (firstnameRef.current = value)}
+            />
+            <Input
+              containerStyle={{ width: "45%" }}
+              icon={<Icon name="user" size={26} strokeWidth={1.6} />}
+              placeholder="Lastname"
+              onChangeText={(value) => (lastnameRef.current = value)}
+            />
+          </View>
           <Input
             icon={<Icon name="user" size={26} strokeWidth={1.6} />}
-            placeholder="Enter your username"
+            placeholder="Username"
             onChangeText={(value) => (usernameRef.current = value)}
           />
           <Input
             icon={<Icon name="mail" size={26} strokeWidth={1.6} />}
-            placeholder="Enter your email"
+            placeholder="Email"
             onChangeText={(value) => (emailRef.current = value)}
           />
           <Input
             icon={<Icon name="lock" size={26} strokeWidth={1.6} />}
-            placeholder="Enter your password"
+            placeholder="Password"
             secureTextEntry
             onChangeText={(value) => (passwordRef.current = value)}
           />
@@ -110,7 +142,7 @@ const signUp = () => {
             </Text>
           </Pressable>
         </View>
-      </View>
+      </KeyboardAvoidingView>
     </ScreenWrapper>
   );
 };
@@ -119,9 +151,10 @@ export default signUp;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    // flex: 1,
     gap: 45,
     paddingHorizontal: wp(5),
+    justifyContent: "flex-end",
   },
   welcomeText: {
     fontSize: hp(4),

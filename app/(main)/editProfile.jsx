@@ -4,6 +4,7 @@ import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
   Alert,
+  KeyboardAvoidingView,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -28,17 +29,23 @@ const EditProfile = () => {
 
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState({
+    firstname: "",
+    lastname: "",
     username: "",
     image: null,
     bio: "",
+    email: "",
   });
 
   useEffect(() => {
     if (currentUser) {
       setUser({
+        firstname: currentUser.firstname || "",
+        lastname: currentUser.lastname || "",
         username: currentUser.username || "",
         image: currentUser.image || null,
         bio: currentUser.bio || "",
+        email: currentUser.email || "",
       });
     }
   }, [currentUser]);
@@ -58,8 +65,8 @@ const EditProfile = () => {
 
   const onSubmit = async () => {
     let userData = { ...user };
-    let { username, image, bio } = userData;
-    if (!username || !bio) {
+    let { firstname, lastname, username, image, bio } = userData;
+    if (!username || !bio || !firstname || !lastname) {
       Alert.alert("Profile", "Please fill all the fields");
     }
     setLoading(true);
@@ -85,43 +92,65 @@ const EditProfile = () => {
       : getUserImageSrc(user.image);
   return (
     <ScreenWrapper bg="white">
-      <View style={styles.container}>
-        <ScrollView style={{ flex: 1 }}>
-          <Header title="Edit Profile" />
+      <KeyboardAvoidingView
+        behavior={"height"}
+        style={{ justifyContent: "flex-end", flex: 1 }}
+      >
+        <View style={styles.container}>
+          <ScrollView style={{ flex: 1 }}>
+            <Header title="Edit Profile" />
 
-          {/* FORM */}
-          <View style={styles.form}>
-            <View style={styles.avatarContainer}>
-              <Image
-                source={imageSource}
-                transition={100}
-                style={styles.avatar}
+            {/* FORM */}
+            <View style={styles.form}>
+              <View style={styles.avatarContainer}>
+                <Image
+                  source={imageSource}
+                  transition={100}
+                  style={styles.avatar}
+                />
+                <Pressable style={styles.cameraIcon} onPress={onPickImage}>
+                  <Icon name="camera" size={20} strokeWidth={2.5} />
+                </Pressable>
+              </View>
+              <Text style={{ fontSize: hp(1.5), color: theme.colors.text }}>
+                Please fill your profile details
+              </Text>
+              <Input
+                icon={<Icon name="user" />}
+                placeholder="Enter your firstname"
+                onChangeText={(value) => setUser({ ...user, firstname: value })}
+                value={user.firstname}
               />
-              <Pressable style={styles.cameraIcon} onPress={onPickImage}>
-                <Icon name="camera" size={20} strokeWidth={2.5} />
-              </Pressable>
+              <Input
+                icon={<Icon name="user" />}
+                placeholder="Enter your lastname"
+                onChangeText={(value) => setUser({ ...user, lastname: value })}
+                value={user.lastname}
+              />
+              <Input
+                icon={<Icon name="user" />}
+                placeholder="Enter your username"
+                onChangeText={(value) => setUser({ ...user, username: value })}
+                value={user.username}
+              />
+              <Input
+                icon={<Icon name="mail" />}
+                placeholder="Enter your email"
+                onChangeText={(value) => setUser({ ...user, email: value })}
+                value={user.email}
+              />
+              <Input
+                placeholder="Enter your bio"
+                multiline={true}
+                containerStyle={styles.bio}
+                onChangeText={(value) => setUser({ ...user, bio: value })}
+                value={user.bio}
+              />
+              <Button title="Update" loading={loading} onPress={onSubmit} />
             </View>
-            <Text style={{ fontSize: hp(1.5), color: theme.colors.text }}>
-              Please fill your profile details
-            </Text>
-            <Input
-              icon={<Icon name="user" />}
-              placeholder="Enter your username"
-              onChangeText={(value) => setUser({ ...user, username: value })}
-              value={user.username}
-            />
-            <Input
-              placeholder="Enter your bio"
-              multiline={true}
-              containerStyle={styles.bio}
-              onChangeText={(value) => setUser({ ...user, bio: value })}
-              value={user.bio}
-            />
-
-            <Button title="Update" loading={loading} onPress={onSubmit} />
-          </View>
-        </ScrollView>
-      </View>
+          </ScrollView>
+        </View>
+      </KeyboardAvoidingView>
     </ScreenWrapper>
   );
 };

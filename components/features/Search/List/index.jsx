@@ -7,6 +7,7 @@ import {
   TouchableHighlight,
   View,
 } from "react-native";
+import { theme } from "../../../../constants/theme";
 import { wp } from "../../../../helpers/common";
 import Avatar from "../../../shared/Avatar";
 
@@ -43,7 +44,12 @@ const SearchResult = ({ item }) => {
     >
       <View style={styles.resultContainer}>
         <Avatar uri={item.image} />
-        <Text>@{item.username}</Text>
+        <View style={{ flexDirection: "column" }}>
+          <Text style={{ fontSize: 15 }}>@{item.username}</Text>
+          <Text style={{ fontSize: 13, color: theme.colors.textLight }}>
+            {item.firstname}
+          </Text>
+        </View>
       </View>
     </TouchableHighlight>
   );

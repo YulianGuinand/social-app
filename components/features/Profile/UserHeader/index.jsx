@@ -67,7 +67,7 @@ const UserHeader = ({
   return (
     <View style={{ flex: 1, backgroundColor: "white" }}>
       <View style={{ justifyContent: "center", marginBottom: 30 }}>
-        <Header title="Profile" />
+        <Header title={user.username} />
         <TouchableOpacity style={styles.logoutButton} onPress={handleLogOut}>
           <Icon name="logout" color={theme.colors.textDark} />
         </TouchableOpacity>
@@ -114,7 +114,7 @@ const UserHeader = ({
             flexDirection: "column",
           }}
         >
-          <Text style={styles.userName}>{user && user.username}</Text>
+          <Text style={styles.userName}>{user && user.firstname}</Text>
         </View>
 
         {/* BIO */}
