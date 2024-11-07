@@ -59,7 +59,7 @@ export const deleteFriendShip = async (id) => {
 };
 
 export const fetchFriendShip = async (user1, user2) => {
-  if (!user1 || !user2) return null;
+  if (!user1 || !user2) return { success: false, msg: { user1, user2 } };
   try {
     const { data, error } = await supabase
       .from("friendship")

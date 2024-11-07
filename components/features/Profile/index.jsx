@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Alert } from "react-native";
 import { useAuth } from "../../../contexts/AuthContext";
 import { supabase } from "../../../lib/supabase";
+import { fetchFriendShip } from "../../../services/FriendshipService";
 import { fetchPostsProfile } from "../../../services/postService";
 import { getUserData } from "../../../services/userService";
 import ScreenWrapper from "../../shared/ScreenWrapper";
@@ -14,6 +15,7 @@ const ProfileScreen = () => {
   const { userId } = useLocalSearchParams();
   const { user: currentUser } = useAuth();
   const [user, setUser] = useState({});
+  const [relation, setRelation] = useState();
 
   const router = useRouter();
   const [posts, setPosts] = useState([]);
@@ -92,11 +94,23 @@ const ProfileScreen = () => {
       setUser(currentUser);
     }
   };
+
+  const getRelation = async () => {
+    if (!userId) return;
+    let res = await fetchFriendShip(currentUser.id, userId);
+
+    if (res.success) {
+      setRelation(res.data[0]);
+    }
+  };
+
   useEffect(() => {
     updateUser();
   }, []);
 
   useEffect(() => {
+    getRelation();
+
     if (withImage) {
       if (posts.length === 0) {
         getPosts();
@@ -132,6 +146,8 @@ const ProfileScreen = () => {
           refreshing={refreshing}
           handleRefresh={handleRefresh}
           getPosts={getPosts}
+          relation={relation}
+          setRelation={setRelation}
         />
       ) : (
         <PostText
@@ -146,6 +162,8 @@ const ProfileScreen = () => {
           refreshing={refreshing}
           handleRefresh={handleRefresh}
           getPosts={getPosts}
+          relation={relation}
+          setRelation={setRelation}
         />
       )}
     </ScreenWrapper>

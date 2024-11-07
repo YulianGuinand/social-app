@@ -1,16 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Icon from "../../../../assets/icons";
 import { theme } from "../../../../constants/theme";
 import { useAuth } from "../../../../contexts/AuthContext";
 import { hp } from "../../../../helpers/common";
 import { supabase } from "../../../../lib/supabase";
-import {
-  createOrUpdateFriendShip,
-  deleteFriendShip,
-  fetchFriendShip,
-  updateFriendShip,
-} from "../../../../services/FriendshipService";
 import {
   createOrUpdateChat,
   fetchThreadByUsers,
@@ -25,29 +19,12 @@ const UserHeader = ({
   nbPosts = 0,
   setWithImage = () => {},
   withImage,
+  relation,
+  setRelation,
 }) => {
   const { user: currentUser } = useAuth();
 
-  const [relation, setRelation] = useState();
-
-  const handleCreateFriendShip = async (status = "waiting") => {
-    if (!user) return null;
-    if (user.id === currentUser.id) return null;
-
-    const frienShip = {
-      user1: currentUser?.id,
-      user2: user?.id,
-      status: status,
-    };
-
-    let res = await createOrUpdateFriendShip(frienShip);
-
-    if (res.success) {
-      if (status === "waiting") setRelation({ ...relation, status: "waiting" });
-    }
-  };
-
-  const handleCreateChat = async (friend = false) => {
+  const handleCreateChat = async () => {
     if (user.id === currentUser.id) return null;
 
     const chat = {
@@ -58,7 +35,6 @@ const UserHeader = ({
     let res = await createOrUpdateChat(chat);
 
     if (res.success) {
-      if (!friend) handleCreateFriendShip("permit");
       router.push({
         pathname: `/threads/${res.data.id}`,
         params: {
@@ -85,57 +61,45 @@ const UserHeader = ({
     }
   };
 
-  const getRelation = async () => {
-    if (!user) return null;
-    if (user.id === currentUser.id) return null;
-
-    let res = await fetchFriendShip(user.id, currentUser.id);
-
-    if (res?.success) {
-      setRelation();
-      if (res.data.length > 0) setRelation(res.data[0]);
-    }
-  };
-
-  const updateStatus = async (status) => {
-    if (!relation) return null;
-
-    let res;
-    if (status === "denied") {
-      res = await deleteFriendShip(relation.id);
-    } else {
-      res = await updateFriendShip(relation.id, status);
-    }
-
-    console.log("res : ", res);
-
-    if (res.success) {
-      console.log("SUCCESS");
-    }
-
-    if (status === "denied") {
-      getRelation();
-    }
-  };
-
   useEffect(() => {
-    getRelation();
-    let friendShipChannel = supabase
-      .channel("friendship")
-      .on(
-        "postgres_changes",
-        {
-          event: "*",
-          schema: "public",
-          table: "friendship",
-          filter: `user1=eq.${currentUser.id}`,
-        },
-        (payload) => {
-          console.log("CHANGES : ", payload);
-          getRelation();
-        }
-      )
-      .subscribe();
+    let friendShipChannel;
+    if (relation && relation.user1 === currentUser.id) {
+      friendShipChannel = supabase
+        .channel("friendship")
+        .on(
+          "postgres_changes",
+          {
+            event: "*",
+            schema: "public",
+            table: "friendship",
+            filter: `user1=eq.${currentUser.id}`,
+          },
+          (payload) => {
+            if (payload.eventType === "UPDATE" && payload.new) {
+              setRelation({ ...relation, status: payload.new.status });
+            }
+          }
+        )
+        .subscribe();
+    } else {
+      friendShipChannel = supabase
+        .channel("friendship")
+        .on(
+          "postgres_changes",
+          {
+            event: "*",
+            schema: "public",
+            table: "friendship",
+            filter: `user2=eq.${currentUser.id}`,
+          },
+          (payload) => {
+            if (payload.eventType === "UPDATE" && payload.new) {
+              setRelation({ ...relation, status: payload.new.status });
+            }
+          }
+        )
+        .subscribe();
+    }
 
     return () => {
       supabase.removeChannel(friendShipChannel);
@@ -151,6 +115,7 @@ const UserHeader = ({
         </TouchableOpacity>
       </View>
 
+      {/* INFO */}
       <View style={styles.container}>
         <View style={styles.avatarContainer}>
           <View>
@@ -193,137 +158,120 @@ const UserHeader = ({
         </View>
       </View>
 
-      <View
-        style={{ width: "100%", flexDirection: "row", gap: 5, marginTop: 10 }}
-      >
+      {/* ACTIONS */}
+      <View style={{ width: "100%", marginTop: 10 }}>
         {currentUser.id !== user.id ? (
-          <>
-            {relation?.status === "waiting" ? (
-              <TouchableOpacity
-                onPress={() => {}}
-                style={{
-                  backgroundColor: "white",
-                  borderColor: theme.colors.primary,
-                  borderWidth: 1,
-                  borderCurve: "continuous",
-                  flex: 1,
-                  paddingVertical: 5,
-                  borderRadius: theme.radius.xs,
-                }}
-              >
-                <Text
-                  style={{
-                    textAlign: "center",
-                    color: theme.colors.primary,
-                    fontWeight: theme.fonts.bold,
-                  }}
-                >
-                  Waiting
-                </Text>
-              </TouchableOpacity>
-            ) : relation?.status === "permit" ? (
-              <>
-                {/* NE PLUS SUIVRE */}
-                <TouchableOpacity onPress={() => updateStatus("denied")}>
-                  <Text>Ne plus suivre</Text>
-                </TouchableOpacity>
-
-                {/* ECRIRE */}
-                <TouchableOpacity
-                  onPress={() => handleCreateChat(true)}
-                  style={{
-                    backgroundColor: theme.colors.primary,
-                    flex: 1,
-                    paddingVertical: 5,
-                    borderRadius: theme.radius.xs,
-                  }}
-                >
-                  <Text
-                    style={{
-                      textAlign: "center",
-                      color: "white",
-                      fontWeight: theme.fonts.bold,
-                    }}
-                  >
-                    Écrire
-                  </Text>
-                </TouchableOpacity>
-              </>
-            ) : (
-              <TouchableOpacity
-                onPress={() => handleCreateFriendShip()}
-                style={{
-                  backgroundColor: "white",
-                  borderColor: theme.colors.primary,
-                  borderWidth: 1,
-                  borderCurve: "continuous",
-                  flex: 1,
-                  paddingVertical: 5,
-                  borderRadius: theme.radius.xs,
-                }}
-              >
-                <Text
-                  style={{
-                    textAlign: "center",
-                    color: theme.colors.primary,
-                    fontWeight: theme.fonts.bold,
-                  }}
-                >
-                  Suivre
-                </Text>
-              </TouchableOpacity>
-            )}
-
-            {user && user.status === "public" && (
-              <TouchableOpacity
-                onPress={() => handleCreateChat(false)}
-                style={{
-                  backgroundColor: theme.colors.primary,
-                  flex: 1,
-                  paddingVertical: 5,
-                  borderRadius: theme.radius.xs,
-                }}
-              >
-                <Text
-                  style={{
-                    textAlign: "center",
-                    color: "white",
-                    fontWeight: theme.fonts.bold,
-                  }}
-                >
-                  Écrire
-                </Text>
-              </TouchableOpacity>
-            )}
-          </>
-        ) : (
-          <>
-            <TouchableOpacity
-              onPress={() => router.push("editProfile")}
+          // PAS MON COMPTE
+          relation ? (
+            // RELATION EXISTANTE
+            <View
               style={{
-                backgroundColor: "white",
-                borderColor: theme.colors.primary,
-                borderWidth: 1,
-                borderCurve: "continuous",
-                flex: 1,
-                paddingVertical: 5,
-                borderRadius: theme.radius.xs,
+                flexDirection: "row",
+                gap: 10,
+                justifyContent: "space-between",
               }}
             >
-              <Text
-                style={{
-                  textAlign: "center",
-                  color: theme.colors.primary,
-                  fontWeight: theme.fonts.bold,
-                }}
+              {relation.status === "permit" ? (
+                <>
+                  {/* REFUSER */}
+                  <TouchableOpacity
+                    onPress={() => console.log("NE PLUS SUIVRE")}
+                    style={styles.containerBtnGauche}
+                  >
+                    <Text style={styles.textBtnGauche}>Ne plus suivre</Text>
+                  </TouchableOpacity>
+
+                  {/* ACCEPTER */}
+                  <TouchableOpacity
+                    onPress={() => console.log("ECRIRE")}
+                    style={styles.containerBtnDroit}
+                  >
+                    <Text style={styles.textBtnDroit}>Ecrire</Text>
+                  </TouchableOpacity>
+                </>
+              ) : // WAITING
+              // IS MINE OR NOT ?
+              relation.user1 === currentUser.id ? (
+                <TouchableOpacity
+                  onPress={() => console.log("WAITING")}
+                  style={styles.containerBtnGauche}
+                >
+                  <Text style={styles.textBtnGauche}>WAITING</Text>
+                </TouchableOpacity>
+              ) : (
+                <>
+                  {/* REFUSER */}
+                  <TouchableOpacity
+                    onPress={() => console.log("REFUSER")}
+                    style={styles.containerBtnGauche}
+                  >
+                    <Text style={styles.textBtnGauche}>REFUSER</Text>
+                  </TouchableOpacity>
+
+                  {/* ACCEPTER */}
+                  <TouchableOpacity
+                    onPress={() => console.log("ACCEPTER")}
+                    style={styles.containerBtnDroit}
+                  >
+                    <Text style={styles.textBtnDroit}>ACCEPTER</Text>
+                  </TouchableOpacity>
+                </>
+              )}
+            </View>
+          ) : (
+            // RELATION INEXISTANTE
+            <View
+              style={{
+                flexDirection: "row",
+                gap: 10,
+                justifyContent: "space-between",
+              }}
+            >
+              <TouchableOpacity
+                onPress={() => console.log("SUIVRE")}
+                style={styles.containerBtnGauche}
               >
-                Modifier le profile
-              </Text>
-            </TouchableOpacity>
-          </>
+                <Text style={styles.textBtnGauche}>SUIVRE</Text>
+              </TouchableOpacity>
+
+              {user.status === "Public" && (
+                <TouchableOpacity
+                  onPress={() => handleCreateChat()}
+                  style={styles.containerBtnDroit}
+                >
+                  <Text style={styles.textBtnDroit}>Ecrire</Text>
+                </TouchableOpacity>
+              )}
+            </View>
+          )
+        ) : (
+          // MON PROFILE
+          <TouchableOpacity
+            onPress={() => router.push("editProfile")}
+            style={{
+              backgroundColor: "white",
+              borderColor: theme.colors.primary,
+              borderWidth: 1,
+              borderCurve: "continuous",
+              flex: 1,
+              paddingVertical: 5,
+              borderRadius: theme.radius.xs,
+            }}
+          >
+            <Text
+              style={{
+                textAlign: "center",
+                color: theme.colors.primary,
+                fontWeight: theme.fonts.bold,
+              }}
+            >
+              Modifier le profile
+            </Text>
+          </TouchableOpacity>
         )}
       </View>
 
+      {/* MODE TOGGLE */}
       <View
         style={{
           flexDirection: "row",
@@ -408,5 +356,31 @@ const styles = StyleSheet.create({
     fontSize: hp(1.6),
     fontWeight: "500",
     color: theme.colors.textLight,
+  },
+
+  containerBtnGauche: {
+    backgroundColor: "white",
+    borderColor: theme.colors.primary,
+    borderWidth: 1,
+    borderCurve: "continuous",
+    flex: 1,
+    paddingVertical: 5,
+    borderRadius: theme.radius.xs,
+  },
+  textBtnGauche: {
+    textAlign: "center",
+    color: theme.colors.primary,
+    fontWeight: theme.fonts.bold,
+  },
+  containerBtnDroit: {
+    backgroundColor: theme.colors.primary,
+    flex: 1,
+    paddingVertical: 5,
+    borderRadius: theme.radius.xs,
+  },
+  textBtnDroit: {
+    textAlign: "center",
+    color: "white",
+    fontWeight: theme.fonts.bold,
   },
 });

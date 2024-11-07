@@ -7,11 +7,19 @@ import Avatar from "../../shared/Avatar";
 
 const NotificationItem = ({ item, router }) => {
   const handleClick = () => {
-    let { postId, commentId } = JSON.parse(item?.data);
-    router.push({ pathname: "postDetails", params: { postId, commentId } });
+    if (item?.title === "want to be your friend.") {
+      router.push({
+        pathname: "profile",
+        params: { userId: item?.senderId },
+      });
+    } else {
+      let { postId, commentId } = JSON.parse(item?.data);
+      router.push({ pathname: "postDetails", params: { postId, commentId } });
+    }
   };
 
   const createdAt = moment(item?.created_at).fromNow();
+
   return (
     <TouchableOpacity style={styles.container} onPress={handleClick}>
       <Avatar uri={item?.sender?.image} size={hp(5)} />
