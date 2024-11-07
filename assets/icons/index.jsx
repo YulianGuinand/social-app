@@ -22,6 +22,7 @@ import Send from "./Send";
 import Share from "./Share";
 import ThreeDotsCircle from "./ThreeDotsCircle";
 import ThreeDotsHorizontal from "./ThreeDotsHorizontal";
+import UnLock from "./UnLock";
 import User from "./User";
 import Video from "./Video";
 
@@ -50,6 +51,7 @@ const icons = {
   message: Message,
   cross: Cross,
   reply: Reply,
+  unlock: UnLock,
 };
 
 const Icon = ({ name, ...props }) => {

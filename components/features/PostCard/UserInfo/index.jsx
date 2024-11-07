@@ -37,7 +37,7 @@ const UserInfo = ({
     });
   };
 
-  const createdAt = moment(item?.created_at).format("MMM D");
+  const createdAt = moment(item?.created_at).fromNow();
   return (
     <View style={styles.header}>
       {/* USER INFO AND POST TIME */}
