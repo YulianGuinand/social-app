@@ -1,9 +1,16 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Icon from "../../../../assets/icons";
 import { theme } from "../../../../constants/theme";
 import { useAuth } from "../../../../contexts/AuthContext";
 import { hp } from "../../../../helpers/common";
+import { supabase } from "../../../../lib/supabase";
+import {
+  createOrUpdateFriendShip,
+  deleteFriendShip,
+  fetchFriendShip,
+  updateFriendShip,
+} from "../../../../services/FriendshipService";
 import {
   createOrUpdateChat,
   fetchThreadByUsers,
@@ -21,7 +28,26 @@ const UserHeader = ({
 }) => {
   const { user: currentUser } = useAuth();
 
-  const handleCreateChat = async () => {
+  const [relation, setRelation] = useState();
+
+  const handleCreateFriendShip = async (status = "waiting") => {
+    if (!user) return null;
+    if (user.id === currentUser.id) return null;
+
+    const frienShip = {
+      user1: currentUser?.id,
+      user2: user?.id,
+      status: status,
+    };
+
+    let res = await createOrUpdateFriendShip(frienShip);
+
+    if (res.success) {
+      if (status === "waiting") setRelation({ ...relation, status: "waiting" });
+    }
+  };
+
+  const handleCreateChat = async (friend = false) => {
     if (user.id === currentUser.id) return null;
 
     const chat = {
@@ -32,6 +58,7 @@ const UserHeader = ({
     let res = await createOrUpdateChat(chat);
 
     if (res.success) {
+      if (!friend) handleCreateFriendShip("permit");
       router.push({
         pathname: `/threads/${res.data.id}`,
         params: {
@@ -57,6 +84,63 @@ const UserHeader = ({
       }
     }
   };
+
+  const getRelation = async () => {
+    if (!user) return null;
+    if (user.id === currentUser.id) return null;
+
+    let res = await fetchFriendShip(user.id, currentUser.id);
+
+    if (res?.success) {
+      setRelation();
+      if (res.data.length > 0) setRelation(res.data[0]);
+    }
+  };
+
+  const updateStatus = async (status) => {
+    if (!relation) return null;
+
+    let res;
+    if (status === "denied") {
+      res = await deleteFriendShip(relation.id);
+    } else {
+      res = await updateFriendShip(relation.id, status);
+    }
+
+    console.log("res : ", res);
+
+    if (res.success) {
+      console.log("SUCCESS");
+    }
+
+    if (status === "denied") {
+      getRelation();
+    }
+  };
+
+  useEffect(() => {
+    getRelation();
+    let friendShipChannel = supabase
+      .channel("friendship")
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "friendship",
+          filter: `user1=eq.${currentUser.id}`,
+        },
+        (payload) => {
+          console.log("CHANGES : ", payload);
+          getRelation();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(friendShipChannel);
+    };
+  }, []);
 
   return (
     <View style={{ flex: 1, backgroundColor: "white" }}>
@@ -114,32 +198,85 @@ const UserHeader = ({
       >
         {currentUser.id !== user.id ? (
           <>
-            <TouchableOpacity
-              onPress={() => {}}
-              style={{
-                backgroundColor: "white",
-                borderColor: theme.colors.primary,
-                borderWidth: 1,
-                borderCurve: "continuous",
-                flex: 1,
-                paddingVertical: 5,
-                borderRadius: theme.radius.xs,
-              }}
-            >
-              <Text
+            {relation?.status === "waiting" ? (
+              <TouchableOpacity
+                onPress={() => {}}
                 style={{
-                  textAlign: "center",
-                  color: theme.colors.primary,
-                  fontWeight: theme.fonts.bold,
+                  backgroundColor: "white",
+                  borderColor: theme.colors.primary,
+                  borderWidth: 1,
+                  borderCurve: "continuous",
+                  flex: 1,
+                  paddingVertical: 5,
+                  borderRadius: theme.radius.xs,
                 }}
               >
-                Suivre
-              </Text>
-            </TouchableOpacity>
+                <Text
+                  style={{
+                    textAlign: "center",
+                    color: theme.colors.primary,
+                    fontWeight: theme.fonts.bold,
+                  }}
+                >
+                  Waiting
+                </Text>
+              </TouchableOpacity>
+            ) : relation?.status === "permit" ? (
+              <>
+                {/* NE PLUS SUIVRE */}
+                <TouchableOpacity onPress={() => updateStatus("denied")}>
+                  <Text>Ne plus suivre</Text>
+                </TouchableOpacity>
+
+                {/* ECRIRE */}
+                <TouchableOpacity
+                  onPress={() => handleCreateChat(true)}
+                  style={{
+                    backgroundColor: theme.colors.primary,
+                    flex: 1,
+                    paddingVertical: 5,
+                    borderRadius: theme.radius.xs,
+                  }}
+                >
+                  <Text
+                    style={{
+                      textAlign: "center",
+                      color: "white",
+                      fontWeight: theme.fonts.bold,
+                    }}
+                  >
+                    Écrire
+                  </Text>
+                </TouchableOpacity>
+              </>
+            ) : (
+              <TouchableOpacity
+                onPress={() => handleCreateFriendShip()}
+                style={{
+                  backgroundColor: "white",
+                  borderColor: theme.colors.primary,
+                  borderWidth: 1,
+                  borderCurve: "continuous",
+                  flex: 1,
+                  paddingVertical: 5,
+                  borderRadius: theme.radius.xs,
+                }}
+              >
+                <Text
+                  style={{
+                    textAlign: "center",
+                    color: theme.colors.primary,
+                    fontWeight: theme.fonts.bold,
+                  }}
+                >
+                  Suivre
+                </Text>
+              </TouchableOpacity>
+            )}
 
             {user && user.status === "public" && (
               <TouchableOpacity
-                onPress={handleCreateChat}
+                onPress={() => handleCreateChat(false)}
                 style={{
                   backgroundColor: theme.colors.primary,
                   flex: 1,
