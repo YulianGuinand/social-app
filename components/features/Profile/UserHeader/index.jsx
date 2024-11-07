@@ -78,6 +78,8 @@ const UserHeader = ({
     let res = await createOrUpdateFriendShip(friendShip);
     if (res.success) {
       setRelation(res.data);
+
+      // TODO : Create notification
     }
   };
 
