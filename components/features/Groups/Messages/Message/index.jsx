@@ -3,12 +3,15 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { theme } from "../../../../../constants/theme";
 import { useAuth } from "../../../../../contexts/AuthContext";
 import { hp } from "../../../../../helpers/common";
+import { getSupabaseFileUrl } from "../../../../../services/imageService";
 import { removeGroupReaction } from "../../../../../services/reactionService";
 import { getUserData } from "../../../../../services/userService";
 import Avatar from "../../../../shared/Avatar";
+import MessageFile from "./File";
 import ReactionsG from "./Reactions";
 
 const MessageG = ({ message, setMessageId, setIsVisible, setRefresh }) => {
+  const [state, setState] = useState(false);
   const { user } = useAuth();
 
   const deleteReaction = async (reactionId) => {
@@ -18,6 +21,9 @@ const MessageG = ({ message, setMessageId, setIsVisible, setRefresh }) => {
       setRefresh((prev) => !prev);
     }
   };
+
+  const imageUrl = getSupabaseFileUrl(message.file);
+  const isVideo = imageUrl?.uri.includes("postVideos");
 
   return (
     <View
@@ -47,7 +53,17 @@ const MessageG = ({ message, setMessageId, setIsVisible, setRefresh }) => {
             {/* FILE ? */}
             {message.file ? (
               // FILE
-              <></>
+              <MessageFile
+                isVideo={isVideo}
+                setMessageId={setMessageId}
+                setIsVisible={setIsVisible}
+                message={message}
+                imageUrl={imageUrl}
+                setState={setState}
+                state={state}
+                reply={message.messageReplyId}
+                deleteReaction={deleteReaction}
+              />
             ) : (
               // TEXT
               <TouchableOpacity

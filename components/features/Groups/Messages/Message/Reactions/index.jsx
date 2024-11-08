@@ -38,6 +38,7 @@ const styles = StyleSheet.create({
     borderCurve: "continuous",
     borderBottomLeftRadius: theme.radius.md,
     borderBottomRightRadius: theme.radius.md,
+    padding: 2,
   },
   reactions: {
     padding: 2,
