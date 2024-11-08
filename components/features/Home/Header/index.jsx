@@ -36,6 +36,15 @@ const HeaderPost = ({
     <View style={styles.header}>
       <Text style={styles.title}>WeBDE</Text>
       <View style={styles.icons}>
+        {/* GROUPS */}
+        <Pressable
+          onPress={() => {
+            router.push("groups");
+          }}
+        >
+          <Text>G</Text>
+        </Pressable>
+
         {/* NOTIFICATIONS */}
         <Pressable
           onPress={() => {
