@@ -9,9 +9,16 @@ const GroupItem = ({ item }) => {
   const group = item.group_id;
   const router = useRouter();
 
+  const onClick = () => {
+    router.push({
+      pathname: `/groups/${group.id}`,
+      params: { data: JSON.stringify(item) },
+    });
+  };
+
   const createdAt = moment(group.created_at).fromNow();
   return (
-    <TouchableOpacity onPress={() => {}} style={styles.container}>
+    <TouchableOpacity onPress={onClick} style={styles.container}>
       <View
         style={{
           width: "50%",
