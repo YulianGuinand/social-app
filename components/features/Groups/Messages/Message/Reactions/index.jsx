@@ -41,8 +41,9 @@ const styles = StyleSheet.create({
     padding: 2,
   },
   reactions: {
+    backgroundColor: "red",
     padding: 2,
-    flexDirection: "row",
+    flexDirection: "row-reverse",
     gap: 3,
     flexWrap: "wrap",
   },

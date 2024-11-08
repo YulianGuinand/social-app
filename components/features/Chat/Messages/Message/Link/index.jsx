@@ -3,7 +3,7 @@ import { Image } from "expo-image";
 import React from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import { theme } from "../../../../../../constants/theme";
-import Reactions from "../Reactions/";
+import Reactions from "../Reactions";
 
 const MessageLink = ({
   message,
@@ -38,7 +38,7 @@ const MessageLink = ({
   };
 
   return (
-    <View>
+    <View style={{ gap: 5 }}>
       <LinkPreview
         metadataContainerStyle={{
           flexDirection: "column",
@@ -89,7 +89,6 @@ const MessageLink = ({
             backgroundColor: mine ? theme.colors.primary : "#EEEEEE",
             padding: 8,
             borderRadius: theme.radius.md,
-
             alignSelf: "flex-end",
             gap: 10,
           }}

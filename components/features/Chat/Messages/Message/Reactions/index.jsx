@@ -3,27 +3,51 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { theme } from "../../../../../../constants/theme";
 
 const Reactions = ({ message, deleteReaction }) => {
-  return message.reactions.length > 0 ? (
-    <View style={styles.reactionsContainer}>
-      <View style={[styles.reactions, { alignSelf: "flex-start" }]}>
-        {message.reactions.map((reaction) => {
-          return (
-            <TouchableOpacity
-              key={reaction.id}
-              onPress={() => deleteReaction(reaction.id)}
-              style={{
-                backgroundColor: "#EEEEEE",
-                padding: 5,
-                borderRadius: theme.radius.md,
-              }}
-            >
-              <Text style={{ fontSize: 20 }}>{reaction.body}</Text>
-            </TouchableOpacity>
-          );
-        })}
+  if (message.reaction) {
+    return message.reactions.length > 0 ? (
+      <View style={styles.reactionsContainer}>
+        <View style={[styles.reactions, { alignSelf: "flex-start" }]}>
+          {message.reactions.map((reaction) => {
+            return (
+              <TouchableOpacity
+                key={reaction.id}
+                onPress={() => deleteReaction(reaction.id)}
+                style={{
+                  backgroundColor: "#EEEEEE",
+                  padding: 5,
+                  borderRadius: theme.radius.md,
+                }}
+              >
+                <Text style={{ fontSize: 20 }}>{reaction.body}</Text>
+              </TouchableOpacity>
+            );
+          })}
+        </View>
       </View>
-    </View>
-  ) : null;
+    ) : null;
+  } else if (message.group_reactions) {
+    return message.group_reactions.length > 0 ? (
+      <View style={styles.reactionsContainer}>
+        <View style={[styles.reactions, { alignSelf: "flex-start" }]}>
+          {message.group_reactions.map((reaction) => {
+            return (
+              <TouchableOpacity
+                key={reaction.id}
+                onPress={() => deleteReaction(reaction.id)}
+                style={{
+                  backgroundColor: "#EEEEEE",
+                  padding: 5,
+                  borderRadius: theme.radius.md,
+                }}
+              >
+                <Text style={{ fontSize: 20 }}>{reaction.body}</Text>
+              </TouchableOpacity>
+            );
+          })}
+        </View>
+      </View>
+    ) : null;
+  }
 };
 
 export default Reactions;
@@ -42,7 +66,7 @@ const styles = StyleSheet.create({
   reactions: {
     padding: 2,
     flexDirection: "row",
-    gap: 3,
     flexWrap: "wrap",
+    gap: 3,
   },
 });

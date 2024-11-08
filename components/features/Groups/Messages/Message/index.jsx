@@ -7,6 +7,7 @@ import { getSupabaseFileUrl } from "../../../../../services/imageService";
 import { removeGroupReaction } from "../../../../../services/reactionService";
 import { getUserData } from "../../../../../services/userService";
 import Avatar from "../../../../shared/Avatar";
+import MessageLink from "../../../Chat/Messages/Message/Link";
 import MessageFile from "./File";
 import ReactionsG from "./Reactions";
 
@@ -24,6 +25,16 @@ const MessageG = ({ message, setMessageId, setIsVisible, setRefresh }) => {
 
   const imageUrl = getSupabaseFileUrl(message.file);
   const isVideo = imageUrl?.uri.includes("postVideos");
+
+  const findLinksInText = (text) => {
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
+
+    const links = text.match(urlRegex);
+
+    return links || [];
+  };
+
+  const links = findLinksInText(message.body);
 
   return (
     <View
@@ -63,6 +74,16 @@ const MessageG = ({ message, setMessageId, setIsVisible, setRefresh }) => {
                 state={state}
                 reply={message.messageReplyId}
                 deleteReaction={deleteReaction}
+              />
+            ) : links.length > 0 ? (
+              // MESSAGE LINKS
+              <MessageLink
+                message={message}
+                setMessageId={setMessageId}
+                setIsVisible={setIsVisible}
+                links={links}
+                deleteReaction={deleteReaction}
+                mine={message?.user_id.id === user.id}
               />
             ) : (
               // TEXT
