@@ -43,3 +43,23 @@ export const fetchMembers = async (groupId) => {
     return { success: false, msg: "Could not fetch the Members" };
   }
 };
+
+// export const updateLastGroupMessage = async (groupId, messageId, lastSenderId) => {
+//   try {
+//     const updateRes = await supabase
+//       .from("threads")
+//       .update({ lastMessage: messageId, lastSender: lastSenderId })
+//       .eq("id", threadId);
+
+//     if (updateRes.error) {
+//       console.error(
+//         "Erreur lors de la mise à jour du thread:",
+//         updateRes.error
+//       );
+//     }
+
+//     return { success: true };
+//   } catch (error) {
+//     console.error("Erreur de mise à jour du dernier message:", error);
+//   }
+// };

@@ -9,8 +9,8 @@ import { getSupabaseFileUrl } from "../../../../../services/imageService";
 import { removeReaction } from "../../../../../services/reactionService";
 import { getUserData } from "../../../../../services/userService";
 import Avatar from "../../../../shared/Avatar";
-import MessageFile from "./File";
-import MessageLink from "./Link";
+import MessageFile from "../../../Groups/Messages/Message/File";
+import MessageLink from "../../../Groups/Messages/Message/Link";
 import Reactions from "./Reactions";
 
 const Message = ({

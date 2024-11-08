@@ -39,10 +39,49 @@ export const createOrUpdateReaction = async (reaction) => {
   }
 };
 
+export const createOrUpdateGroupReaction = async (reaction) => {
+  try {
+    const { data, error } = await supabase
+      .from("group_reactions")
+      .upsert(reaction)
+      .select()
+      .single();
+
+    if (error) {
+      console.log("CreateReaction Error: ", error);
+      return { success: false, msg: "Could not create your Reaction" };
+    }
+
+    return { success: true, data: data };
+  } catch (error) {
+    console.log("CreateReaction error: ", error);
+    return { success: false, msg: "Could not create your Reaction" };
+  }
+};
+
 export const removeReaction = async (reactionId) => {
   try {
     const { error } = await supabase
       .from("reactions")
+      .delete()
+      .eq("id", reactionId);
+
+    if (error) {
+      console.log("removeReaction error: ", error);
+      return { success: false, msg: "Could not remove the Reaction" };
+    }
+
+    return { success: true, data: { reactionId } };
+  } catch (error) {
+    console.log("removeReaction error: ", error);
+    return { success: false, msg: "Could not remove the Reaction" };
+  }
+};
+
+export const removeGroupReaction = async (reactionId) => {
+  try {
+    const { error } = await supabase
+      .from("group_reactions")
       .delete()
       .eq("id", reactionId);
 

@@ -24,7 +24,9 @@ export const fetchGroupMessages = async (groupId) => {
   try {
     const { data, error } = await supabase
       .from("group_messages")
-      .select(`*, group_reactions (*)`)
+      .select(
+        `*, group_reactions (*), user_id (id, username, firstname, lastname, image)`
+      )
       .eq("group_id", groupId)
       .order("created_at", { ascending: false });
     if (error) {
@@ -43,6 +45,26 @@ export const fetchMessageById = async (messageId) => {
   try {
     const { data, error } = await supabase
       .from("messages")
+      .select("*")
+      .eq("id", messageId);
+
+    if (error) {
+      console.log("FetchMessageById error : ", error);
+      return { success: false, msg: "Could not fetch the Message" };
+    }
+
+    return { success: true, data: data };
+  } catch (error) {
+    console.log("FetchMessageById error : ", error);
+    return { success: false, msg: "Could not fetch the Message" };
+  }
+};
+
+export const fetchGroupMessageById = async (messageId) => {
+  if (!messageId) return null;
+  try {
+    const { data, error } = await supabase
+      .from("group_messages")
       .select("*")
       .eq("id", messageId);
 
@@ -102,6 +124,31 @@ export const fetchMessagesByThreadId = async (threadId, limit = 5) => {
   }
 };
 
+export const fetchMessagesByGroupId = async (groupId, limit = 5) => {
+  try {
+    const { data, error } = await supabase
+      .from("group_messages")
+      .select(
+        `*,
+        messageReplyId (*),
+        group_reactions (*)
+        `
+      )
+      .eq("group_id", groupId)
+      .order("created_at", { ascending: false })
+      .limit(limit);
+
+    if (error) {
+      console.log("fetchMessagesByThreadId error: ", error);
+      return { success: false, msg: "Could not fetch the Messages" };
+    }
+    return { success: true, data: data };
+  } catch (error) {
+    console.log("fetchMessagesByThreadId error: ", error);
+    return { success: false, msg: "Could not fetch the Messages" };
+  }
+};
+
 export const createOrUpdateMessage = async (message) => {
   try {
     // upload image
@@ -139,10 +186,66 @@ export const createOrUpdateMessage = async (message) => {
   }
 };
 
+export const createOrUpdateGroupMessage = async (message) => {
+  try {
+    // upload image
+    if (message.file && typeof message.file == "object") {
+      let isImage = message?.file?.type == "image";
+      let folderName = isImage ? "postImages" : "postVideos";
+
+      let fileResult = await uploadFile(
+        folderName,
+        message?.file?.uri,
+        isImage
+      );
+
+      if (fileResult.success) message.file = fileResult.data;
+      else {
+        return fileResult;
+      }
+    }
+
+    const { data, error } = await supabase
+      .from("group_messages")
+      .upsert(message)
+      .select()
+      .single();
+
+    if (error) {
+      console.log("CreateMessage Error: ", error);
+      return { success: false, msg: "Could not create your message" };
+    }
+
+    return { success: true, data: data };
+  } catch (error) {
+    console.log("CreateMessage error: ", error);
+    return { success: false, msg: "Could not create your message" };
+  }
+};
+
 export const removeMessage = async (messageId) => {
   try {
     const { error } = await supabase
       .from("messages")
+      .delete()
+      .eq("id", messageId);
+
+    if (error) {
+      console.log("Removing Message error: ", error);
+      return { success: false, msg: "Could not remove the message" };
+    }
+
+    return { success: true };
+  } catch (error) {
+    console.log("Removing Message error: ", error);
+    return { success: false, msg: "Could not remove the message" };
+  }
+};
+
+export const removeMessageG = async (messageId) => {
+  try {
+    const { error } = await supabase
+      .from("group_messages")
       .delete()
       .eq("id", messageId);
 
