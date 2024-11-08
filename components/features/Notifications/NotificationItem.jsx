@@ -24,13 +24,32 @@ const NotificationItem = ({ item, router }) => {
     <TouchableOpacity style={styles.container} onPress={handleClick}>
       <Avatar uri={item?.sender?.image} size={hp(5)} />
       <View style={styles.nameTitle}>
-        <Text style={styles.text}>{item?.sender?.username}</Text>
-        <Text style={[styles.text, { color: theme.colors.textDark }]}>
+        <Text style={[styles.text, { fontWeight: theme.fonts.medium }]}>
+          {item?.sender?.username}
+        </Text>
+
+        <Text
+          style={[
+            styles.text,
+            {
+              color: theme.colors.textDark,
+              fontWeight: item?.new ? theme.fonts.medium : "normal",
+            },
+          ]}
+        >
           {item?.title}
         </Text>
       </View>
 
-      <Text style={[styles.text, { color: theme.colors.textLight }]}>
+      <Text
+        style={[
+          styles.text,
+          {
+            color: theme.colors.textLight,
+            fontWeight: item?.new ? theme.fonts.medium : "normal",
+          },
+        ]}
+      >
         {createdAt}
       </Text>
     </TouchableOpacity>
@@ -60,7 +79,6 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: hp(1.6),
-    fontWeight: theme.fonts.medium,
     color: theme.colors.text,
   },
 });

@@ -8,17 +8,16 @@ import ScreenWrapper from "../components/shared/ScreenWrapper";
 import { theme } from "../constants/theme";
 import { useAuth } from "../contexts/AuthContext";
 import { hp, wp } from "../helpers/common";
-import { fetchNotifications } from "../services/notificationService";
+import {
+  fetchNotifications,
+  updateNewNotification,
+} from "../services/notificationService";
 
 const Notifications = () => {
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(false);
   const { user } = useAuth();
   const router = useRouter();
-
-  useEffect(() => {
-    getNotifications();
-  }, []);
 
   const getNotifications = async () => {
     setLoading(true);
@@ -28,6 +27,16 @@ const Notifications = () => {
       setNotifications(res.data);
     }
   };
+
+  const viewedNotification = () => {
+    if (!user) return null;
+    updateNewNotification(user.id);
+  };
+
+  useEffect(() => {
+    getNotifications();
+    viewedNotification();
+  }, []);
 
   if (loading) {
     return (

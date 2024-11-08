@@ -44,3 +44,22 @@ export const fetchNotifications = async (receiverId) => {
     return { success: false, msg: "Could not fetch notifications" };
   }
 };
+
+export const updateNewNotification = async (receiverId) => {
+  try {
+    const { data, error } = await supabase
+      .from("notifications")
+      .update({ new: false })
+      .eq("receiverId", receiverId);
+
+    if (error) {
+      console.log("UpdateNotifications error: ", error);
+      return { success: false, msg: "Could not Update notifications" };
+    }
+
+    return { success: true, data: data };
+  } catch (error) {
+    console.log("UpdateNotifications error: ", error);
+    return { success: false, msg: "Could not Update notifications" };
+  }
+};
