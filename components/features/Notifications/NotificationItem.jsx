@@ -7,22 +7,49 @@ import Avatar from "../../shared/Avatar";
 
 const NotificationItem = ({ item, router }) => {
   const handleClick = () => {
-    let { postId, commentId } = JSON.parse(item?.data);
-    router.push({ pathname: "postDetails", params: { postId, commentId } });
+    if (item?.title === "want to be your friend") {
+      router.push({
+        pathname: "profile",
+        params: { userId: item?.senderId },
+      });
+    } else {
+      let { postId, commentId } = JSON.parse(item?.data);
+      router.push({ pathname: "postDetails", params: { postId, commentId } });
+    }
   };
 
   const createdAt = moment(item?.created_at).fromNow();
+
   return (
     <TouchableOpacity style={styles.container} onPress={handleClick}>
       <Avatar uri={item?.sender?.image} size={hp(5)} />
       <View style={styles.nameTitle}>
-        <Text style={styles.text}>{item?.sender?.username}</Text>
-        <Text style={[styles.text, { color: theme.colors.textDark }]}>
+        <Text style={[styles.text, { fontWeight: theme.fonts.medium }]}>
+          {item?.sender?.username}
+        </Text>
+
+        <Text
+          style={[
+            styles.text,
+            {
+              color: theme.colors.textDark,
+              fontWeight: item?.new ? theme.fonts.medium : "normal",
+            },
+          ]}
+        >
           {item?.title}
         </Text>
       </View>
 
-      <Text style={[styles.text, { color: theme.colors.textLight }]}>
+      <Text
+        style={[
+          styles.text,
+          {
+            color: theme.colors.textLight,
+            fontWeight: item?.new ? theme.fonts.medium : "normal",
+          },
+        ]}
+      >
         {createdAt}
       </Text>
     </TouchableOpacity>
@@ -52,7 +79,6 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: hp(1.6),
-    fontWeight: theme.fonts.medium,
     color: theme.colors.text,
   },
 });

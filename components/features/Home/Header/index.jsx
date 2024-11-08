@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import Icon from "../../../../assets/icons";
 import { theme } from "../../../../constants/theme";
 import { hp, wp } from "../../../../helpers/common";
+import { fetchNotifications } from "../../../../services/notificationService";
 import Avatar from "../../../shared/Avatar";
 
 const HeaderPost = ({
@@ -11,6 +12,26 @@ const HeaderPost = ({
   setNotificationCount,
   user,
 }) => {
+  const [notifiactions, setNotifications] = useState();
+
+  const getNotifications = async () => {
+    if (!user) return null;
+    let res = await fetchNotifications(user.id);
+    if (res.success) {
+      const data = res.data;
+
+      data.forEach((notifiaction) => {
+        if (notifiaction.new) {
+          setNotificationCount((prev) => prev + 1);
+        }
+      });
+    }
+  };
+
+  useEffect(() => {
+    getNotifications();
+  }, []);
+
   return (
     <View style={styles.header}>
       <Text style={styles.title}>WeBDE</Text>

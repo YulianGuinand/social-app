@@ -16,6 +16,8 @@ const PostText = ({
   refreshing,
   handleRefresh,
   getPosts,
+  relation,
+  setRelation,
 }) => {
   return (
     <FlatList
@@ -28,6 +30,8 @@ const PostText = ({
           setWithImage={setWithImage}
           withImage={withImage}
           nbPosts={len}
+          relation={relation}
+          setRelation={setRelation}
         />
       }
       ListHeaderComponentStyle={{}}
