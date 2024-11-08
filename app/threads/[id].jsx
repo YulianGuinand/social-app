@@ -97,6 +97,7 @@ const ThreadScreen = () => {
       receiverId: user2Id,
       threadId: id,
       messageReplyId: reply?.isReplying ? reply?.messageId : null,
+      data: JSON.stringify({ views: [currentUser] }),
     };
 
     // CREATE MESSAGE

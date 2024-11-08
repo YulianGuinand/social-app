@@ -20,7 +20,13 @@ const Messages = ({
     limit += 2;
     let res = await fetchMessagesByThreadId(id, limit);
     if (res.success) {
-      setNewMessages(res.data);
+      let messages = [];
+
+      res.data.forEach((message) => {
+        messages.push({ ...message, data: JSON.parse(message.data) });
+      });
+
+      setNewMessages(messages);
     }
   };
 

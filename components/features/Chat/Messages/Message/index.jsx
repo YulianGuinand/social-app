@@ -48,6 +48,8 @@ const Message = ({
     }
   };
 
+  console.log(message.data.views.length === 1);
+
   return (
     <View
       style={[
