@@ -7,7 +7,7 @@ import Avatar from "../../shared/Avatar";
 
 const NotificationItem = ({ item, router }) => {
   const handleClick = () => {
-    if (item?.title === "want to be your friend.") {
+    if (item?.title === "want to be your friend") {
       router.push({
         pathname: "profile",
         params: { userId: item?.senderId },

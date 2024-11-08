@@ -6,16 +6,17 @@ import { useAuth } from "../../../../contexts/AuthContext";
 import { hp } from "../../../../helpers/common";
 import { supabase } from "../../../../lib/supabase";
 import {
+  createOrUpdateFriendShip,
+  deleteFriendShip,
+  updateFriendShip,
+} from "../../../../services/FriendshipService";
+import { createNotification } from "../../../../services/notificationService";
+import {
   createOrUpdateChat,
   fetchThreadByUsers,
 } from "../../../../services/threadService";
 import Avatar from "../../../shared/Avatar";
 import Header from "../../../shared/Header";
-import {
-  createOrUpdateFriendShip,
-  deleteFriendShip,
-  updateFriendShip,
-} from "../../../../services/FriendshipService";
 
 const UserHeader = ({
   user,
@@ -79,7 +80,14 @@ const UserHeader = ({
     if (res.success) {
       setRelation(res.data);
 
-      // TODO : Create notification
+      let notify = {
+        senderId: currentUser.id,
+        receiverId: user.id,
+        title: "want to be your friend",
+        data: "",
+        new: true,
+      };
+      createNotification(notify);
     }
   };
 
@@ -422,7 +430,6 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     color: theme.colors.textLight,
   },
-
   containerBtnGauche: {
     backgroundColor: "white",
     borderColor: theme.colors.primary,
