@@ -12,6 +12,7 @@ const GroupMessage = ({
   setRefresh,
 }) => {
   const [messages, setMessages] = useState();
+  const [refreshing, setRefreshing] = useState(false);
 
   const getMessages = async () => {
     if (!id) return null;
@@ -52,6 +53,11 @@ const GroupMessage = ({
     };
   }, []);
 
+  const handleRefresh = () => {
+    setRefreshing(true);
+    getMessages();
+    setRefreshing(false);
+  };
   return (
     <FlatList
       data={messages}
@@ -71,9 +77,11 @@ const GroupMessage = ({
         />
       )}
       onEndReached={() => {
-        // FETCH
+        getMessages();
       }}
       onEndReachedThreshold={0}
+      refreshing={refreshing}
+      onRefresh={handleRefresh}
       automaticallyAdjustKeyboardInsets
     />
   );
