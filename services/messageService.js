@@ -20,6 +20,24 @@ export const fetchMessages = async (userId, user2Id) => {
   }
 };
 
+export const fetchGroupMessages = async (groupId) => {
+  try {
+    const { data, error } = await supabase
+      .from("group_messages")
+      .select(`*, group_reactions (*)`)
+      .eq("group_id", groupId)
+      .order("created_at", { ascending: false });
+    if (error) {
+      console.log("fetchGroupMessages error: ", error);
+      return { success: false, msg: "Could not fetch the Messages" };
+    }
+    return { success: true, data: data };
+  } catch (error) {
+    console.log("fetchGroupMessages error: ", error);
+    return { success: false, msg: "Could not fetch the Messages" };
+  }
+};
+
 export const fetchMessageById = async (messageId) => {
   if (!messageId) return null;
   try {
