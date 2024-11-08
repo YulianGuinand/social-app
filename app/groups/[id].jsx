@@ -166,8 +166,8 @@ const GroupScreen = () => {
   }, []);
 
   return (
-    <ScreenWrapper>
-      <View style={{ paddingHorizontal: wp(4) }}>
+    <ScreenWrapper bg="white">
+      <View style={{ paddingHorizontal: wp(4), flex: 1 }}>
         <Header title={group.name} />
         <GroupMessage
           id={id}

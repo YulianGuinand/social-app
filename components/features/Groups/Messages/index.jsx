@@ -73,6 +73,8 @@ const GroupMessage = ({
       onEndReached={() => {
         // FETCH
       }}
+      onEndReachedThreshold={0}
+      automaticallyAdjustKeyboardInsets
     />
   );
 };

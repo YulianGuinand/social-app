@@ -25,7 +25,7 @@ export const fetchGroupMessages = async (groupId) => {
     const { data, error } = await supabase
       .from("group_messages")
       .select(
-        `*, group_reactions (*), user_id (id, username, firstname, lastname, image)`
+        `*, group_reactions (*), user_id (id, username, firstname, lastname, image), messageReplyId (*)`
       )
       .eq("group_id", groupId)
       .order("created_at", { ascending: false });
