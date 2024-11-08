@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { FlatList, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
+import GroupsList from "../components/features/Groups";
 import Header from "../components/shared/Header";
 import ScreenWrapper from "../components/shared/ScreenWrapper";
 import { useAuth } from "../contexts/AuthContext";
@@ -24,20 +25,10 @@ const groups = () => {
   }, []);
 
   return (
-    <ScreenWrapper bg="white">
+    <ScreenWrapper>
       <View style={{ paddingHorizontal: wp(4) }}>
         <Header title="Groups" />
-        <FlatList
-          data={groups}
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={{}}
-          keyExtractor={(item) => item.id.toString()}
-          renderItem={({ item }) => <Text>{item.group_id.name}</Text>}
-          onEndReached={() => {
-            // getThreads();
-          }}
-          onEndReachedThreshold={0}
-        />
+        <GroupsList groups={groups} />
       </View>
     </ScreenWrapper>
   );
