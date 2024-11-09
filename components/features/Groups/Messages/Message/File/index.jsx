@@ -74,6 +74,7 @@ const MessageFile = ({
                   ? "white"
                   : theme.colors.text
                 : theme.colors.text,
+              fontSize: 20,
             }}
           >
             {message.body}
