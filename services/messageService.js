@@ -5,7 +5,7 @@ export const fetchMessages = async (userId, user2Id) => {
   try {
     const { data, error } = await supabase
       .from("messages")
-      .select(`*`)
+      .select(`*, senderId (*)`)
       .or(`senderId.eq.${userId},receiverId.eq.${userId}`)
       .or(`senderId.eq.${user2Id},receiverId.eq.${user2Id}`)
       .order("created_at", { ascending: false });
@@ -105,6 +105,7 @@ export const fetchMessagesByThreadId = async (threadId, limit = 5) => {
       .from("messages")
       .select(
         `*,
+        senderId (*),
         messageReplyId (*),
         reactions (*)
         `

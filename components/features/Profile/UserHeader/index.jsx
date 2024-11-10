@@ -133,7 +133,6 @@ const UserHeader = ({
             filter: `user1=eq.${currentUser.id}`,
           },
           (payload) => {
-            console.log("NEW: ", payload);
             if (payload.eventType === "UPDATE" && payload.new) {
               setRelation({ ...relation, status: payload.new.status });
             }

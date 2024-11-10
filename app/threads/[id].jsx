@@ -37,7 +37,7 @@ const ThreadScreen = () => {
 
   // EMOJI
   const [isVisible, setIsVisible] = useState(false);
-  const [messageId, setMessageId] = useState(null);
+  const [message, setMessage] = useState();
 
   const getUser = async () => {
     let res = await getUserData(user2Id);
@@ -173,7 +173,7 @@ const ThreadScreen = () => {
           refresh={refresh}
           setRefresh={setRefresh}
           setIsVisible={setIsVisible}
-          setMessageId={setMessageId}
+          setMessage={setMessage}
         />
         {file && (
           <ChatFile
@@ -203,7 +203,7 @@ const ThreadScreen = () => {
         isVisible={isVisible}
         setIsVisible={setIsVisible}
         user={user}
-        messageId={messageId}
+        message={message}
         id={id}
         setReply={setReply}
         onDelete={onDelete}

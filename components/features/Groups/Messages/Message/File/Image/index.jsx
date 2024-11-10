@@ -7,7 +7,7 @@ import { hp } from "../../../../../../../helpers/common";
 
 const MessageImage = ({
   message,
-  setMessageId,
+  setMessage,
   setIsVisible,
   setState,
   imageUrl,
@@ -17,7 +17,7 @@ const MessageImage = ({
     <>
       <TouchableOpacity
         onLongPress={() => {
-          setMessageId(message.id);
+          setMessage(message);
           setIsVisible((prev) => !prev);
         }}
         onPress={() => setState(true)}

@@ -4,11 +4,11 @@ import { TouchableOpacity } from "react-native";
 import { theme } from "../../../../../../../constants/theme";
 import { hp } from "../../../../../../../helpers/common";
 
-const MessageVideo = ({ message, setMessageId, setIsVisible, imageUrl }) => {
+const MessageVideo = ({ message, setMessage, setIsVisible, imageUrl }) => {
   return (
     <TouchableOpacity
       onLongPress={() => {
-        setMessageId(message.id);
+        setMessage(message);
         setIsVisible((prev) => !prev);
       }}
     >

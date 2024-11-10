@@ -7,7 +7,7 @@ import Reactions from "../Reactions";
 
 const MessageLink = ({
   message,
-  setMessageId,
+  setMessage,
   setIsVisible,
   links,
   deleteReaction,
@@ -18,7 +18,7 @@ const MessageLink = ({
       return (
         <TouchableOpacity
           onLongPress={() => {
-            setMessageId(message.id);
+            setMessage(message);
             setIsVisible((prev) => !prev);
           }}
           style={{ padding: 0 }}
@@ -80,7 +80,7 @@ const MessageLink = ({
       />
       <TouchableOpacity
         onLongPress={() => {
-          setMessageId(message.id);
+          setMessage(message);
           setIsVisible((prev) => !prev);
         }}
       >

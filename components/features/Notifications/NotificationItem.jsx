@@ -10,7 +10,7 @@ const NotificationItem = ({ item, router }) => {
     if (item?.title === "want to be your friend") {
       router.push({
         pathname: "profile",
-        params: { userId: item?.senderId },
+        params: { userId: item?.senderId.id },
       });
     } else {
       let { postId, commentId } = JSON.parse(item?.data);

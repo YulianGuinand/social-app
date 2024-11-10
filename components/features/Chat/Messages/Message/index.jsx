@@ -13,13 +13,7 @@ import MessageFile from "../../../Groups/Messages/Message/File";
 import MessageLink from "./Link";
 import Reactions from "./Reactions";
 
-const Message = ({
-  message,
-  user2,
-  setIsVisible,
-  setMessageId,
-  setRefresh,
-}) => {
+const Message = ({ message, user2, setIsVisible, setMessage, setRefresh }) => {
   const { user } = useAuth();
   const [state, setState] = useState(false);
 
@@ -53,9 +47,10 @@ const Message = ({
       style={[
         styles.container,
         {
-          alignItems: message?.senderId === user.id ? "flex-end" : "flex-start",
+          alignItems:
+            message?.senderId.id === user.id ? "flex-end" : "flex-start",
           justifyContent:
-            message?.senderId === user.id ? "flex-end" : "flex-start",
+            message?.senderId.id === user.id ? "flex-end" : "flex-start",
           marginBottom: message.reactions.length > 0 ? 20 : 0,
         },
       ]}
@@ -67,7 +62,7 @@ const Message = ({
           gap: 10,
         }}
       >
-        {message?.senderId !== user.id && (
+        {message?.senderId.id !== user.id && (
           <Avatar uri={user2?.image} size={hp(4)} />
         )}
         <View style={{ flexDirection: "column" }}>
@@ -78,7 +73,7 @@ const Message = ({
               // MESSAGE FILE
               <MessageFile
                 isVideo={isVideo}
-                setMessageId={setMessageId}
+                setMessage={setMessage}
                 setIsVisible={setIsVisible}
                 message={message}
                 imageUrl={imageUrl}
@@ -90,17 +85,17 @@ const Message = ({
               // MESSAGE LINKS
               <MessageLink
                 message={message}
-                setMessageId={setMessageId}
+                setMessage={setMessage}
                 setIsVisible={setIsVisible}
                 links={links}
                 deleteReaction={deleteReaction}
-                mine={message?.senderId === user.id}
+                mine={message?.senderId.id === user.id}
               />
             ) : (
               // MESSAGE TEXT
               <TouchableOpacity
                 onLongPress={() => {
-                  setMessageId(message.id);
+                  setMessage(message);
                   setIsVisible((prev) => !prev);
                 }}
               >
@@ -124,7 +119,7 @@ export default Message;
 const MessageText = ({ message, reply, user, deleteReaction }) => {
   const [userReply, setUserReply] = useState();
   const getReplyData = async () => {
-    let res = await getUserData(reply?.senderId);
+    let res = await getUserData(reply?.senderId.id);
     if (res.success) setUserReply(res.data);
   };
 
@@ -189,7 +184,8 @@ const MessageText = ({ message, reply, user, deleteReaction }) => {
 
       <View
         style={{
-          alignSelf: message?.senderId === user.id ? "flex-end" : "flex-start",
+          alignSelf:
+            message?.senderId.id === user.id ? "flex-end" : "flex-start",
         }}
       >
         <View
@@ -198,14 +194,16 @@ const MessageText = ({ message, reply, user, deleteReaction }) => {
             borderRadius: theme.radius.md,
             // overflow: "hidden",
             backgroundColor:
-              message?.senderId === user.id ? theme.colors.primary : "#EEEEEE",
+              message?.senderId.id === user.id
+                ? theme.colors.primary
+                : "#EEEEEE",
           }}
         >
           <Text
             style={{
               padding: 6,
               color:
-                message?.senderId === user.id ? "white" : theme.colors.text,
+                message?.senderId.id === user.id ? "white" : theme.colors.text,
               fontSize: 20,
             }}
           >

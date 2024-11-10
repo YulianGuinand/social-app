@@ -7,7 +7,7 @@ import MessageG from "./Message";
 const GroupMessage = ({
   id,
   setIsVisible,
-  setMessageId,
+  setMessage,
   refresh,
   setRefresh,
 }) => {
@@ -72,7 +72,7 @@ const GroupMessage = ({
         <MessageG
           message={item}
           setIsVisible={setIsVisible}
-          setMessageId={setMessageId}
+          setMessage={setMessage}
           setRefresh={setRefresh}
         />
       )}

@@ -1,3 +1,4 @@
+import moment from "moment";
 import React, { useState } from "react";
 import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Icon from "../../../../../assets/icons";
@@ -11,10 +12,11 @@ const ReactionGroupModal = ({
   setIsVisible,
   id,
   user,
-  messageId,
+  message,
   setReply,
   onDelete,
 }) => {
+  const messageId = message?.id;
   const [mine, setMine] = useState(false);
   // REACTIONS ITEMS
   const ReactionItems = [
@@ -87,6 +89,8 @@ const ReactionGroupModal = ({
       },
     ]);
   };
+
+  const createdAt = moment(message?.created_at).fromNow();
   return (
     <ReactionsPicker isVisible={isVisible} onClose={() => setIsVisible(false)}>
       {/* EMOJI */}
@@ -121,14 +125,12 @@ const ReactionGroupModal = ({
           );
         })}
       </View>
-      {/* REPLY */}
+      {/* ACTIONS */}
       <View
         style={{
-          height: "70%",
-          justifyContent: "space-around",
-          alignItems: "flex-start",
+          paddingVertical: hp(4),
           paddingHorizontal: wp(4),
-          marginTop: 20,
+          gap: 10,
         }}
       >
         <TouchableOpacity
@@ -138,7 +140,6 @@ const ReactionGroupModal = ({
             alignItems: "center",
             gap: 20,
             width: "100%",
-            height: "50%",
           }}
         >
           <Icon name="reply" size={hp(4)} color={theme.colors.primary} />
@@ -152,13 +153,18 @@ const ReactionGroupModal = ({
               alignItems: "center",
               gap: 20,
               width: "100%",
-              height: "50%",
             }}
           >
             <Icon name="delete" size={hp(4)} color={theme.colors.primary} />
             <Text style={{ fontSize: hp(2) }}>Delete</Text>
           </TouchableOpacity>
         )}
+      </View>
+
+      <View style={{ paddingHorizontal: wp(4) }}>
+        <Text style={{ color: theme.colors.textLight }}>
+          Sent by {message?.user_id.username} - {createdAt}
+        </Text>
       </View>
     </ReactionsPicker>
   );

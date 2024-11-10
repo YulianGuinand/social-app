@@ -11,7 +11,7 @@ const Messages = ({
   refresh,
   setRefresh,
   setIsVisible,
-  setMessageId,
+  setMessage,
 }) => {
   const [newMessages, setNewMessages] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
@@ -83,7 +83,7 @@ const Messages = ({
           user2={user2}
           isLast={index === 0}
           setIsVisible={setIsVisible}
-          setMessageId={setMessageId}
+          setMessage={setMessage}
         />
       )}
       onEndReached={() => {

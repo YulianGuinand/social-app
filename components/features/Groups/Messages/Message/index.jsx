@@ -12,7 +12,7 @@ import MessageLink from "../../../Chat/Messages/Message/Link";
 import MessageFile from "./File";
 import ReactionsG from "./Reactions";
 
-const MessageG = ({ message, setMessageId, setIsVisible, setRefresh }) => {
+const MessageG = ({ message, setMessage, setIsVisible, setRefresh }) => {
   const [state, setState] = useState(false);
   const { user } = useAuth();
 
@@ -67,7 +67,7 @@ const MessageG = ({ message, setMessageId, setIsVisible, setRefresh }) => {
               // FILE
               <MessageFile
                 isVideo={isVideo}
-                setMessageId={setMessageId}
+                setMessage={setMessage}
                 setIsVisible={setIsVisible}
                 message={message}
                 imageUrl={imageUrl}
@@ -80,7 +80,7 @@ const MessageG = ({ message, setMessageId, setIsVisible, setRefresh }) => {
               // MESSAGE LINKS
               <MessageLink
                 message={message}
-                setMessageId={setMessageId}
+                setMessage={setMessage}
                 setIsVisible={setIsVisible}
                 links={links}
                 deleteReaction={deleteReaction}
@@ -90,7 +90,7 @@ const MessageG = ({ message, setMessageId, setIsVisible, setRefresh }) => {
               // TEXT
               <TouchableOpacity
                 onLongPress={() => {
-                  setMessageId(message.id);
+                  setMessage(message);
                   setIsVisible((prev) => !prev);
                 }}
               >

@@ -9,7 +9,7 @@ import MessageVideo from "./Video";
 
 const MessageFile = ({
   isVideo,
-  setMessageId,
+  setMessage,
   setIsVisible,
   message,
   imageUrl,
@@ -35,14 +35,14 @@ const MessageFile = ({
       {isVideo ? (
         <MessageVideo
           message={message}
-          setMessageId={setMessageId}
+          setMessage={setMessage}
           setIsVisible={setIsVisible}
           imageUrl={imageUrl}
         />
       ) : (
         <MessageImage
           message={message}
-          setMessageId={setMessageId}
+          setMessage={setMessage}
           setIsVisible={setIsVisible}
           setState={setState}
           imageUrl={imageUrl}
@@ -53,7 +53,7 @@ const MessageFile = ({
       {message.body && (
         <TouchableOpacity
           onLongPress={() => {
-            setMessageId(message.id);
+            setMessage(message);
             setIsVisible((prev) => !prev);
           }}
           style={{

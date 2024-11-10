@@ -62,7 +62,7 @@ const GroupScreen = () => {
 
   // MODAL
   const [isVisible, setIsVisible] = useState(false);
-  const [messageId, setMessageId] = useState(null);
+  const [message, setMessage] = useState();
 
   // REPLY
   const [reply, setReply] = useState({
@@ -172,7 +172,7 @@ const GroupScreen = () => {
         <GroupMessage
           id={id}
           setIsVisible={setIsVisible}
-          setMessageId={setMessageId}
+          setMessage={setMessage}
           refresh={refresh}
           setRefresh={setRefresh}
         />
@@ -208,7 +208,7 @@ const GroupScreen = () => {
         setReply={setReply}
         onDelete={onDelete}
         user={user}
-        messageId={messageId}
+        message={message}
         id={parseInt(id)}
       />
     </ScreenWrapper>
