@@ -9,8 +9,8 @@ import {
   View,
 } from "react-native";
 import Icon from "../../../assets/icons";
+import Header from "../../../components/features/Groups/Header";
 import Avatar from "../../../components/shared/Avatar";
-import Header from "../../../components/shared/Header";
 import ScreenWrapper from "../../../components/shared/ScreenWrapper";
 import { theme } from "../../../constants/theme";
 import { useAuth } from "../../../contexts/AuthContext";
@@ -46,7 +46,12 @@ const InfoGroup = () => {
   return (
     <ScreenWrapper>
       <View style={{ paddingHorizontal: wp(4) }}>
-        <Header title={data.name} />
+        <Header
+          title={data.name}
+          data={data}
+          user={user}
+          showMoreButton={false}
+        />
       </View>
 
       <FlatList

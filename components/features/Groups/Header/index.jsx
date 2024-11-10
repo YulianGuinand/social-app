@@ -1,13 +1,45 @@
 import { useRouter } from "expo-router";
 import React from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Icon from "../../../../assets/icons";
 import { theme } from "../../../../constants/theme";
 import { hp } from "../../../../helpers/common";
+import { removeMember } from "../../../../services/groupService";
 import BackButton from "../../../shared/BackButton";
 
-const Header = ({ title, showBackButton = true, mb = 10, data }) => {
+const Header = ({
+  title,
+  showBackButton = true,
+  mb = 10,
+  data,
+  user,
+  showMoreButton = true,
+}) => {
   const router = useRouter();
+
+  const quiteGroup = async () => {
+    if (!user) return null;
+    if (!data) return null;
+    let res = await removeMember(data.id, user.id);
+
+    if (res.success) {
+      router.push("home");
+    }
+  };
+
+  const handleOnDelete = () => {
+    Alert.alert("Confirm", "Are you sure you want to quite this group ?", [
+      {
+        text: "Cancel",
+        style: "cancel",
+      },
+      {
+        text: "Delete",
+        onPress: () => quiteGroup(),
+        style: "destructive",
+      },
+    ]);
+  };
 
   return (
     <View style={[styles.container, { marginBottom: mb }]}>
@@ -17,17 +49,24 @@ const Header = ({ title, showBackButton = true, mb = 10, data }) => {
         </View>
       )}
       <Text style={styles.title}>{title || ""}</Text>
-      <TouchableOpacity
-        style={styles.moreButton}
-        onPress={() =>
-          router.push({
-            pathname: "/groups/info/info",
-            params: { data: JSON.stringify(data) },
-          })
-        }
-      >
-        <Icon name="threeDotsHorizontal" color={theme.colors.dark} />
-      </TouchableOpacity>
+
+      {showMoreButton ? (
+        <TouchableOpacity
+          style={styles.moreButton}
+          onPress={() =>
+            router.push({
+              pathname: "/groups/info/info",
+              params: { data: JSON.stringify(data) },
+            })
+          }
+        >
+          <Icon name="threeDotsHorizontal" color={theme.colors.dark} />
+        </TouchableOpacity>
+      ) : (
+        <TouchableOpacity style={styles.moreButton} onPress={handleOnDelete}>
+          <Icon name="delete" color={theme.colors.dark} />
+        </TouchableOpacity>
+      )}
     </View>
   );
 };
