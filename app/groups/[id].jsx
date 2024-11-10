@@ -4,10 +4,10 @@ import React, { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import ChatFile from "../../components/features/Chat/Files";
 import ChatInput from "../../components/features/Chat/Input";
+import GroupHeader from "../../components/features/Groups/Header";
 import GroupMessage from "../../components/features/Groups/Messages";
 import ReplyPreview from "../../components/features/Groups/Messages/Message/ReplyPreview";
 import ReactionGroupModal from "../../components/features/Groups/Messages/Reactions";
-import Header from "../../components/shared/Header";
 import ScreenWrapper from "../../components/shared/ScreenWrapper";
 import { useAuth } from "../../contexts/AuthContext";
 import { wp } from "../../helpers/common";
@@ -168,7 +168,7 @@ const GroupScreen = () => {
   return (
     <ScreenWrapper bg="white">
       <View style={{ paddingHorizontal: wp(4), flex: 1 }}>
-        <Header title={group.name} />
+        <GroupHeader title={group.name} data={group} />
         <GroupMessage
           id={id}
           setIsVisible={setIsVisible}

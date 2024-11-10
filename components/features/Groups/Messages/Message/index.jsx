@@ -1,3 +1,4 @@
+import { Image } from "expo-image";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { theme } from "../../../../../constants/theme";

@@ -44,6 +44,25 @@ export const fetchMembers = async (groupId) => {
   }
 };
 
+export const removeMember = async (groupId, userId) => {
+  try {
+    const { data, error } = await supabase
+      .from("group_members")
+      .delete()
+      .eq("group_id", groupId)
+      .eq("user_id", userId);
+
+    if (error) {
+      console.log("removeMember error: ", error);
+      return { success: false, msg: "Could not remove member" };
+    }
+
+    return { success: true, data: data };
+  } catch (error) {
+    console.log("removeMember error: ", error);
+    return { success: false, msg: "Could not remove member" };
+  }
+};
 // export const updateLastGroupMessage = async (groupId, messageId, lastSenderId) => {
 //   try {
 //     const updateRes = await supabase
